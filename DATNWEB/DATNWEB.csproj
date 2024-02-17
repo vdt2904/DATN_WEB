@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\Home\Source\plyr-master\.vscode\extensions.json" />
+    <Content Include="wwwroot\Home\Source\plyr-master\.vscode\launch.json" />
+    <Content Include="wwwroot\Home\Source\plyr-master\.vscode\settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.25.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.26" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.26" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.26">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="X.PagedList" Version="8.4.7" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Data\" />
+    <Folder Include="Areas\Admin\Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Home\Source\plyr-master\.github\FUNDING.yml" />
+    <None Include="wwwroot\Home\Source\plyr-master\.github\issue_template.md" />
+    <None Include="wwwroot\Home\Source\plyr-master\.github\ISSUE_TEMPLATE\bug.md" />
+    <None Include="wwwroot\Home\Source\plyr-master\.github\ISSUE_TEMPLATE\feature.md" />
+    <None Include="wwwroot\Home\Source\plyr-master\.github\ISSUE_TEMPLATE\improvement.md" />
+    <None Include="wwwroot\Home\Source\plyr-master\.github\pull_request_template.md" />
+    <None Include="wwwroot\Home\Source\plyr-master\.travis\omit-dist.sh" />
+    <None Include="wwwroot\Home\Source\plyr-master\.travis\prevent-base-master.sh" />
+  </ItemGroup>
+
+</Project>

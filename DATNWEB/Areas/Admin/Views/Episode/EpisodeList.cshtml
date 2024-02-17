@@ -1,0 +1,95 @@
+﻿@using DATNWEB.Models;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+@model X.PagedList.IPagedList<Episode>;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "EpisodeList";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@if (TempData["DeleteError"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["DeleteError"]
+    </div>
+}
+<div class="card mb-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-table me-1"></i>
+                <span class="fw-bold">Episode List</span>
+            </div>
+            <div>
+                <a class="btn btn-primary" asp-action="EpisodesAdd" asp-route-ani="@ViewBag.AnimeId">Create New</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Anime Name</th>
+                    <th>Episode</th>
+                    <th>Title</th>
+                    <th>Posting date</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            No Data
+                        </td>
+
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        QlPhimAnimeContext db = new QlPhimAnimeContext();
+                        var name = db.Animes.Find(item.AnimeId);
+
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => name.AnimeName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Ep)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PostingDate)
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-action="EpisodeEdit" asp-route-id="@item.EpisodeId">Edit</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" asp-action="EpisodeDelete" asp-route-id="@item.EpisodeId">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+        @if (Model.PageCount > 1)
+        {
+            <div class="datatable-pagination">
+                @Html.PagedListPager(Model, page => Url.Action("PackageList", new { page = page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+            </div>
+        }
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-primary" href="/admin/anime">Anime List</a>
+</div>

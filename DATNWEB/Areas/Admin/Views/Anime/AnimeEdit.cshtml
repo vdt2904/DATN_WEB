@@ -1,0 +1,74 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.Anime;
+@{
+    ViewData["Title"] = "AnimeEdit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Anime</h4>
+        <form method="post" action="@Url.Action("AnimeEdits", "Anime")" class="forms-sample" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Anime ID</label>
+                <input type="text" class="form-control" asp-for="AnimeId" placeholder="ID" value="@Model.AnimeId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Anime Name</label>
+                <input type="text" class="form-control" asp-for="AnimeName" placeholder="Name" value="@Model.AnimeName">
+            </div>
+            <div class="form-group">
+                <label>Horizontal image </label>
+                <input type="text" value="@Model.ImageHUrl" asp-for="ImageHUrl" hidden />
+                <input type="file" class="form-control" name="h" id="imageInput" onchange="displayImage(this,'previewImage')">
+                <img id="previewImage" style="max-width: 200px; max-height: 200px; margin-top: 10px;" src="@Model.ImageHUrl" />
+            </div>
+            <div class="form-group">
+                <label>Vertical image</label>
+                <input type="text" value="@Model.ImageVUrl" asp-for="ImageVUrl" hidden />
+                <input type="file" class="form-control" name="v" id="imageInputv" onchange="displayImage(this,'previewImage1')">
+                <img id="previewImage1" style="max-width: 200px; max-height: 200px; margin-top: 10px;" src="@Model.ImageVUrl" />
+            </div>
+            <div class="form-group">
+                <label>Background image </label>
+                <input type="text" value="@Model.BackgroundImageUrl" asp-for="BackgroundImageUrl" hidden />
+                <input type="file" class="form-control" name="b" id="imageInputb" onchange="displayImage(this,'previewImage2')">
+                <img id="previewImage2" style="max-width: 200px; max-height: 200px; margin-top: 10px;" src="@Model.BackgroundImageUrl" />
+            </div>
+            <div class="form-group">
+                <label>Total episode</label>
+                <input type="number" class="form-control" asp-for="TotalEpisode" value="@Model.TotalEpisode?">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="text" class="form-control" asp-for="Information" placeholder="Information" value="@Model.Information">
+            </div>
+            <div class="form-group">
+                <label>Posting Date</label>
+                <input asp-for="BroadcastSchedule" type="datetime-local" class="form-control" value="@Model.BroadcastSchedule?.ToString("yyyy-MM-ddTHH:mm:ss")" />
+            </div>
+            <div class="form-group">
+                <label>Permission</label>
+                <select class="form-control" asp-for="Permission">
+                    <option value="" selected>Choose</option>
+                    <option value="0" selected="@(Model.Permission == 0)">Vip</option>
+                    <option value="1" selected="@(Model.Permission == 1)">Normal</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Season</label>
+                <select asp-for="SeasonId" class="form-control" asp-items="ViewBag.Season"></select>
+            </div>
+            <div class="form-group">
+                <label>Director</label>
+                <select asp-for="DirectorId" class="form-control" asp-items="ViewBag.Director"></select>
+            </div>
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/Anime">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script src="../Admin/js/ShowImage.js"></script>
+

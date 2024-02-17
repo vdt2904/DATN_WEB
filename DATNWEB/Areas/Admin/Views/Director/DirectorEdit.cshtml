@@ -1,0 +1,25 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.Director;
+@{
+    ViewData["Title"] = "DirectorEdit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Director</h4>
+        <form method="post" action="@Url.Action("DirectorEdits", "Director")" class="forms-sample">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Director ID</label>
+                <input type="text" class="form-control" asp-for="DirectorId" placeholder="ID" value="@Model.DirectorId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Director Name</label>
+                <input type="text" class="form-control" asp-for="DirectorName" placeholder="Name" value="@Model.DirectorName">
+            </div>
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/director">Cancel</a>
+        </form>
+    </div>
+</div>

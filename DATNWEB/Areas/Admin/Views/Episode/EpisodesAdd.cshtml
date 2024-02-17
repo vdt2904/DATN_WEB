@@ -1,0 +1,43 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.Episode;
+@{
+    ViewData["Title"] = "EpisodesAdd";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Add Episode</h4>
+        <form method="post" action="@Url.Action("EpisodeAdds", "Episode")" class="forms-sample" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Episode ID</label>
+                <input type="text" class="form-control" asp-for="EpisodeId" placeholder="ID" value="@Model.EpisodeId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Anime</label>
+                <input type="text" class="form-control" asp-for="AnimeId" placeholder="ID" value="@Model.AnimeId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" class="form-control" asp-for="Title" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label>Total episode</label>
+                <input type="number" class="form-control" asp-for="Ep" value="@Model.Ep" readonly>
+            </div>
+            <div class="form-group">
+                <label>Posting Date</label>
+                <input asp-for="PostingDate" type="datetime-local" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Video</label>
+                <input type="file" class="form-control" name="video">
+            </div>
+
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/Episode">Cancel</a>
+        </form>
+    </div>
+</div>
+

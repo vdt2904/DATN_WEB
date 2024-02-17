@@ -1,0 +1,30 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.Genre;
+@{
+    ViewData["Title"] = "GenreEdit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Edit Genre</h4>
+        <form method="post" action="@Url.Action("GenreEdits", "Genre")" class="forms-sample">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Genre ID</label>
+                <input type="text" class="form-control" asp-for="GenreId" placeholder="ID" value="@Model.GenreId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Genre Name</label>
+                <input type="text" class="form-control" asp-for="GenreName" placeholder="Name" value="@Model.GenreName">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="text" class="form-control" asp-for="Infomation" placeholder="Name" value="@Model.Infomation">
+            </div>
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/genre">Cancel</a>
+        </form>
+    </div>
+</div>
+

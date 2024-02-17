@@ -1,0 +1,39 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.ServicePackage;
+@{
+    ViewData["Title"] = "PackagesAdd";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Add Package</h4>
+        <form method="post" action="@Url.Action("PackageAdds", "Package")" class="forms-sample">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Package ID</label>
+                <input type="text" class="form-control" asp-for="PackageId" placeholder="ID" value="@Model.PackageId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Package Name</label>
+                <input type="text" class="form-control" asp-for="PackageName" placeholder="Name">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="text" class="form-control" asp-for="Description" placeholder="Description">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="number" class="form-control" asp-for="Price" placeholder="Price">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="number" class="form-control" asp-for="ValidityPeriod" placeholder="ValidityPeriod">
+            </div>
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/package">Cancel</a>
+        </form>
+    </div>
+</div>
+
+

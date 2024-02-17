@@ -1,0 +1,38 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.Admin;
+@{
+    ViewData["Title"] = "AdminEdit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Add Admin</h4>
+        <form method="post" action="@Url.Action("AdminEdits", "Manager")" class="forms-sample">
+            @Html.AntiForgeryToken()
+            <input type="number" class="form-control" asp-for="Id" value="@Model.Id" hidden>
+            <div class="form-group">
+                <label>Package Name</label>
+                <input type="text" class="form-control" asp-for="UserName" placeholder="UserName" value="@Model.UserName">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="password" class="form-control" asp-for="PassWord" placeholder="PassWord" value="@Model.PassWord">
+            </div>
+            <div class="form-group">
+                <label>Information</label>
+                <input type="email" class="form-control" asp-for="Mail" placeholder="Mail" value="@Model.Mail">
+            </div>
+            <div class="form-group">
+                <label>Auth</label>
+                <select class="form-control" asp-for="Auth">
+                    <option value="" selected>Choose</option>
+                    <option value="0" selected="@(Model.Auth == 0)">Admin</option>
+                    <option value="1" selected="@(Model.Auth == 1)">User</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/admin">Cancel</a>
+        </form>
+    </div>
+</div>
