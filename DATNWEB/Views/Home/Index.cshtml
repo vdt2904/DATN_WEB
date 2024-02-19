@@ -2,7 +2,7 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <section class="hero">
     <div class="container" id="advertis">
     </div>
@@ -20,7 +20,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
                             <div class="btn__all">
-                                <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                <a asp-action="trending" asp-controller="home" class="primary-btn">View All <span class="arrow_right"></span></a>
                             </div>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
                             <div class="btn__all">
-                                <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                <a asp-action="popular" asp-controller="home" class="primary-btn">View All <span class="arrow_right"></span></a>
                             </div>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-4">
                             <div class="btn__all">
-                                <a href="#" class="primary-btn">View All <span class="arrow_right"></span></a>
+                                <a asp-action="recently" asp-controller="home" class="primary-btn">View All <span class="arrow_right"></span></a>
                             </div>
                         </div>
                     </div>
@@ -89,15 +89,13 @@
     </div>
 </section>
 <script src="@Url.Content("~/pagesjs/homepage.js")"></script>
-<script>
-    
+<script> 
     advertisement();
     topday();
     newcomment();
     trending();
     popular();
     recently();
-   
 </script>
 
 

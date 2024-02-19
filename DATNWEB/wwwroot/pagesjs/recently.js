@@ -1,8 +1,7 @@
-﻿
-function category(a,page) {
-    page = page || 1; 
+﻿function recentlys(page) {
+    page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/category?id=' + a + '&page=' + page,
+        url: 'https://localhost:7274/api/category/recently?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -18,7 +17,7 @@ function category(a,page) {
                 table += '<div class="col-lg-4 col-md-6 col-sm-6">';
                 table += '<div class="product__item">';
                 table += '<div class="product__item__pic set-bg" style="background-image: url(' + products[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;">';
-                table += '<div class="ep">' + products[i].maxep + ' /' + (products[i].totalEpisode == null ? '??' : products[i].totalEpisode) + '</div>';
+                table += '<div class="ep">' + (products[i].maxep == -1 ? '??' : products[i].maxep) + ' /' + (products[i].totalEpisode == null ? '??' : products[i].totalEpisode) + '</div>';
                 table += '<div class="comment"><i class="fa fa-comments"></i> ' + products[i].totalc + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i> ' + products[i].total + '</div>';
                 table += '</div>';
@@ -34,32 +33,32 @@ function category(a,page) {
                 table += '</div>';
             }
             document.getElementById('category_product').innerHTML = table;
-            renderPagination(response.paginationInfo,a);
+            renderPagination(response.paginationInfo);
         },
         fail: function (response) {
             console.log("fail");
         }
     })
 }
-function renderPagination(paginationInfo,a) {
+function renderPagination(paginationInfo) {
     let paginationHtml = '';
 
     // Add page links to pagination
-    for (let i = 1; i <= paginationInfo.totalPages; i++) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + i + ')">' + i + '</a>';
+    if (paginationInfo.totalPages >1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<a href="#" onclick="recentlys(' + i + ')">' + i + '</a>';
+        }
     }
-
     // Display previous page link
     if (paginationInfo.currentPage > 1) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
+        paginationHtml += '<a href="#" onclick="recentlys(' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
     }
 
     // Display next page link
     if (paginationInfo.currentPage < paginationInfo.totalPages) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
+        paginationHtml += '<a href="#" onclick="recentlys(' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
     }
 
     // Display pagination
     document.getElementById('pagination').innerHTML = paginationHtml;
 }
-

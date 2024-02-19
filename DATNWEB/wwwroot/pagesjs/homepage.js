@@ -281,7 +281,7 @@ function recently() {
                 table += '<div class="col-lg-4 col-md-6 col-sm-6">';
                 table += '<div class="product__item">';
                 table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;">';
-                table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
+                table += '<div class="ep">' + (response[i].maxep == -1 ? '??' : response[i].maxep) + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="comment"><i class="fa fa-comments"></i> ' + response[i].totalc + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i> ' + response[i].total + '</div>';
                 table += '</div>';

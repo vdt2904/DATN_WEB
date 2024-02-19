@@ -5,15 +5,17 @@ using X.PagedList;
 
 namespace DATNWEB.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
         QlPhimAnimeContext db = new QlPhimAnimeContext();
+
         [HttpGet]
         public IActionResult category(string id,int? page)
         {
-            const int pageSize = 3;
+            const int pageSize = 15;
             var idanimes = (from a in db.Animes
                             join f in db.FilmGenres on a.AnimeId equals f.AnimeId
                             where f.GenreId == id
@@ -107,10 +109,11 @@ namespace DATNWEB.Controllers
         }
         [Route("trending")]
         [HttpGet]
-        public IActionResult trending()
+        public IActionResult trending(int? page)
         {
+            const int pageSize = 15;
             DateTime today = DateTime.Now;
-            DateTime oneWeekAgo = today.AddDays(-7);
+            DateTime oneWeekAgo = today.AddDays(-70);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId
@@ -119,7 +122,7 @@ namespace DATNWEB.Controllers
                             {
                                 a.AnimeId,
                                 a.TotalEpisode,
-                                a.ImageHUrl,
+                                a.ImageVUrl,
                                 a.AnimeName
                             } into grouped
                             orderby grouped.Count() descending
@@ -128,9 +131,27 @@ namespace DATNWEB.Controllers
                                 AnimeId = grouped.Key.AnimeId,
                                 TotalEpisode = grouped.Key.TotalEpisode,
                                 AnimeName = grouped.Key.AnimeName,
-                                ImageHUrl = grouped.Key.ImageHUrl,
+                                ImageVUrl = grouped.Key.ImageVUrl,
                             }
-                         ).ToList();
+                         ).Distinct().ToList();
+            var newid = (from a in idanimes
+                         select new
+                         {
+                             a.AnimeId,
+                             a.TotalEpisode,
+                             a.ImageVUrl,
+                             a.AnimeName,
+                             Genres = (
+                               from fg in db.FilmGenres
+                               join g in db.Genres on fg.GenreId equals g.GenreId
+                               where fg.AnimeId == a.AnimeId
+                               select new
+                               {
+                                   GenreId = g.GenreId,
+                                   GenreName = g.GenreName
+                               }
+                           ).Distinct().ToList()
+                         }).Distinct().ToList();
             var totalv = (from a in db.Animes
                           join e in db.Episodes on a.AnimeId equals e.AnimeId
                           join v in db.Views on e.EpisodeId equals v.EpisodeId
@@ -161,7 +182,8 @@ namespace DATNWEB.Controllers
                           }
              ).ToList();
             var episodesList = db.Episodes.ToList();
-            var animes = (from a in idanimes
+
+            var animes = (from a in newid
                           join e in episodesList on a.AnimeId equals e.AnimeId
                           join t in totalv on a.AnimeId equals t.AnimeId
                           join c in totalc on a.AnimeId equals c.AnimeId
@@ -169,19 +191,30 @@ namespace DATNWEB.Controllers
                           {
                               a.AnimeId,
                               a.AnimeName,
-                              a.ImageHUrl,
+                              a.ImageVUrl,
                               a.TotalEpisode,
                               Maxep = db.Episodes.Where(ep => ep.AnimeId == a.AnimeId).Max(ep => ep.Ep),
                               t.Total,
-                              c.Totalc
+                              c.Totalc,
+                              a.Genres
                           }
                          ).Distinct().ToList();
-            return Ok(animes);
+            var totalAnimes = animes.Count;
+            var totalPages = (int)Math.Ceiling(totalAnimes / (double)pageSize);
+            var pageNumber = page ?? 1;
+            var pagedAnimes = animes.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var paginationInfo = new
+            {
+                TotalPages = totalPages,
+                CurrentPage = pageNumber
+            };
+            return Ok(new { PagedAnimes = pagedAnimes, PaginationInfo = paginationInfo });
         }
         [Route("popular")]
         [HttpGet]
-        public IActionResult popular()
+        public IActionResult popular(int? page)
         {
+            const int pageSize = 15;
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId into viewGroup
@@ -191,7 +224,7 @@ namespace DATNWEB.Controllers
                             {
                                 a.AnimeId,
                                 a.TotalEpisode,
-                                a.ImageHUrl,
+                                a.ImageVUrl,
                                 a.AnimeName
                             } into grouped
                             orderby grouped.Sum(x => x.v != null ? 1 : 0) descending
@@ -200,10 +233,11 @@ namespace DATNWEB.Controllers
                                 AnimeId = grouped.Key.AnimeId,
                                 TotalEpisode = grouped.Key.TotalEpisode,
                                 AnimeName = grouped.Key.AnimeName,
-                                ImageHUrl = grouped.Key.ImageHUrl,
+                                ImageVUrl = grouped.Key.ImageVUrl,
                                 Total = grouped.Sum(x => x.v != null ? 1 : 0),
                             }
-             ).ToList();
+             ).Take(6).ToList();
+
             var totalc = (from a in db.Animes
                           join e in db.Episodes on a.AnimeId equals e.AnimeId
                           join v in db.Comments on e.EpisodeId equals v.EpisodeId into commentGroup
@@ -224,19 +258,39 @@ namespace DATNWEB.Controllers
                           {
                               a.AnimeId,
                               a.AnimeName,
-                              a.ImageHUrl,
+                              a.ImageVUrl,
                               a.TotalEpisode,
                               Maxep = db.Episodes.Where(ep => ep.AnimeId == a.AnimeId).Max(ep => ep.Ep),
                               a.Total,
-                              t.Totalc
+                              t.Totalc,
+                              Genres = (
+                                    from fg in db.FilmGenres
+                                    join g in db.Genres on fg.GenreId equals g.GenreId
+                                    where fg.AnimeId == a.AnimeId
+                                    select new
+                                    {
+                                        GenreId = g.GenreId,
+                                        GenreName = g.GenreName
+                                    }
+                                ).ToList()
                           }
                          ).Distinct().ToList();
-            return Ok(animes);
+            var totalAnimes = animes.Count;
+            var totalPages = (int)Math.Ceiling(totalAnimes / (double)pageSize);
+            var pageNumber = page ?? 1;
+            var pagedAnimes = animes.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var paginationInfo = new
+            {
+                TotalPages = totalPages,
+                CurrentPage = pageNumber
+            };
+            return Ok(new { PagedAnimes = pagedAnimes, PaginationInfo = paginationInfo });
         }
         [Route("recently")]
         [HttpGet]
-        public IActionResult recently()
+        public IActionResult recently(int? page)
         {
+            const int pageSize = 15;
             var idanimes = db.Animes.OrderByDescending(x => x.BroadcastSchedule).ToList();
             var totalc = (from a in idanimes
                           join e in db.Episodes on a.AnimeId equals e.AnimeId into episodeGroup
@@ -288,14 +342,33 @@ namespace DATNWEB.Controllers
                           {
                               a.AnimeId,
                               a.AnimeName,
-                              a.ImageHUrl,
+                              a.ImageVUrl,
                               a.TotalEpisode,
                               Maxep = e.MaxEpisode,
                               v.Total,
-                              c.Totalc
+                              c.Totalc,
+                              Genres = (
+                                      from fg in db.FilmGenres
+                                      join g in db.Genres on fg.GenreId equals g.GenreId
+                                      where fg.AnimeId == a.AnimeId
+                                      select new
+                                      {
+                                          GenreId = g.GenreId,
+                                          GenreName = g.GenreName
+                                      }
+                                  ).ToList()
                           }).Distinct().ToList();
-            return Ok(animes);
+            var totalAnimes = animes.Count;
+            var totalPages = (int)Math.Ceiling(totalAnimes / (double)pageSize);
+            var pageNumber = page ?? 1;
+            var pagedAnimes = animes.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var paginationInfo = new
+            {
+                TotalPages = totalPages,
+                CurrentPage = pageNumber
+            };
+            return Ok(new { PagedAnimes = pagedAnimes, PaginationInfo = paginationInfo });
         }
     }
-
+    
 }

@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "trending";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<section class="product-page spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="product__page__content">
+                    <div class="product__page__title">
+                        <div class="row">
+                            <div class="col-lg-8 col-md-8 col-sm-6">
+                                <div class="section-title">
+                                    <h4>TRENDING NOW</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="category_product">
+                    </div>
+                </div>
+                <div class="product__pagination" id="pagination">
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-8">
+                <div class="product__sidebar">
+                    <div class="product__sidebar__view">
+                        <div class="section-title">
+                            <h5>Top Views</h5>
+                        </div>
+                        <ul class="filter__controls">
+                            <li onclick="topday()">Day</li>
+                            <li onclick="topweek()">Week</li>
+                            <li onclick="topmonth()">Month</li>
+                            <li onclick="topyear()">Years</li>
+                        </ul>
+                        <div class="filter__gallery" id="topview">
+                        </div>
+                    </div>
+                    <div class="product__sidebar__comment">
+                        <div class="section-title">
+                            <h5>New Comment</h5>
+                        </div>
+                        <div id="newcmt">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="@Url.Content("~/pagesjs/trending.js")"></script>
+<script src="@Url.Content("~/pagesjs/homepage.js")"></script>
+<script>
+    trendings();
+    topday();
+    newcomment();
+</script>

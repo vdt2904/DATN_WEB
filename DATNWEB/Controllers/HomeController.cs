@@ -16,5 +16,17 @@ namespace DATNWEB.Controllers
             var genre = db.Genres.Find(Genre);
             return View(genre);
         }
+        public IActionResult trending()
+        {
+            return View();
+        }
+        public IActionResult popular()
+        {
+            return View();
+        }
+        public IActionResult recently()
+        {
+            return View();
+        }
     }
 }

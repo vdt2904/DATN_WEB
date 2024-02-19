@@ -1,8 +1,7 @@
-﻿
-function category(a,page) {
-    page = page || 1; 
+﻿function trendings(page) {
+    page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/category?id=' + a + '&page=' + page,
+        url: 'https://localhost:7274/api/category/trending?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -34,32 +33,33 @@ function category(a,page) {
                 table += '</div>';
             }
             document.getElementById('category_product').innerHTML = table;
-            renderPagination(response.paginationInfo,a);
+            renderPagination(response.paginationInfo);
         },
         fail: function (response) {
             console.log("fail");
         }
     })
 }
-function renderPagination(paginationInfo,a) {
+function renderPagination(paginationInfo) {
     let paginationHtml = '';
 
     // Add page links to pagination
-    for (let i = 1; i <= paginationInfo.totalPages; i++) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + i + ')">' + i + '</a>';
+    if (paginationInfo.totalPages > 1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<a href="#" onclick="recentlys(' + i + ')">' + i + '</a>';
+        }
     }
 
     // Display previous page link
     if (paginationInfo.currentPage > 1) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
+        paginationHtml += '<a href="#" onclick="trendings(' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
     }
 
     // Display next page link
     if (paginationInfo.currentPage < paginationInfo.totalPages) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
+        paginationHtml += '<a href="#" onclick="trendings(' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
     }
 
     // Display pagination
     document.getElementById('pagination').innerHTML = paginationHtml;
 }
-
