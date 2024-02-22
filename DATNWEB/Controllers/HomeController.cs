@@ -28,5 +28,14 @@ namespace DATNWEB.Controllers
         {
             return View();
         }
+        public IActionResult Blog()
+        {
+            return View();
+        }
+        public IActionResult Blogdetail(string season)
+        {
+            var a = db.Seasons.Find(season);
+            return View(a);
+        }
     }
 }

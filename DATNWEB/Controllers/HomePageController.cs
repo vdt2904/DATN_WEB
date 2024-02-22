@@ -12,7 +12,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult advertisement()
         {
-            var season = db.Seasons.OrderByDescending(x => x.SeasonId).FirstOrDefault();
+            var season = db.Seasons.OrderByDescending(x => x.PostingDate).FirstOrDefault();
             var animes = (from a in db.Animes
                           join e in db.Episodes on a.AnimeId equals e.AnimeId
                           where a.SeasonId == season.SeasonId
