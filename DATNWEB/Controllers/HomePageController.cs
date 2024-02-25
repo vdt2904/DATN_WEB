@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DATNWEB.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DATNWEB.Controllers
 {

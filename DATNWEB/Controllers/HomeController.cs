@@ -37,5 +37,15 @@ namespace DATNWEB.Controllers
             var a = db.Seasons.Find(season);
             return View(a);
         }
+        public IActionResult AnimeDetail(string id)
+        {
+            var a = db.Animes.Find(id);
+            return View(a);
+        }
+        public IActionResult Watch(string id)
+        {
+            var a = db.Animes.Find(id);
+            return View(a);
+        }
     }
 }

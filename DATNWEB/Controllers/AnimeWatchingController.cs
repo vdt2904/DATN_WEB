@@ -10,17 +10,21 @@ namespace DATNWEB.Controllers
     {
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         [HttpGet]
-        public IActionResult animewatch(string aid,int ep)
-        {
+        public IActionResult animewatch(string aid,int? ep)
+        {     
+            var ani = db.Animes.Find(aid);
+            var eps = db.Episodes.Where(x => x.AnimeId == aid).OrderBy(x=>x.Ep).Select(x=>x.Ep).ToList();
+            ep = ep ?? 0;
             var epi = db.Episodes.Where(x => x.AnimeId == aid && x.Ep == ep).FirstOrDefault();
-            var eps = db.Episodes.Where(x => x.AnimeId == aid).Select(x=>x.Ep).ToList();
             var detail = new
             {
                 epi.AnimeId,
+                ani.BackgroundImageUrl,
                 epi.VideoUrl,
                 epi.EpisodeId,
                 epi.Title,
-                e = eps
+                e = eps,
+                epside = ep
             };
             return Ok(detail);
         }

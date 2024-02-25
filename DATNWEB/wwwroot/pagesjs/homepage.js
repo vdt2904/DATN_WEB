@@ -213,7 +213,7 @@ function trending() {
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
                 table += '</div>';
                 table += '</div>';
