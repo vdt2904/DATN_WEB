@@ -28,7 +28,7 @@ function category(a,page) {
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="#">' + products[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + products[i].animeId + '">' + products[i].animeName + '</a></h5>';
                 table += '</div>';
                 table += '</div>';
                 table += '</div>';
@@ -45,10 +45,11 @@ function renderPagination(paginationInfo,a) {
     let paginationHtml = '';
 
     // Add page links to pagination
-    for (let i = 1; i <= paginationInfo.totalPages; i++) {
-        paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + i + ')">' + i + '</a>';
+    if (paginationInfo.totalPages > 1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + i + ')">' + i + '</a>';
+        }
     }
-
     // Display previous page link
     if (paginationInfo.currentPage > 1) {
         paginationHtml += '<a href="#" onclick="category(\'' + a + '\', ' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';

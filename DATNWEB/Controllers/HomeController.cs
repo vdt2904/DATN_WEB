@@ -47,5 +47,18 @@ namespace DATNWEB.Controllers
             var a = db.Animes.Find(id);
             return View(a);
         }
+        public IActionResult Episode(string id, int ep)
+        {
+            var a = db.Episodes.Where(x => x.AnimeId == id && x.Ep == ep).FirstOrDefault();
+            return View(a);
+        }
+        public IActionResult Login()
+        {
+            if(HttpContext.Session.GetString("UID") == null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

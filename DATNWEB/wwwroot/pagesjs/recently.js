@@ -27,7 +27,7 @@
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="#">' + products[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + products[i].animeId + '">' + products[i].animeName + '</a></h5>';
                 table += '</div>';
                 table += '</div>';
                 table += '</div>';

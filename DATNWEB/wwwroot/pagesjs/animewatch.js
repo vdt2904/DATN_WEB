@@ -30,9 +30,9 @@
             for (var i = 0; i < eps.length; i++) {
                 if (eps[i] == response.epside) {
                    
-                    table += '<a onclick="watch(\'' + response.animeId + '\', \'' + eps[i] + '\')" style = "color: blue;">Ep ' + eps[i] + '</a>';
+                    table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i] + '" style = "color: white; background-color:blue;">Ep ' + eps[i] + '</a>';
                 } else {
-                    table += '<a onclick="watch(\'' + response.animeId + '\', \'' + eps[i] + '\')">Ep ' + eps[i] + '</a>';
+                    table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i] + '">Ep ' + eps[i] + '</a>';
                 }
             }
             console.log(response.epside)

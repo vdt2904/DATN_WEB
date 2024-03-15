@@ -22,7 +22,7 @@
                 }            
                 table = table + '<h2>' + response[i].animeName + '</h2>';
                 table = table + '<p>' + response[i].info + '</p>';
-                table = table + '<a href="#"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>';
+                table = table + '<a href="/Home/AnimeDetail?id=' + response[i].animeId + '"><span>Watch Now</span> <i class="fa fa-angle-right"></i></a>';
                 table = table + '</div>';
                 table = table + '</div>';
                 table = table + '</div>';
@@ -61,7 +61,7 @@ function topday() {
                 table += '<div class="product__sidebar__view__item set-bg" style="background-image: url(' + response[i].imageHUrl + '); background-size: cover; width: 360px; height: 190px;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i>' + response[i].total + '</div>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
             }
             document.getElementById('topview').innerHTML = table;
@@ -87,7 +87,7 @@ function topweek() {
                 table += '<div class="product__sidebar__view__item set-bg" style="background-image: url(' + response[i].imageHUrl + '); background-size: cover; width: 360px; height: 190px;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i>' + response[i].total + '</div>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
             }
             document.getElementById('topview').innerHTML = table;
@@ -113,7 +113,7 @@ function topyear() {
                 table += '<div class="product__sidebar__view__item set-bg" style="background-image: url(' + response[i].imageHUrl + '); background-size: cover; width: 360px; height: 190px;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i>' + response[i].total + '</div>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
             }
             document.getElementById('topview').innerHTML = table;
@@ -139,7 +139,7 @@ function topmonth() {
                 table += '<div class="product__sidebar__view__item set-bg" style="background-image: url(' + response[i].imageHUrl + '); background-size: cover; width: 360px; height: 190px;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i>' + response[i].total + '</div>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
             }
             document.getElementById('topview').innerHTML = table;
@@ -174,7 +174,7 @@ function newcomment() {
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '<span><i class="fa fa-eye"></i> ' + response[i].totalViews + ' Viewes</span>';
                 table += '</div>';
                 table += '</div>';
@@ -252,7 +252,7 @@ function popular() {
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
                 table += '</div>';
                 table += '</div>';
@@ -291,7 +291,7 @@ function recently() {
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="#">' + response[i].animeName + '</a></h5>';
+                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
                 table += '</div>';
                 table += '</div>';
                 table += '</div>';

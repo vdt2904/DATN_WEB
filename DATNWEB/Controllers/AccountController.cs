@@ -24,9 +24,10 @@ namespace DATNWEB.Controllers
             AutoCode a = new AutoCode();
             var user = db.Users.FirstOrDefault(x => (x.Username == login.Username || x.Email == login.Username || x.Phone == login.Username) && x.Password == a.HashPassword(login.Pass));
             if (user != null)
-            {               
+            {
+                HttpContext.Session.SetString("UID", user.UserId);
                 var token = GenerateToken(user);
-                return Ok(new { token });
+                return Ok(new { token , user.UserId});
             }
             return BadRequest("Invalid user");
         }
@@ -46,8 +47,8 @@ namespace DATNWEB.Controllers
                 _config["Jwt:Issuer"],
                 claims,
                 expires: DateTime.Now.AddDays(7),
-                signingCredentials: credentials);
-
+                signingCredentials: credentials
+                );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
