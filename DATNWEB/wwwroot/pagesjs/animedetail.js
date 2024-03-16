@@ -21,15 +21,7 @@
             table += '<h3>' + response.animeName + '</h3>';
             table += '<span>' + response.direc + '</span>';
             table += '</div>';
-            table += '<div class="anime__details__rating">';
-            table += '<div class="rating">';
-            table += '<a href="#"><i class="fa fa-star"></i></a>';
-            table += '<a href="#"><i class="fa fa-star"></i></a>';
-            table += '<a href="#"><i class="fa fa-star"></i></a>';
-            table += '<a href="#"><i class="fa fa-star"></i></a>';
-            table += '<a href="#"><i class="fa fa-star-half-o"></i></a>';
-            table += '</div>';
-            table += '<span>1.029 Votes</span>';
+            table += '<div id="rate">'
             table += '</div>';
             table += '<p>' + response.information + '</p>';
             table += '<div class="anime__details__widget">';
@@ -70,6 +62,9 @@
             table += '</div>';
             table += '</div>';
             document.getElementById('detail').innerHTML = table;
+            rate(response.animeId);
+            mikelike(response.animeId);
+            getreview(response.animeId);
         },
         fail: function (response) {
             console.log("fail");
@@ -112,8 +107,162 @@ function mikelike(a) {
         }
     })
 }
-    
-        
+
+function getreview(id,page) {
+    page = page || 1;
+    $.ajax({
+        url: 'https://localhost:7274/api/animedetail/review?id='+id+'&page=' + page,
+        method: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            const products = response.pagedReview; // Lấy dữ liệu sản phẩm từ response
+            const len = products.length;
+            let table = '';
+            table += '<div class="section-title">';
+            table += '<h5>Reviews</h5>';
+            table += '</div>';
+            for (var i = 0; i < len; i++) {
+                var date = new Date(products[i].timestamp);
+                var now = new Date();
+                var date1 = date.toISOString().slice(0, 10);
+                var date2 = now.toISOString().slice(0, 10);
+                var diff = now.getTime() - date.getTime();
+                var diffM = Math.floor(diff / (1000 * 60));
+                var diffD = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var str = '';
+                var str1 = '';
+                if (diffM < 60) {
+                    if (diffM === 0) {
+                        str = 'Bây giờ';
+                    } else {
+                        str = diffM + ' phút trước'
+                    }
+                } else if (date1 == date2) {
+                    var hour = Math.floor(diff / (1000 * 60 * 60));
+                    str = hour + ' giờ trước';
+                } else if (diffD <= 7) {
+                    str = diffD + ' ngày trước';
+                } else {
+                    str = date1;
+                }
+                if (products[i].rating === 1) {
+                    str1 = '★☆☆☆☆';
+                }
+                if (products[i].rating === 2) {
+                    str1 = '★★☆☆☆';
+                }
+                if (products[i].rating === 3) {
+                    str1 = '★★★☆☆';
+                }
+                if (products[i].rating === 4) {
+                    str1 = '★★★★☆';
+                }
+                if (products[i].rating === 5) {
+                    str1 = '★★★★★';
+                }                
+                table += '<div class="anime__review__item">';
+                table += '<div class="anime__review__item__pic"><img src="../Home/img/avatar.jfif" alt=""></div>';
+                table += '<div class="anime__review__item__text">';
+                table += '<h6>' + products[i].user + ' - <span>' + str1 + '</span> - <span>' + str + '</span></h6>';
+                table += '<p>' + products[i].content + '</p>';
+                table += '</div>';
+                table += '</div>';
+
+            }
+            document.getElementById('review').innerHTML = table;
+            renderPagination(response.paginationInfo, id);
+        },
+        fail: function (response) {
+            console.log("fail");
+        }
+    })
+}
+
+function rate(id) {
+    $.ajax({
+        url: 'https://localhost:7274/api/animedetail/rate?id=' + id,
+        method: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            var rateTb = response.totalRating / response.totalReviews;
+            var nguyen = Math.floor(rateTb);
+            var du = rateTb % 1;
+            var tbr = 0;
+            if (du > 0 && du < 0.3) {
+                tbr = nguyen;
+            } else if (du >= 0.3 && du < 0.7) {
+                tbr = nguyen + 0.5;
+            }
+            else {
+                tbr = nguyen + 1;
+            }
+            let html = '';
+            html += '<div class="anime__details__rating">';
+            html += '<div class="rating">';
+            if (tbr % 1 == 0) {
+                for (var i = 1; i <= 5; i++) {
+                    if (i > tbr) {
+                        html += '<a><i class="fa fa-star-o"></i></a>';
+                    } else {
+                        html += '<a><i class="fa fa-star"></i></a>';
+                    }
+                }
+            } else {
+                for (var i = 1; i <= 5; i++) {
+                    if (i <= tbr) {
+                        html += '<a><i class="fa fa-star"></i></a>';
+                    } else if (i >= Math.floor(tbr) + 2) {
+                        html += '<a><i class="fa fa-star-o"></i></a>';
+                    } else {
+                        html += '<a href="#"><i class="fa fa-star-half-o"></i></a>';
+                    }
+                }
+            }
+            html += '</div>';
+            html += '<span>' + response.totalReviews + ' lượt đánh giá</span>';
+            html += '</div>';
+            document.getElementById('rate').innerHTML = html;           
+        },
+        fail: function (response) {
+            console.log("fail");
+        }
+    })
+}
+
+function renderPagination(paginationInfo, id) {
+    let paginationHtml = '<nav aria-label="Page navigation"><ul class="pagination">';
+
+    // Display previous page link
+    if (paginationInfo.currentPage > 1) {
+        paginationHtml += '<li class="page-item"><a class="page-link" onclick="getreview(\'' + id + '\',' + (paginationInfo.currentPage - 1) + ')" style="cursor:pointer;"><span aria-hidden="true">&laquo;</span></a></li>';
+    }
+
+    // Add page links to pagination
+    if (paginationInfo.totalPages > 1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<li class="page-item"><a class="page-link" onclick="getreview(\'' + id + '\',' + i + ')" style="cursor:pointer;">' + i + '</a></li>';
+        }
+    }
+
+    // Display next page link
+    if (paginationInfo.currentPage < paginationInfo.totalPages) {
+        paginationHtml += '<li class="page-item"><a class="page-link" onclick="getreview(\'' + id + '\',' + (paginationInfo.currentPage + 1) + ')" style="cursor:pointer;"><span aria-hidden="true">&raquo;</span></a></li>';
+    }
+
+    paginationHtml += '</ul></nav>';
+
+    // Display pagination
+    document.getElementById('pagination').innerHTML = paginationHtml;
+}
+ 
             
                          
                         

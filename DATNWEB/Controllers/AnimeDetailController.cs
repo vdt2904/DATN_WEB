@@ -148,7 +148,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult review(string id,int? page)
         {
-            const int pageSize = 5;
+            const int pageSize = 6;
             var reviews = db.Reviews.Where(x => x.AnimeId == id).ToList();
             var rvs = (from r in reviews
                        select new
@@ -158,10 +158,17 @@ namespace DATNWEB.Controllers
                            r.Timestamp,
                            r.Content,
                            User = db.Users.Where(x => x.UserId == r.UserId).Select(x=>x.Username).FirstOrDefault()
-                       }).ToList();
-            int pageNumber = (page ?? 1);
-            var pageReviews = rvs.ToPagedList(pageNumber, pageSize);
-            return Ok(pageReviews);
+                       }).OrderByDescending(x=>x.Timestamp).ToList();
+            var totalreviews = rvs.Count;
+            var totalPages = (int)Math.Ceiling(totalreviews / (double)pageSize);
+            var pageNumber = page ?? 1;
+            var pagedReview = rvs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var paginationInfo = new
+            {
+                TotalPages = totalPages,
+                CurrentPage = pageNumber
+            };
+            return Ok(new { PagedReview = pagedReview, PaginationInfo = paginationInfo });
         }
         [Route("rate")]
         [HttpGet]

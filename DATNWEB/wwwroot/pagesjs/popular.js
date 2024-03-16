@@ -46,18 +46,18 @@ function renderPagination(paginationInfo) {
     // Add page links to pagination
     if (paginationInfo.totalPages > 1) {
         for (let i = 1; i <= paginationInfo.totalPages; i++) {
-            paginationHtml += '<a href="#" onclick="recentlys(' + i + ')">' + i + '</a>';
+            paginationHtml += '<a href="#" onclick="populars(' + i + ')">' + i + '</a>';
         }
     }
 
     // Display previous page link
     if (paginationInfo.currentPage > 1) {
-        paginationHtml += '<a href="#" onclick="trendings(' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
+        paginationHtml += '<a href="#" onclick="populars(' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
     }
 
     // Display next page link
     if (paginationInfo.currentPage < paginationInfo.totalPages) {
-        paginationHtml += '<a href="#" onclick="trendings(' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
+        paginationHtml += '<a href="#" onclick="populars(' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
     }
 
     // Display pagination
