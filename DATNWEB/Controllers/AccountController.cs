@@ -31,7 +31,7 @@ namespace DATNWEB.Controllers
             }
             return BadRequest("Invalid user");
         }
-        private string GenerateToken(User user)
+        public string GenerateToken(User user)
         {
             var securityKey = Encoding.UTF8.GetBytes(_config["Jwt:Secret"]);
             var credentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256);

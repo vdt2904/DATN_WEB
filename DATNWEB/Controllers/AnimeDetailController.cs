@@ -183,7 +183,7 @@ namespace DATNWEB.Controllers
         }
         [Route("addreview")]
         [HttpPost]
-        public IActionResult addreview([FromBody] DATNWEB.Models.Review rv)
+        public IActionResult addreview([FromBody] Review rv)
         {
             db.Reviews.Add(rv);
             db.SaveChanges();

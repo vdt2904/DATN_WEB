@@ -262,8 +262,64 @@ function renderPagination(paginationInfo, id) {
     // Display pagination
     document.getElementById('pagination').innerHTML = paginationHtml;
 }
+
+/*const socket = new WebSocket('ws://localhost:7274/send-review');
+socket.onopen = function (event) {
+    console.log('WebSocket connection opened successfully');
+    // Kết nối WebSocket đã được thiết lập thành công
+    // Bạn có thể gửi dữ liệu từ đây nếu cần
+};
+socket.onclose = function (event) {
+    console.log('WebSocket connection closed');
+    // Xử lý các thao tác sau khi kết nối WebSocket bị đóng (nếu cần)
+};
+socket.onerror = function (error) {
+    console.error('WebSocket error: ', error);
+    // Xử lý lỗi kết nối WebSocket (nếu cần)
+};*/
  
-            
+function addreview(id) {
+    // Tạo một đối tượng Date hiện tại
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng, thêm 0 nếu cần thiết
+    var day = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày, thêm 0 nếu cần thiết
+    var hours = ('0' + currentDate.getHours()).slice(-2); // Lấy giờ, thêm 0 nếu cần thiết
+    var minutes = ('0' + currentDate.getMinutes()).slice(-2); // Lấy phút, thêm 0 nếu cần thiết
+    var seconds = ('0' + currentDate.getSeconds()).slice(-2); // Lấy giây, thêm 0 nếu cần thiết
+
+    // Tạo chuỗi định dạng "yyyy-mm-ddThh:mm:ss"
+    var formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
+
+    const item = {
+        animeId: id,
+        userId: localStorage.getItem("uid"),
+        rating: document.getElementById('vrate').value,
+        content: document.getElementById('idrv').value,
+        timestamp: formattedDateTime
+    }
+    console.log(item);
+    $.ajax({
+        url: 'https://localhost:7274/api/animedetail/addreview',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ animeId: id, userId: localStorage.getItem("uid"), rating: document.getElementById('vrate').value, content: document.getElementById('idrv').value, timestamp: formattedDateTime }),
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            getreview(id);
+            document.getElementById("vrate").selectedIndex = 0; // Chọn lại option đầu tiên
+            document.getElementById("idrv").value = ""; // Xóa nội dung của textarea
+
+        },
+
+        fail: function (response) {
+            getreview(id);
+            console.log("fail");
+        }
+    })
+}           
                          
                         
                     
