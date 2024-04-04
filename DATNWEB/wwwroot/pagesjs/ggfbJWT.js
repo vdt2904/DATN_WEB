@@ -9,8 +9,8 @@
             // Lưu token vào localStorage hoặc session để sử dụng trong các yêu cầu sau này
             localStorage.setItem("token", token);
             localStorage.setItem("uid", response.userId);
-            window.close();
             window.opener.postMessage('reloadLogin', 'https://localhost:7274/Home/Login');
+            window.close();
         },
         error: function (xhr, status, error) {
             console.error("Lỗi khi đăng nhập:", error);

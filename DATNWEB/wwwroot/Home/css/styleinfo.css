@@ -1,0 +1,148 @@
+﻿.side-bar h4 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+    color: #fff;
+    margin-bottom: 30px
+}
+.side-bar .nav-content .line {
+    max-width: 250px;
+    height: 1px;
+    background: #2c2c2e;
+    margin: 11.5px 0
+}
+
+.side-bar .nav-content .menu-item a {
+    color: #a6a6a6;
+    margin-bottom: 11.5px
+}
+
+    .side-bar .nav-content .menu-item a:hover {
+        color: #fff
+    }
+
+.side-bar .nav-content .menu-item .active {
+    border-left: 2px solid #fff;
+    color: #fff
+}
+
+#personal-area {
+    position: relative;
+    height: 100%;
+    width: 100%
+}
+
+#personal-area .label {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #616161;
+    max-width: 90%;
+    overflow: hidden
+}
+
+#personal-area .label .info {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #d2d2d2
+}
+
+#personal-area .button-change {
+    cursor: pointer;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #d2d2d2
+}
+
+    #personal-area .button-change:hover {
+        color: var(--primary)
+    }
+
+#personal-area .personal h5 {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    color: #fff;
+    margin-bottom: 8px
+}
+    #personal-area .personal__profile {
+        padding: 16px 24px;
+        margin-bottom: 40px;
+        gap: 8px;
+        min-height: 96px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),#202020;
+        border-radius: 8px
+    }
+
+    #personal-area .personal__profile .profile-info {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }
+
+    #personal-area .personal__profile .profile-info .profile-info-div {
+        width: 80%;
+        overflow: hidden
+    }
+
+    #personal-area .personal__profile .profile-info .name {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 24px;
+        color: #fff;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical
+    }
+
+    #personal-area .personal__profile .profile-info .line {
+        width: 1px;
+        height: 16px;
+        background: #616161;
+        margin: 0 24px
+    }
+
+    #personal-area .personal__profile .img-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        margin-right: 24px
+    }
+
+    #personal-area .personal__account-security {
+        max-width: 100%;
+        margin: 0;
+        height: auto;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),#202020;
+        border-radius: 8px
+    }
+
+    #personal-area .personal__account-security .row {
+        padding: 0 24px
+    }
+
+    #personal-area .personal__account-security .row .col-12 {
+        padding: 27.5px 0;
+        border-bottom: 1px solid #2c2c2e
+    }
+
+        #personal-area .personal__account-security .row .col-12:last-child {
+            border-bottom: none
+        }
+
+    #personal-area .personal__account-security .row .col-12 .item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between
+    }

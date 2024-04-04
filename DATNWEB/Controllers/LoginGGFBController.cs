@@ -70,10 +70,6 @@ namespace DATNWEB.Controllers
             await HttpContext.ChallengeAsync(FacebookDefaults.AuthenticationScheme, new AuthenticationProperties
             {
                 RedirectUri = Url.Action("FacebookResponse"),
-                Items =
-                {
-                    { "prompt", "select_account" } // Yêu cầu người dùng chọn tài khoản đăng nhập
-                }
             });
         }
         public async Task<IActionResult> FacebookResponse()

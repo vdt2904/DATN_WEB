@@ -60,6 +60,13 @@ namespace DATNWEB.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-        
+        public IActionResult infouser()
+        {
+            return View();
+        }
+        public IActionResult pay()
+        {
+            return View();
+        }
     }
 }
