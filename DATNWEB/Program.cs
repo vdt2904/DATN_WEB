@@ -15,7 +15,10 @@ using System.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Facebook;
+using DATNWEB.Hubs;
+using DATNWEB.Models;
 
+QlPhimAnimeContext db = new QlPhimAnimeContext();
 var builder = WebApplication.CreateBuilder(args);
 // Thiết lập cấu hình
 builder.Configuration.AddJsonFile("appsettings.json");
@@ -38,7 +41,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+// thêm dịch vụ signalR
+builder.Services.AddSignalR();
 builder.Services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -81,7 +85,6 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -94,79 +97,16 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseRouting();
-var wsOptions = new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(5) };
-app.UseWebSockets(wsOptions); // Kích hoạt WebSocket support
-
-/*app.Use(async (context, next) =>
+//signalr
+var reviewhubs = db.Animes.Select(x => x.AnimeId).ToList();
+app.UseEndpoints(endpoints =>
 {
-    if (context.Request.Path == "/send-review")
+    foreach(var i in reviewhubs)
     {
-        if (context.WebSockets.IsWebSocketRequest)
-        {
-            using (WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
-            {
-                await Send(context, webSocket);
-            }
-        }
-        else
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-        }
+        endpoints.MapHub<ReviewHub>("/reviewhub/"+i);
     }
-    else
-    {
-        await next();
-    }
+    
 });
-
-async Task Send(HttpContext context, WebSocket webSocket)
-{
-    var buffer = new byte[1024 * 4];
-    WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), System.Threading.CancellationToken.None);
-    if (result != null)
-    {
-        while (!result.CloseStatus.HasValue)
-        {
-            string msg = Encoding.UTF8.GetString(new ArraySegment<byte>(buffer, 0, result.Count));
-            Console.WriteLine($"clients says: {msg}");
-            await webSocket.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes($"Server says: {DateTime.UtcNow:f}")), result.MessageType, result.EndOfMessage, System.Threading.CancellationToken.None);
-            result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), System.Threading.CancellationToken.None);
-            Console.WriteLine();
-        }
-    }
-    await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, System.Threading.CancellationToken.None);
-}*/
-
-async Task HandleWebSocketConnection(WebSocket webSocket)
-{
-    try
-    {
-        var buffer = new byte[1024 * 4];
-        while (webSocket.State == WebSocketState.Open)
-        {
-            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            if (result.MessageType == WebSocketMessageType.Text)
-            {
-                // Nhận dữ liệu từ client
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-
-                // Xử lý tin nhắn nếu cần
-                // Ví dụ: Trong trường hợp này, không cần xử lý tin nhắn từ client
-
-                // Gửi tin nhắn đến client để kích hoạt AJAX request
-                var responseMessage = Encoding.UTF8.GetBytes("review ajax");
-                await webSocket.SendAsync(new ArraySegment<byte>(responseMessage, 0, responseMessage.Length), result.MessageType, result.EndOfMessage, CancellationToken.None);
-            }
-        }
-    }
-    catch (WebSocketException ex)
-    {
-        // Xử lý các lỗi kết nối WebSocket nếu cần
-        Console.WriteLine($"WebSocket connection error: {ex.Message}");
-    }
-}
-
-
 
 app.UseAuthorization();
 

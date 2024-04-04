@@ -1,4 +1,5 @@
-﻿function detail(a) {
+﻿let connection;
+function detail(a) {
     $.ajax({
         url: 'https://localhost:7274/api/animedetail?id=' + a,
         method: 'GET',
@@ -65,6 +66,16 @@
             rate(response.animeId);
             mikelike(response.animeId);
             getreview(response.animeId);
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/reviewhub/"+a)
+                .build();
+            connection.on("ReviewRequested", () => {
+                // Gọi hàm để thực hiện lấy dữ liệu review
+                rate(response.animeId);
+                getreview(response.animeId);
+            });
+
+            connection.start().catch(err => console.error(err));
         },
         fail: function (response) {
             console.log("fail");
@@ -263,21 +274,6 @@ function renderPagination(paginationInfo, id) {
     document.getElementById('pagination').innerHTML = paginationHtml;
 }
 
-/*const socket = new WebSocket('ws://localhost:7274/send-review');
-socket.onopen = function (event) {
-    console.log('WebSocket connection opened successfully');
-    // Kết nối WebSocket đã được thiết lập thành công
-    // Bạn có thể gửi dữ liệu từ đây nếu cần
-};
-socket.onclose = function (event) {
-    console.log('WebSocket connection closed');
-    // Xử lý các thao tác sau khi kết nối WebSocket bị đóng (nếu cần)
-};
-socket.onerror = function (error) {
-    console.error('WebSocket error: ', error);
-    // Xử lý lỗi kết nối WebSocket (nếu cần)
-};*/
- 
 function addreview(id) {
     // Tạo một đối tượng Date hiện tại
     var currentDate = new Date();
@@ -308,10 +304,10 @@ function addreview(id) {
             console.log("error");
         },
         success: function (response) {
+            connection.invoke("RequestReview").catch(err => console.error(err));
             getreview(id);
             document.getElementById("vrate").selectedIndex = 0; // Chọn lại option đầu tiên
             document.getElementById("idrv").value = ""; // Xóa nội dung của textarea
-
         },
 
         fail: function (response) {
