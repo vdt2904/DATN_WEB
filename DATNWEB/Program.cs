@@ -99,11 +99,16 @@ app.UseAuthentication();
 app.UseRouting();
 //signalr
 var reviewhubs = db.Animes.Select(x => x.AnimeId).ToList();
+var commenthubs = db.Episodes.Select(x => x.EpisodeId).ToList();
 app.UseEndpoints(endpoints =>
 {
     foreach(var i in reviewhubs)
     {
         endpoints.MapHub<ReviewHub>("/reviewhub/"+i);
+    }
+    foreach(var i in commenthubs)
+    {
+        endpoints.MapHub<ReviewHub>("/commenthub/" + i);
     }
     
 });

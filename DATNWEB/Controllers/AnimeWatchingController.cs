@@ -30,13 +30,29 @@ namespace DATNWEB.Controllers
         }
         [Route("getcmt")]
         [HttpGet]
-        public IActionResult cmt(string eid,int? page)
+        public IActionResult getcmt(string eid,int? page)
         {
-            const int pageSize = 1;
+            const int pageSize = 6;
             var cmts = db.Comments.Where(x =>x.EpisodeId == eid).ToList();
+            var cmtss = (from r in cmts
+                         select new
+                       {
+                           r.Id,
+                           r.EpisodeId,
+                           r.CommentDate,
+                           r.Comment1,
+                           User = db.Users.Where(x => x.UserId == r.UserId).Select(x => x.Username).FirstOrDefault()
+                       }).OrderByDescending(x => x.CommentDate).ToList();
+            var totalCMT = cmtss.Count;
+            var totalPages = (int)Math.Ceiling(totalCMT / (double)pageSize);
             int pageNumber = (page ?? 1);
-            var pageCmts = cmts.ToPagedList(pageNumber, pageSize);
-            return Ok(pageCmts);
+            var pagedCMT = cmtss.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var paginationInfo = new
+            {
+                TotalPages = totalPages,
+                CurrentPage = pageNumber
+            };
+            return Ok(new { PagedCMT = pagedCMT, PaginationInfo = paginationInfo });
         }
         [Route("addcmt")]
         [HttpPost]

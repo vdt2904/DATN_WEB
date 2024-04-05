@@ -1,4 +1,5 @@
-﻿function watch(a, b) {
+﻿let connection;
+function watch(a, b) {
     var urls = '';
     if (b == null) {
         urls = 'https://localhost:7274/api/AnimeWatching?aid=' + a;
@@ -39,6 +40,15 @@
             table += '</div>';
             table += '</div>';
             document.getElementById('video').innerHTML = table;
+            connection = new signalR.HubConnectionBuilder()
+                .withUrl("/commenthub/" + response.episodeId)
+                .build();
+            connection.on("ReviewRequested", () => {
+                // Gọi hàm để thực hiện lấy dữ liệu review
+                getcmt(response.episodeId);
+            });
+
+            connection.start().catch(err => console.error(err));
         },
         fail: function (response) {
             console.log("fail");
@@ -46,9 +56,123 @@
     })
 }
 
+function getcmt(id, page) {
+    page = page || 1;
+    $.ajax({
+        url: 'https://localhost:7274/api/animewatching/getcmt?eid=' + id + '&page=' + page,
+        method: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            const products = response.pagedCMT; // Lấy dữ liệu sản phẩm từ response
+            const len = products.length;
+            let table = '';
+            table += '<div class="section-title">';
+            table += '<h5>Bình Luận</h5>';
+            table += '</div>';
+            for (var i = 0; i < len; i++) {
+                var date = new Date(products[i].commentDate);
+                var now = new Date();
+                var date1 = date.toISOString().slice(0, 10);
+                var date2 = now.toISOString().slice(0, 10);
+                var diff = now.getTime() - date.getTime();
+                var diffM = Math.floor(diff / (1000 * 60));
+                var diffD = Math.floor(diff / (1000 * 60 * 60 * 24));
+                var str = '';
+                var str1 = '';
+                if (diffM < 60) {
+                    if (diffM === 0) {
+                        str = 'Bây giờ';
+                    } else {
+                        str = diffM + ' phút trước'
+                    }
+                } else if (date1 == date2) {
+                    var hour = Math.floor(diff / (1000 * 60 * 60));
+                    str = hour + ' giờ trước';
+                } else if (diffD <= 7) {
+                    str = diffD + ' ngày trước';
+                } else {
+                    str = date1;
+                }
+                table += '<div class="anime__review__item">';
+                table += '<div class="anime__review__item__pic"><img src="../Home/img/avatar.jfif" alt=""></div>';
+                table += '<div class="anime__review__item__text">';
+                table += '<h6>' + products[i].user + ' - <span>' + str + '</span></h6>';
+                table += '<p>' + products[i].comment1 + '</p>';
+                table += '</div>';
+                table += '</div>';
 
+            }
+            document.getElementById('cmt').innerHTML = table;
+            renderPagination(response.paginationInfo, id);
+        },
+        fail: function (response) {
+            console.log("fail");
+        }
+    })
+}
 
+function renderPagination(paginationInfo, id) {
+    let paginationHtml = '<nav aria-label="Page navigation"><ul class="pagination">';
 
+    // Display previous page link
+    if (paginationInfo.currentPage > 1) {
+        paginationHtml += '<li class="page-item"><a class="page-link" onclick="getcmt(\'' + id + '\',' + (paginationInfo.currentPage - 1) + ')" style="cursor:pointer;"><span aria-hidden="true">&laquo;</span></a></li>';
+    }
+
+    // Add page links to pagination
+    if (paginationInfo.totalPages > 1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<li class="page-item"><a class="page-link" onclick="getcmt(\'' + id + '\',' + i + ')" style="cursor:pointer;">' + i + '</a></li>';
+        }
+    }
+
+    // Display next page link
+    if (paginationInfo.currentPage < paginationInfo.totalPages) {
+        paginationHtml += '<li class="page-item"><a class="page-link" onclick="getcmt(\'' + id + '\',' + (paginationInfo.currentPage + 1) + ')" style="cursor:pointer;"><span aria-hidden="true">&raquo;</span></a></li>';
+    }
+
+    paginationHtml += '</ul></nav>';
+
+    // Display pagination
+    document.getElementById('pagination').innerHTML = paginationHtml;
+}
+
+function addreview(id) {
+    // Tạo một đối tượng Date hiện tại
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng, thêm 0 nếu cần thiết
+    var day = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày, thêm 0 nếu cần thiết
+    var hours = ('0' + currentDate.getHours()).slice(-2); // Lấy giờ, thêm 0 nếu cần thiết
+    var minutes = ('0' + currentDate.getMinutes()).slice(-2); // Lấy phút, thêm 0 nếu cần thiết
+    var seconds = ('0' + currentDate.getSeconds()).slice(-2); // Lấy giây, thêm 0 nếu cần thiết
+
+    // Tạo chuỗi định dạng "yyyy-mm-ddThh:mm:ss"
+    var formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
+
+    $.ajax({
+        url: 'https://localhost:7274/api/animewatching/addcmt',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ episodeId: id, userId: localStorage.getItem("uid"), commentDate: formattedDateTime, Comment1: document.getElementById('idrv').value }),
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            connection.invoke("RequestReview").catch(err => console.error(err));
+            document.getElementById("idrv").value = ""; // Xóa nội dung của textarea
+        },
+
+        fail: function (response) {
+            getreview(id);
+            console.log("fail");
+        }
+    })
+}   
 
     
         

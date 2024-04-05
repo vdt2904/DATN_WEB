@@ -44,7 +44,7 @@ namespace DATNWEB.Controllers
         }
         public IActionResult Watch(string id)
         {
-            var a = db.Animes.Find(id);
+            var a = db.Episodes.Where(x=>x.AnimeId == id && x.Ep == 0).FirstOrDefault();
             return View(a);
         }
         public IActionResult Episode(string id, int ep)

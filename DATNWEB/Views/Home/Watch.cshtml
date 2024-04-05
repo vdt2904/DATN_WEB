@@ -1,4 +1,4 @@
-﻿@model DATNWEB.Models.Anime
+﻿@model DATNWEB.Models.Episode
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Watch";
@@ -12,7 +12,11 @@
             <div class="col-lg-12">
                 <div class="breadcrumb__links">
                     <a asp-action="Index" asp-controller="home"><i class="fa fa-home"></i> Home</a>
-                    <span>@Model.AnimeName</span>
+                    @{
+                        QlPhimAnimeContext db = new QlPhimAnimeContext();
+                        var a = db.Animes.Find(Model.AnimeId);
+                    }
+                    <span>@a.AnimeName</span>
                 </div>
             </div>
         </div>
@@ -27,78 +31,17 @@
         </div>
         <div class="row">
             <div class="col-lg-8">
-                <div class="anime__details__review">
-                    <div class="section-title">
-                        <h5>Reviews</h5>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="../home/img/anime/review-1.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>
-                                whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL
-                            </p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="../home/img/anime/review-2.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="../home/img/anime/review-3.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="../home/img/anime/review-4.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Chris Curry - <span>1 Hour ago</span></h6>
-                            <p>
-                                whachikan Just noticed that someone categorized this as belonging to the genre
-                                "demons" LOL
-                            </p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="../home/img/anime/review-5.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Lewis Mann - <span>5 Hour ago</span></h6>
-                            <p>Finally it came out ages ago</p>
-                        </div>
-                    </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__pic">
-                            <img src="../home/img/anime/review-6.jpg" alt="">
-                        </div>
-                        <div class="anime__review__item__text">
-                            <h6>Louis Tyler - <span>20 Hour ago</span></h6>
-                            <p>Where is the episode 15 ? Slow update! Tch</p>
-                        </div>
-                    </div>
+                <div class="anime__details__review" id="cmt">
                 </div>
+                <div id="pagination"></div>
+                <br />
                 <div class="anime__details__form">
                     <div class="section-title">
                         <h5>Your Comment</h5>
                     </div>
-                    <form action="#">
-                        <textarea placeholder="Your Comment"></textarea>
-                        <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
+                    <form>
+                        <textarea placeholder="Your Comment" id="idrv"></textarea>
+                        <button type="button" onclick="addreview('@Model.EpisodeId');"><i class="fa fa-location-arrow"></i> Bình luận</button>
                     </form>
                 </div>
             </div>
@@ -106,8 +49,9 @@
     </div>
 </section>
 <!-- Anime Section End -->
-
+<script src="@Url.Content("~/lib/signalr/dist/browser/signalr.min.js")"></script>
 <script src="@Url.Content("~/pagesjs/animewatch.js")"></script>
 <script>
     watch('@Model.AnimeId');
+    getcmt('@Model.EpisodeId');
 </script>
