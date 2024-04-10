@@ -3,7 +3,7 @@
         url: 'https://localhost:7274/api/account',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ username: a, pass: b }),
+        data: JSON.stringify({ mail: a, pass: b }),
         success: function (response) {
             var token = response.token;
             // Lưu token vào localStorage hoặc session để sử dụng trong các yêu cầu sau này

@@ -22,7 +22,7 @@ namespace DATNWEB.Controllers
         public IActionResult Login([FromBody] Login  login)
         {
             AutoCode a = new AutoCode();
-            var user = db.Users.FirstOrDefault(x => (x.Username == login.Username || x.Email == login.Username || x.Phone == login.Username) && x.Password == a.HashPassword(login.Pass));
+            var user = db.Users.FirstOrDefault(x => (x.Username == login.Mail || x.Email == login.Mail || x.Phone == login.Mail) && x.Password == a.HashPassword(login.Pass));
             if (user != null)
             {
                 HttpContext.Session.SetString("UID", user.UserId);
@@ -50,6 +50,32 @@ namespace DATNWEB.Controllers
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        [Route("Register")]
+        [HttpPost]
+        public IActionResult Register([FromBody] Register register)
+        {
+            AutoCode at = new AutoCode();
+            var uid_max = db.Users.OrderByDescending(x => x.UserId).FirstOrDefault();
+            string id = "AN0001";
+            if (uid_max != null)
+            {
+                AutoCode a = new AutoCode();
+                id = a.GenerateMa(uid_max.UserId);
+            }
+            User user = new User
+            {
+                UserId = id,
+                Username = register.Username,
+                Password = at.HashPassword(register.Pass),
+                Email = register.Mail,
+                Phone = null,
+                UserType = 0
+            };
+            db.Users.Add(user);
+            db.SaveChanges();
+            HttpContext.Session.SetString("UID", user.UserId);
+            return Ok();
         }
     }
 }

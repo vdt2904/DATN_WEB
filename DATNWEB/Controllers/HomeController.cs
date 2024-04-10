@@ -58,7 +58,11 @@ namespace DATNWEB.Controllers
             {
                 return View();
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("infouser", "Home");
+        }
+        public IActionResult Register()
+        {
+            return View();
         }
         public IActionResult infouser()
         {
