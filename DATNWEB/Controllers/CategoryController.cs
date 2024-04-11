@@ -13,7 +13,7 @@ namespace DATNWEB.Controllers
         QlPhimAnimeContext db = new QlPhimAnimeContext();
 
         [HttpGet]
-        public IActionResult category(string id,int? page)
+        public IActionResult category(string id, int? page)
         {
             const int pageSize = 15;
             var idanimes = (from a in db.Animes
@@ -35,7 +35,8 @@ namespace DATNWEB.Controllers
                                         GenreId = g.GenreId,
                                         GenreName = g.GenreName
                                     }
-                                ).ToList()
+                                ).ToList(),
+                                a.Permission
                             }).ToList();
             var totalc = (from a in idanimes
                           join e in db.Episodes on a.AnimeId equals e.AnimeId into episodeGroup
@@ -92,11 +93,12 @@ namespace DATNWEB.Controllers
                               Maxep = e.MaxEpisode,
                               v.Total,
                               c.Totalc,
-                              a.Genres
+                              a.Genres,
+                              a.Permission
                           }).Distinct().ToList();
             var totalAnimes = animes.Count;
             var totalPages = (int)Math.Ceiling(totalAnimes / (double)pageSize);
-            var pageNumber = page ?? 1; 
+            var pageNumber = page ?? 1;
             var pagedAnimes = animes.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             var paginationInfo = new
@@ -123,7 +125,8 @@ namespace DATNWEB.Controllers
                                 a.AnimeId,
                                 a.TotalEpisode,
                                 a.ImageVUrl,
-                                a.AnimeName
+                                a.AnimeName,
+                                a.Permission
                             } into grouped
                             orderby grouped.Count() descending
                             select new
@@ -132,6 +135,7 @@ namespace DATNWEB.Controllers
                                 TotalEpisode = grouped.Key.TotalEpisode,
                                 AnimeName = grouped.Key.AnimeName,
                                 ImageVUrl = grouped.Key.ImageVUrl,
+                                Permission = grouped.Key.Permission
                             }
                          ).Distinct().ToList();
             var newid = (from a in idanimes
@@ -150,7 +154,8 @@ namespace DATNWEB.Controllers
                                    GenreId = g.GenreId,
                                    GenreName = g.GenreName
                                }
-                           ).Distinct().ToList()
+                           ).Distinct().ToList(),
+                             a.Permission
                          }).Distinct().ToList();
             var totalv = (from a in db.Animes
                           join e in db.Episodes on a.AnimeId equals e.AnimeId
@@ -196,7 +201,8 @@ namespace DATNWEB.Controllers
                               Maxep = db.Episodes.Where(ep => ep.AnimeId == a.AnimeId).Max(ep => ep.Ep),
                               t.Total,
                               c.Totalc,
-                              a.Genres
+                              a.Genres,
+                              a.Permission
                           }
                          ).Distinct().ToList();
             var totalAnimes = animes.Count;
@@ -225,7 +231,8 @@ namespace DATNWEB.Controllers
                                 a.AnimeId,
                                 a.TotalEpisode,
                                 a.ImageVUrl,
-                                a.AnimeName
+                                a.AnimeName,
+                                a.Permission
                             } into grouped
                             orderby grouped.Sum(x => x.v != null ? 1 : 0) descending
                             select new
@@ -235,6 +242,7 @@ namespace DATNWEB.Controllers
                                 AnimeName = grouped.Key.AnimeName,
                                 ImageVUrl = grouped.Key.ImageVUrl,
                                 Total = grouped.Sum(x => x.v != null ? 1 : 0),
+                                Permission = grouped.Key.Permission
                             }
              ).Take(6).ToList();
 
@@ -272,7 +280,8 @@ namespace DATNWEB.Controllers
                                         GenreId = g.GenreId,
                                         GenreName = g.GenreName
                                     }
-                                ).ToList()
+                                ).ToList(),
+                              a.Permission
                           }
                          ).Distinct().ToList();
             var totalAnimes = animes.Count;
@@ -356,7 +365,8 @@ namespace DATNWEB.Controllers
                                           GenreId = g.GenreId,
                                           GenreName = g.GenreName
                                       }
-                                  ).ToList()
+                                  ).ToList(),
+                              a.Permission
                           }).Distinct().ToList();
             var totalAnimes = animes.Count;
             var totalPages = (int)Math.Ceiling(totalAnimes / (double)pageSize);
@@ -370,5 +380,5 @@ namespace DATNWEB.Controllers
             return Ok(new { PagedAnimes = pagedAnimes, PaginationInfo = paginationInfo });
         }
     }
-    
+
 }

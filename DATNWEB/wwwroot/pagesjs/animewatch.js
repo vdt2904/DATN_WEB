@@ -1,4 +1,5 @@
 ﻿let connection;
+var ids = "";
 function watch(a, b) {
     var urls = '';
     if (b == null) {
@@ -16,6 +17,7 @@ function watch(a, b) {
         },
         success: function (response) {
             let table = '';
+            ids = response.episodeId;
             table += '<div class="col-lg-12">';
             table += '<div class="anime__video__player">';
             table += '<video id="player" playsinline controls poster="' + response.backgroundImageUrl + '" style="width:100%;max-width: 1140px; max-height: 654.06px; ">';
@@ -174,10 +176,68 @@ function addreview(id) {
     })
 }   
 
-    
-        
+window.addEventListener('beforeunload', function (event) {
+    requestSent = true;
+    // Lấy thời gian hiện tại của video
+    var player = document.getElementById("player");
+    var currentTime = player.currentTime;
 
-            
+    var duration = player.duration;
+
+    // Gửi yêu cầu HTTP POST đến API để ghi nhận thời gian đang xem
+    sendApiRequest(currentTime, ids, duration);
+
+    // Thông báo cho trình duyệt biết rằng bạn không muốn rời khỏi trang
+    event.preventDefault();
+    // Chrome cần một giá trị cho event.returnValue
+    event.returnValue = '';
+}); 
+        
+function sendApiRequest(time, id, times) {
+    var bool = 0;
+    if (time > times / 2) {
+        bool = 1;
+    }
+    // Tạo một đối tượng Date hiện tại
+    var currentDate = new Date();
+    var year = currentDate.getFullYear();
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng, thêm 0 nếu cần thiết
+    var day = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày, thêm 0 nếu cần thiết
+    var hours = ('0' + currentDate.getHours()).slice(-2); // Lấy giờ, thêm 0 nếu cần thiết
+    var minutes = ('0' + currentDate.getMinutes()).slice(-2); // Lấy phút, thêm 0 nếu cần thiết
+    var seconds = ('0' + currentDate.getSeconds()).slice(-2); // Lấy giây, thêm 0 nếu cần thiết
+
+    // Tạo chuỗi định dạng "yyyy-mm-ddThh:mm:ss"
+    var formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
+    // Gửi yêu cầu AJAX POST đến API
+    $.ajax({
+        url: 'https://localhost:7274/api/animewatching/addview',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ episodeId: id, userId: localStorage.getItem("uid"), viewDate: formattedDateTime, duration: formatTime(time), isView:bool }),
+        success: function (response) {
+            console.log(response);
+        },
+        error: function (response) {
+            console.log(response);
+        }
+    });
+}
+
+
+function formatTime(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var remainingSeconds = Math.floor(seconds % 60);
+
+    // Chuyển đổi các giá trị thành chuỗi, nếu cần thiết thêm số 0 ở trước
+    var formattedTime = (hours < 10 ? '0' : '') + hours + ':' +
+        (minutes < 10 ? '0' : '') + minutes + ':' +
+        (remainingSeconds < 10 ? '0' : '') + remainingSeconds;
+
+    return formattedTime;
+}
+        
         
     
     

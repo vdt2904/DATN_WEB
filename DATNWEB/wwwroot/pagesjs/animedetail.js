@@ -19,7 +19,11 @@ function detail(a) {
             table += '<div class="col-lg-9">';
             table += '<div class="anime__details__text">';
             table += '<div class="anime__details__title">';
-            table += '<h3>' + response.animeName + '</h3>';
+            if (response.permission == 0) {
+                table += '<h3>' + response.animeName + ' <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h3>';
+            } else {
+                table += '<h3>' + response.animeName + '</h3>';
+            }
             table += '<span>' + response.direc + '</span>';
             table += '</div>';
             table += '<div id="rate">'
@@ -108,7 +112,11 @@ function mikelike(a) {
                 table += '<div class="product__sidebar__view__item set-bg" data-setbg="' + response[i].imageHUrl + '" style="background-image: url(' + response[i].imageHUrl + '); max-width: 360px; max-height: 190px;">';
                 table += '<div class="ep">' + (response[i].maxep === -1 ? '??' : response[i].maxep) + '/' + (response[i].totalEpisode === null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i> ' + response[i].total + '</div>';
-                table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
+                if (response[i].permission == 0) {
+                    table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a> <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h5>';
+                } else {
+                    table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
+                }
                 table += '</div>';
             }
             document.getElementById('like').innerHTML = table;

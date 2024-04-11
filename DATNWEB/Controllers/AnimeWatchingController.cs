@@ -24,7 +24,8 @@ namespace DATNWEB.Controllers
                 epi.EpisodeId,
                 epi.Title,
                 e = eps,
-                epside = ep
+                epside = ep,
+                ani.Permission
             };
             return Ok(detail);
         }
@@ -61,6 +62,30 @@ namespace DATNWEB.Controllers
             db.Comments.Add(cmt);
             db.SaveChanges();
             return Ok(cmt);
+        }
+        [Route("addview")]
+        [HttpPost]
+        public IActionResult addview([FromBody]  View view)
+        {
+            var v1 = db.Views.Where(x => x.EpisodeId == view.EpisodeId & x.UserId == view.UserId).OrderByDescending(x => x.ViewDate).FirstOrDefault();
+            if(v1 != null )
+            {
+                // Tính sự khác biệt về thời gian giữa ViewDate của v1 và view
+                TimeSpan? timeDifference = v1.ViewDate - view.ViewDate ?? TimeSpan.Zero;
+
+                if (v1.IsView == 0 || timeDifference?.TotalMinutes < 20)
+                {
+                    v1.ViewDate = view.ViewDate;
+                    v1.Duration = view.Duration;
+                    v1.IsView = view.IsView;
+                    db.Views.Update(v1);
+                    db.SaveChanges();
+                    return Ok(v1);
+                }
+            }
+            db.Views.Add(view);
+            db.SaveChanges();
+            return Ok(view);
         }
     }
 }

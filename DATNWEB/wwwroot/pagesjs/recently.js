@@ -27,7 +27,11 @@
                     table += '<li>' + genre[j].genreName + '</li> ';
                 }
                 table += '</ul>';
-                table += '<h5><a href="/Home/AnimeDetail?id=' + products[i].animeId + '">' + products[i].animeName + '</a></h5>';
+                if (products[i].permission == 0) {
+                    table += '<h5><a href="/Home/AnimeDetail?id=' + products[i].animeId + '">' + products[i].animeName + '</a> <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h5>';
+                } else {
+                    table += '<h5><a href="/Home/AnimeDetail?id=' + products[i].animeId + '">' + products[i].animeName + '</a></h5>';
+                } 
                 table += '</div>';
                 table += '</div>';
                 table += '</div>';

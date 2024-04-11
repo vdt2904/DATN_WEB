@@ -100,7 +100,8 @@ namespace DATNWEB.Controllers
                                a.AnimeId,
                                a.AnimeName,
                                a.ImageHUrl,
-                               a.TotalEpisode
+                               a.TotalEpisode,
+                               a.Permission
                            }).Distinct().ToList();
             var randomidAnimes = idanime.OrderBy(x => Guid.NewGuid()).Take(4).ToList();
             var totalv = (from a in db.Animes
@@ -140,7 +141,8 @@ namespace DATNWEB.Controllers
                               a.ImageHUrl,
                               a.TotalEpisode,
                               Maxep = e.MaxEpisode,
-                              v.Total
+                              v.Total,
+                              a.Permission
                           }).Distinct().ToList();
             return Ok(animes);
         }

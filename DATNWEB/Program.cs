@@ -110,7 +110,7 @@ app.UseEndpoints(endpoints =>
     {
         endpoints.MapHub<ReviewHub>("/commenthub/" + i);
     }
-    
+
 });
 
 app.UseAuthorization();
