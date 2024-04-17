@@ -16,6 +16,6 @@ namespace DATNWEB.Models
         public string? Information { get; set; }
         public DateTime? PostingDate { get; set; }
 
-        public virtual ICollection<Anime>? Animes { get; set; }
+        public virtual ICollection<Anime> Animes { get; set; }
     }
 }

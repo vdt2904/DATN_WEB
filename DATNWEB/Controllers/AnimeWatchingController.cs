@@ -72,7 +72,6 @@ namespace DATNWEB.Controllers
             {
                 // Tính sự khác biệt về thời gian giữa ViewDate của v1 và view
                 TimeSpan? timeDifference = v1.ViewDate - view.ViewDate ?? TimeSpan.Zero;
-
                 if (v1.IsView == 0 || timeDifference?.TotalMinutes < 20)
                 {
                     v1.ViewDate = view.ViewDate;

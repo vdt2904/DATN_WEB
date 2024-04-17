@@ -1,4 +1,6 @@
-﻿using DATNWEB.Models;
+﻿using DATNWEB.helpter;
+using DATNWEB.Models;
+using DATNWEB.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -13,10 +15,12 @@ namespace DATNWEB.Controllers
     public class AccountController : ControllerBase
     {
         private IConfiguration _config;
+        private readonly IMailService mailService;
         QlPhimAnimeContext db = new QlPhimAnimeContext();
-        public AccountController(IConfiguration config)
+        public AccountController(IConfiguration config,IMailService service)
         {
             _config = config;
+            this.mailService = service;
         }
         [HttpPost]
         public IActionResult Login([FromBody] Login  login)
@@ -55,27 +59,98 @@ namespace DATNWEB.Controllers
         [HttpPost]
         public IActionResult Register([FromBody] Register register)
         {
-            AutoCode at = new AutoCode();
-            var uid_max = db.Users.OrderByDescending(x => x.UserId).FirstOrDefault();
-            string id = "AN0001";
-            if (uid_max != null)
+            var codes = db.CodeRegisters.Where(x => x.Email == register.Mail && x.Token == register.Code).OrderByDescending(x => x.SentDate).FirstOrDefault();
+            if(codes!= null)
             {
-                AutoCode a = new AutoCode();
-                id = a.GenerateMa(uid_max.UserId);
+                if (codes.SentDate < DateTime.Now.AddMinutes(-5))
+                {
+                    return BadRequest("Mã đã hết hạn");
+                }
+                AutoCode at = new AutoCode();
+                var uid_max = db.Users.OrderByDescending(x => x.UserId).FirstOrDefault();
+                string id = "AN0001";
+                if (uid_max != null)
+                {
+                    AutoCode a = new AutoCode();
+                    id = a.GenerateMa(uid_max.UserId);
+                }
+                User user = new User
+                {
+                    UserId = id,
+                    Username = register.Username,
+                    Password = at.HashPassword(register.Pass),
+                    Email = register.Mail,
+                    Phone = null,
+                    UserType = 0
+                };
+                db.Users.Add(user);
+                db.SaveChanges();
+                HttpContext.Session.SetString("UID", user.UserId);
+                return Ok();
             }
-            User user = new User
+            else
             {
-                UserId = id,
-                Username = register.Username,
-                Password = at.HashPassword(register.Pass),
-                Email = register.Mail,
-                Phone = null,
-                UserType = 0
-            };
-            db.Users.Add(user);
-            db.SaveChanges();
-            HttpContext.Session.SetString("UID", user.UserId);
-            return Ok();
+                return BadRequest("Mã không tồn tại");
+            }
         }
+        [HttpPost]
+        [Route("sendmail")]
+        public async Task<IActionResult> sendmail([FromBody] MailRequest mailrequest)
+        {
+            try{
+                if(mailrequest.Num == 1)
+                {
+                    CodeRegister c = new CodeRegister
+                    {
+                        Email = mailrequest.ToEmail,
+                        Token = mailrequest.Code,
+                        SentDate = DateTime.Now
+                    };
+                    db.CodeRegisters.Add(c);
+                    db.SaveChanges();
+                }else if(mailrequest.Num == 2)
+                {
+                    var a = db.Users.FirstOrDefault(x => x.Email == mailrequest.ToEmail);
+                    if(a != null)
+                    {
+                        var b = db.PasswordResetRequests.FirstOrDefault(x => x.UserId == a.UserId);
+                        if(b!= null) { 
+                            if(b.RequestDate < DateTime.Now.AddMinutes(-1))
+                            {
+                                PasswordResetRequest p = new PasswordResetRequest
+                                {
+                                    UserId = a.UserId,
+                                    Token = mailrequest.Code,
+                                    RequestDate= DateTime.Now
+                                };
+                                db.PasswordResetRequests.Add(p);
+                                db.SaveChanges();
+                            }
+                        }
+                        else
+                        {
+                            PasswordResetRequest p = new PasswordResetRequest
+                            {
+                                UserId = a.UserId,
+                                Token = mailrequest.Code,
+                                RequestDate = DateTime.Now
+                            };
+                            db.PasswordResetRequests.Add(p);
+                            db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Email không tồn tại trong hệ thống!");
+                    }
+                }
+                await mailService.SendEmailAsync(mailrequest);
+                return Ok(mailrequest);
+            }
+            catch(Exception ex){
+                throw;
+            }
+        }
+
     }
 }

@@ -47,6 +47,7 @@
             table += '<span class="label">';
             table += 'Email';
             table += '<span class="info">&nbsp;&nbsp;' + response.email + '</span>';
+            document.getElementById("email").value = response.email;
             table += '</span>';
             table += '<div class="button-change"></div>';
             table += '</div>';
@@ -59,9 +60,10 @@
                 table += '<span class="info">&nbsp;&nbsp;( Chưa cập nhật )</span>';
             } else {
                 table += '<span class="info">&nbsp;&nbsp;' + response.phone + '</span>';
+                document.getElementById("phone").value = response.phone;
             }
             table += '</span>';
-            table += '<div class="button-change">Thay đổi</div>';
+            table += '<div class="button-change" data-toggle="modal" data-target="#phoneModalCenter">Thay đổi</div>';
             table += '</div>';
             table += '</div>';
             table += '<div class="col-12">';
@@ -70,13 +72,14 @@
             table += 'Mật khẩu';
             table += '<span class="info" data-password="' + response.password + '">&nbsp;&nbsp;******</span>';
             table += '</span>';
-            table += '<div class="button-change">Thay đổi</div>';
+            table += '<div class="button-change" data-toggle="modal" data-target="#passModalCenter">Thay đổi</div>';
             table += '</div>';
             table += '</div>';
             table += '</div>';
             table += '</div>';
             table += '';
             document.getElementById('infou').innerHTML = table;
+            updateModal();
         },
         fail: function (response) {
             console.log("fail");
@@ -102,3 +105,143 @@ function logout() {
     });
 }
 
+function updatesdt() {
+    var sdt = document.getElementById("phone").value;
+    $.ajax({
+        url: 'https://localhost:7274/api/infouser/updatesdt',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify( sdt ),
+        success: function (response) {
+            info();
+            $('#phoneModalCenter').modal('hide');
+        }, error: function (response) {
+            console.log("Error:", response);
+        }
+    });
+}
+
+function validateOTP(input) {
+    // Xóa bất kỳ ký tự không phải là số nào được nhập vào
+    input.value = input.value.replace(/\D/g, '');
+
+    // Giới hạn độ dài của đầu vào là 6 ký tự
+    if (input.value.length > 6) {
+        input.value = input.value.slice(0, 6);
+    }
+}
+
+
+var currentStep = 1;
+
+function nextStep() {
+    if (currentStep == 1) {
+        sendmail();
+    } else {
+        checkotp();
+    }
+}
+
+function prevStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        updateModal();
+    }
+}
+
+function updateModal() {
+    $("#step1, #step2, #step3").hide();
+    $("#step" + currentStep).show();
+
+    // Hiển thị hoặc ẩn nút "Quay lại" và "Tiếp theo" tùy thuộc vào bước hiện tại
+    if (currentStep === 1) {
+        $(".btn-secondary").hide();
+        $(".btn-success").hide();
+    } else {
+        $(".btn-secondary").show();
+        $(".btn-success").hide();
+    }
+    if (currentStep === 3) {
+        $(".btn-primary").hide();
+        $(".btn-success").show();
+    } else {
+        $(".btn-primary").show();
+    }
+}
+
+function sendmail() {
+    var currentDate = new Date();
+    // Lấy các thành phần của ngày
+    var year = currentDate.getFullYear(); // Năm
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Tháng (từ 01 đến 12)
+    var day = ('0' + currentDate.getDate()).slice(-2); // Ngày (từ 01 đến 31)
+    var hours = ('0' + currentDate.getHours()).slice(-2); // Giờ (từ 00 đến 23)
+    var minutes = ('0' + currentDate.getMinutes()).slice(-2); // Phút (từ 00 đến 59)
+    // Tạo chuỗi ngày tháng theo định dạng YYYY-MM-DD HH:mm
+    var formattedDate = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+    var mail = document.getElementById("email").value;
+    var subject = 'Đổi mật khẩu tại Anime-Thai';
+    var code = (Math.floor(Math.random() * 999999) + 1).toString().padStart(6, '0');
+    var num = 2;
+    // Định dạng nội dung email với một placeholder cho đồng hồ đếm ngược
+    var body = '<p>Bạn đang muốn thay đổi mật khẩu.</p>';
+    body += '<p>Mã xác nhận của bạn là: ' + code + '.</p>';
+    body += '<div style="text-align: center;"><img src="https://i.mailtimer.io/lTF47IQjCs.gif?start={' + formattedDate + '}" border="0" alt="mailtimer.io" style="max-width:100%;" /></div>';
+    // Gửi email qua AJAX
+    $.ajax({
+        url: 'https://localhost:7274/api/account/sendmail',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ toEmail: mail, subject: subject, body: body, code: code, num: num }),
+        success: function (response) {
+            console.log(response);
+            if (currentStep < 3) {
+                currentStep++;
+                updateModal();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Lỗi khi đăng nhập:", error);
+            // Xử lý lỗi ở đây nếu cần thiết
+        }
+    });
+}
+
+function checkotp() {
+    var otp = document.getElementById("otp").value;
+    var mail = document.getElementById("email").value;
+
+    $.ajax({
+        url: `https://localhost:7274/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
+        method: 'GET',
+        success: function (response) {
+            console.log(response);
+            if (currentStep < 3) {
+                currentStep++;
+                updateModal();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Lỗi khi đăng nhập:", error);
+            // Xử lý lỗi ở đây nếu cần thiết
+        }
+    });
+}
+
+function updatepass() {
+    var pass = document.getElementById("newPassword").value;
+    var mail = document.getElementById("email").value;
+    $.ajax({
+        url: 'https://localhost:7274/api/infouser/updatepass',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({mail:mail, pass:pass}),
+        success: function (response) {
+            console.log(response);
+            info();
+            $('#passModalCenter').modal('hide');
+        }, error: function (response) {
+            console.log("Error:", response);
+        }
+    });
+}

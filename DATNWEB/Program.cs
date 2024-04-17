@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using DATNWEB.Hubs;
 using DATNWEB.Models;
+using DATNWEB.helpter;
+using DATNWEB.Service;
 
 QlPhimAnimeContext db = new QlPhimAnimeContext();
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +27,9 @@ builder.Configuration.AddJsonFile("appsettings.json");
 var configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// cấu hình mail
+builder.Services.Configure<MailSetting>(builder.Configuration.GetSection("MailSetting"));
+builder.Services.AddTransient<IMailService, MailService>();
 // Thêm đoạn mã sau vào phương thức ConfigureServices trong Startup.cs
 builder.Services.Configure<KestrelServerOptions>(options =>
 {

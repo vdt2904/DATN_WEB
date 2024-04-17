@@ -3,7 +3,19 @@
     ViewData["Title"] = "Register";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    /* Hide the number input spinner */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    
+    input[type=number] {
+        /* Ensure the input width is consistent */
+        width: 100px; /* Adjust width as needed */
+    }
+</style>
 <!-- Normal Breadcrumb Begin -->
 <section class="normal-breadcrumb set-bg" data-setbg="../home/img/normal-breadcrumb.jpg" style="background-image: url('../Home/img/normal-breadcrumb.jpg'); max-width: 1350px; max-height: 300px;">
     <div class="container">
@@ -29,6 +41,11 @@
                         <div class="input__item">
                             <input type="text" placeholder="Email address" id="mailid">
                             <span class="icon_mail"></span>
+                        </div>
+                        <div class="input__item" style="display: flex;">
+                            <input type="number" placeholder="Mã code" id="codeid" style="flex-grow: 1;" oninput="this.value = this.value.slice(0, 6)">
+                            <span class="icon_mail"></span>
+                            <button type="button" onclick="sendlat60()" id="sendmail" class="icon_code" style="flex-grow: 1;height:50px;font-size:15px;color:#b7b7b7;background:#1000ff;border:none;margin-top:0px!important;">Gửi mã</button>
                         </div>
                         <div class="input__item">
                             <input type="text" placeholder="Your Name" id="nameid">

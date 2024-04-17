@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="CloudinaryDotNet" Version="1.25.0" />
+    <PackageReference Include="MailKit" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="6.0.28" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.28" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
@@ -26,6 +27,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="MimeKit" Version="4.5.0" />
     <PackageReference Include="X.PagedList" Version="8.4.7" />
     <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />
   </ItemGroup>

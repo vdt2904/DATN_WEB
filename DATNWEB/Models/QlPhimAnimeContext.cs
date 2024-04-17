@@ -18,6 +18,7 @@ namespace DATNWEB.Models
 
         public virtual DbSet<Admin> Admins { get; set; } = null!;
         public virtual DbSet<Anime> Animes { get; set; } = null!;
+        public virtual DbSet<CodeRegister> CodeRegisters { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Director> Directors { get; set; } = null!;
         public virtual DbSet<Episode> Episodes { get; set; } = null!;
@@ -50,7 +51,7 @@ namespace DATNWEB.Models
 
                 entity.Property(e => e.Mail).HasMaxLength(100);
 
-                entity.Property(e => e.PassWord).HasMaxLength(50);
+                entity.Property(e => e.PassWord).HasMaxLength(500);
 
                 entity.Property(e => e.UserName).HasMaxLength(50);
             });
@@ -102,6 +103,17 @@ namespace DATNWEB.Models
                     .WithMany(p => p.Animes)
                     .HasForeignKey(d => d.SeasonId)
                     .HasConstraintName("FK_Anime_Season");
+            });
+
+            modelBuilder.Entity<CodeRegister>(entity =>
+            {
+                entity.ToTable("CodeRegister");
+
+                entity.Property(e => e.Email).HasMaxLength(500);
+
+                entity.Property(e => e.SentDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Token).HasMaxLength(10);
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -325,7 +337,7 @@ namespace DATNWEB.Models
 
                 entity.Property(e => e.Email).HasMaxLength(500);
 
-                entity.Property(e => e.Password).HasMaxLength(50);
+                entity.Property(e => e.Password).HasMaxLength(500);
 
                 entity.Property(e => e.Phone).HasMaxLength(50);
 
