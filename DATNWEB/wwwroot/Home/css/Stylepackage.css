@@ -1,0 +1,26 @@
+﻿.card-header {
+    text-align: center; /* Center align the text */
+    color: white; /* White text color */
+    background-color: black!important; /* Black background color */
+    border: 1px solid white!important; /* White border */
+}
+
+.card-body {
+    color: white; /* White text color */
+    background-color: black; /* Black background color */
+    border: 1px solid white!important; /* White border */
+}
+
+.card-footer {
+    cursor: pointer;
+    color: white; /* White text color */
+    background-color: black !important; /* Black background color */
+    border: 1px solid white!important; /* White border */
+    text-align: center;
+}
+h5{
+    color:white!important;
+}
+p {
+    color: #3D3D0F!important;
+}

@@ -76,5 +76,9 @@ namespace DATNWEB.Controllers
         {
             return View();
         }
+        public IActionResult package()
+        {
+            return View();
+        }
     }
 }
