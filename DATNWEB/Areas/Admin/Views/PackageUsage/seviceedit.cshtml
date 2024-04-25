@@ -1,0 +1,42 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DATNWEB.Models.ServiceUsage;
+@{
+    ViewData["Title"] = "seviceedit";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Add Package</h4>
+        <form method="post" action="@Url.Action("seviceedits", "PackageUsage")" class="forms-sample">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input type="number" class="form-control" asp-for="Id" placeholder="ID" value="@Model.Id" readonly hidden>
+            </div>
+            <div class="form-group">
+                <label>Package ID</label>
+                <input type="text" class="form-control" asp-for="PackageId" placeholder="Name" value="@Model.PackageId" readonly>
+            </div>
+            <div class="form-group">
+                <label>Used Time</label>
+                <input type="number" class="form-control" asp-for="UsedTime" placeholder="Description" value="@Model.UsedTime">
+            </div>
+            <div class="form-group">
+                <label>Price</label>
+                <input type="number" class="form-control" asp-for="Price" placeholder="Price" value="@Model.Price">
+            </div>
+            <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+            <a class="btn btn-light" href="/admin/PackageUsage?ids=@Model.PackageId">Cancel</a>
+        </form>
+    </div>
+</div>
+
+
+<style>
+    /* Hide the number input spinner */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>

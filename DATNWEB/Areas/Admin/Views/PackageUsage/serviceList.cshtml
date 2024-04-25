@@ -1,27 +1,27 @@
 ﻿@using DATNWEB.Models;
 @using X.PagedList.Mvc.Core;
 @using X.PagedList.Web.Common;
-@model X.PagedList.IPagedList<ServicePackage>;
+@model X.PagedList.IPagedList<ServiceUsage>;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "PackageList";
+    ViewData["Title"] = "serviceList";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 @if (TempData["DeleteError"] != null)
 {
-    <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger" role="alert">
         @TempData["DeleteError"]
-    </div>
+        </div>
 }
 <div class="card mb-4">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <i class="fas fa-table me-1"></i>
-                <span class="fw-bold">Package List</span>
+                <span class="fw-bold">Price List</span>
             </div>
             <div>
-                <a class="btn btn-primary" href="/admin/Packageadd">Create New</a>
+                <a class="btn btn-primary" asp-action="ServicesAdd" asp-route-id="@ViewBag.pid">Create New</a>
             </div>
         </div>
     </div>
@@ -30,11 +30,10 @@
         <table class="table table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>Package ID</th>
+                    <th>STT</th>
                     <th>Package Name</th>
-                    <th>Information</th>
-                    <th>Validity period</th>
-                    <th></th>
+                    <th>Used Time(Month)</th>
+                    <th>Price</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -43,7 +42,7 @@
                 @if (Model.Count == 0)
                 {
                     <tr>
-                        <td colspan="8" style="text-align: center;">
+                        <td colspan="7" style="text-align: center;">
                             No Data
                         </td>
 
@@ -51,29 +50,27 @@
                 }
                 else
                 {
+                    var i = 0;
                     @foreach (var item in Model)
                     {
                         <tr>
                             <td>
+                                @(i++)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.PackageId)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.PackageName)
+                                @Html.DisplayFor(modelItem => item.UsedTime)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Description)
+                                @Html.DisplayFor(modelItem => item.Price)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.ValidityPeriod)
+                                <a class="btn btn-primary" asp-action="seviceedit" asp-route-id="@item.Id">Edit</a>
                             </td>
                             <td>
-                                <a class="btn btn-primary" asp-action="serviceList" asp-controller="PackageUsage" asp-route-ids="@item.PackageId">Price</a>
-                            </td>
-                            <td>
-                                <a class="btn btn-primary" asp-action="PackageEdit" asp-route-id="@item.PackageId">Edit</a>
-                            </td>
-                            <td>
-                                <a class="btn btn-danger" asp-action="PackageDelete" asp-route-id="@item.PackageId">Delete</a>
+                                <a class="btn btn-danger" asp-action="ServiceDelete" asp-route-id="@item.Id">Delete</a>
                             </td>
                         </tr>
                     }

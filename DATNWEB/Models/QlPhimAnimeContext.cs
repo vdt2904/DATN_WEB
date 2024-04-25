@@ -28,6 +28,7 @@ namespace DATNWEB.Models
         public virtual DbSet<Review> Reviews { get; set; } = null!;
         public virtual DbSet<Season> Seasons { get; set; } = null!;
         public virtual DbSet<ServicePackage> ServicePackages { get; set; } = null!;
+        public virtual DbSet<ServiceUsage> ServiceUsages { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UserSubscription> UserSubscriptions { get; set; } = null!;
         public virtual DbSet<View> Views { get; set; } = null!;
@@ -325,6 +326,22 @@ namespace DATNWEB.Models
                     .HasColumnName("Package_Name");
 
                 entity.Property(e => e.ValidityPeriod).HasColumnName("Validity_Period");
+            });
+
+            modelBuilder.Entity<ServiceUsage>(entity =>
+            {
+                entity.ToTable("ServiceUsage");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.PackageId)
+                    .HasMaxLength(10)
+                    .HasColumnName("Package_ID");
+
+                entity.HasOne(d => d.Package)
+                    .WithMany(p => p.ServiceUsages)
+                    .HasForeignKey(d => d.PackageId)
+                    .HasConstraintName("FK_ServiceUsage_ServicePackage");
             });
 
             modelBuilder.Entity<User>(entity =>
