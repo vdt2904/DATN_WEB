@@ -19,7 +19,7 @@
                 table += '<h5 class="card-title">Mô tả:</h5>';
                 table += '<p class="card-text">' + response[i].description + '</p >';
                 table += '</div>';
-                table += '<div class="card-footer bg-transparent border-success">Mua gói</div>';
+                table += '<div class="card-footer bg-transparent border-success"><a href="/home/pay?id=' + response[i].packageId + '">Mua gói</a></div>';
                 table += '</div>';
                 table += '</div>';
 

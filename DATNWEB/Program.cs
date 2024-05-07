@@ -19,12 +19,20 @@ using DATNWEB.Hubs;
 using DATNWEB.Models;
 using DATNWEB.helpter;
 using DATNWEB.Service;
+using DATNWEB.Payments.Momo.Config;
+using Net.payOS;
 
 QlPhimAnimeContext db = new QlPhimAnimeContext();
 var builder = WebApplication.CreateBuilder(args);
 // Thiết lập cấu hình
 builder.Configuration.AddJsonFile("appsettings.json");
 var configuration = builder.Configuration;
+//pay os
+PayOS payOS = new PayOS(configuration["Environment:PAYOS_CLIENT_ID"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_API_KEY"] ?? throw new Exception("Cannot find environment"),
+                    configuration["Environment:PAYOS_CHECKSUM_KEY"] ?? throw new Exception("Cannot find environment"));
+builder.Services.AddSingleton(payOS);
+builder.Services.AddControllers();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // cấu hình mail
@@ -65,7 +73,20 @@ builder.Services.AddAuthentication(options =>
                     options.AppId = configuration["Login:FacebookClientId"];
                     options.AppSecret = configuration["Login:FacebookClientSecret"];
                 });
-
+//PayMent config
+builder.Services.Configure<MomoConfig>(
+    builder.Configuration.GetSection(MomoConfig.ConfigName));
+//cors
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddMvc();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+        });
+});
 // cau hing jwt
 var key = Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]);
 builder.Services.AddAuthentication(x =>
@@ -115,6 +136,11 @@ app.UseEndpoints(endpoints =>
     {
         endpoints.MapHub<ReviewHub>("/commenthub/" + i);
     }
+    // Định nghĩa route cho trang được gọi từ payOS
+    endpoints.MapControllerRoute(
+        name: "payment",
+        pattern: "home/infouser",
+        defaults: new { controller = "infouser", action = "ProcessPayment" });
 
 });
 

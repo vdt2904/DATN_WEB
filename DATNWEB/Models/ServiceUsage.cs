@@ -7,8 +7,8 @@ namespace DATNWEB.Models
     {
         public int Id { get; set; }
         public string? PackageId { get; set; }
-        public int? UsedTime { get; set; }
-        public int? Price { get; set; }
+        public int UsedTime { get; set; }
+        public int Price { get; set; }
 
         public virtual ServicePackage? Package { get; set; }
     }

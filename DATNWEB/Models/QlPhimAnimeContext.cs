@@ -18,6 +18,7 @@ namespace DATNWEB.Models
 
         public virtual DbSet<Admin> Admins { get; set; } = null!;
         public virtual DbSet<Anime> Animes { get; set; } = null!;
+        public virtual DbSet<Bill> Bills { get; set; } = null!;
         public virtual DbSet<CodeRegister> CodeRegisters { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Director> Directors { get; set; } = null!;
@@ -104,6 +105,29 @@ namespace DATNWEB.Models
                     .WithMany(p => p.Animes)
                     .HasForeignKey(d => d.SeasonId)
                     .HasConstraintName("FK_Anime_Season");
+            });
+
+            modelBuilder.Entity<Bill>(entity =>
+            {
+                entity.ToTable("Bill");
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(200)
+                    .HasColumnName("id");
+
+                entity.Property(e => e.Createat)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createat");
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(500)
+                    .HasColumnName("description");
+
+                entity.Property(e => e.Ids).HasColumnName("ids");
+
+                entity.Property(e => e.Userid)
+                    .HasMaxLength(10)
+                    .HasColumnName("userid");
             });
 
             modelBuilder.Entity<CodeRegister>(entity =>

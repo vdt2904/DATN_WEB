@@ -1,206 +1,98 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "pay";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@model DATNWEB.Models.ServiceUsage
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <link rel="stylesheet" href="../Home/css/stylepay.css" type="text/css">
-<div  class="color-white container pt-4">
-    <h3  class="font-weight-bold mb-4 text-2xl pl-4">Thanh toán</h3> <div  class="row">
-        <div  class="col-lg-7 col-12">
-            <div    class="PaySection rounded-xl is-darken" >
-                <h4  class="font-weight-bold mb-2 text-lg">
+<div class="color-white container pt-4">
+    <h3 class="font-weight-bold mb-4 text-2xl pl-4">Thanh toán</h3> <div class="row">
+        <div class="col-lg-7 col-12">
+            <div class="PaySection rounded-xl is-darken">
+                <h4 class="font-weight-bold mb-2 text-lg">
                     Chọn thời hạn gói
-                </h4> <div   class="PayPlan p-3 relative cursor-pointer ">
-                    <input type="radio"  id="checkbox" name="checkbox" checked/> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                        1 Tháng
-
-                        <!---->
-                    </div> <div   class="PayPlan__Price">
-                        <!----> <span   class="PayPlan__Amount">
-                            66.000 VND
-                        </span> <!---->
-                    </div>
-                </div><div   class="PayPlan p-3 relative cursor-pointer">
-                  <input type="radio"  id="checkbox" name="checkbox"/><div   class="PayPlan__Name font-weight-semibold text-sm">
-                        3 Tháng
-
-                        <!---->
-                    </div> <div   class="PayPlan__Price">
-                        <!----> <span   class="PayPlan__Amount">
-                            198.000 VND
-                        </span> <!---->
-                    </div>
-                </div><div   class="PayPlan p-3 relative cursor-pointer">
-                    <div   class="PaySelectBox" ></div> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                        6 Tháng
-
-                        <!---->
-                    </div> <div   class="PayPlan__Price">
-                        <!----> <span   class="PayPlan__Amount">
-                            396.000 VND
-                        </span> <!---->
-                    </div>
-                </div><div   class="PayPlan p-3 relative cursor-pointer">
-                    <div   class="PaySelectBox" ></div> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                        12 Tháng
-
-                        <!---->
-                    </div> <div   class="PayPlan__Price">
-                        <!----> <span   class="PayPlan__Amount">
-                            792.000 VND
-                        </span> <!---->
-                    </div>
-                </div> <div   class="UpsellPlan">
-                    <div   class="UpsellPlan__Title">hoặc tiết kiệm hơn với gói Combo</div> <div   class="PayPlan p-3 relative cursor-pointer">
-                        <div   class="PaySelectBox" ></div> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                            Gói Combo SMAX K+ 1 tháng
-
-                            <!---->
-                        </div> <div   class="PayPlan__Price">
-                            <!----> <span   class="PayPlan__Amount">
-                                219.000 VND
-                            </span> <!---->
-                        </div>
-                    </div><div   class="PayPlan p-3 relative cursor-pointer">
-                        <div   class="PaySelectBox" ></div> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                            Gói Combo SMAX K+ 3 tháng
-
-                            <!---->
-                        </div> <div   class="PayPlan__Price">
-                            <!----> <span   class="PayPlan__Amount">
-                                657.000 VND
-                            </span> <!---->
-                        </div>
-                    </div><div   class="PayPlan p-3 relative cursor-pointer">
-                        <div   class="PaySelectBox" ></div> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                            Gói Combo SMAX K+ 6 tháng
-
-                            <!---->
-                        </div> <div   class="PayPlan__Price">
-                            <!----> <span   class="PayPlan__Amount">
-                                1.314.000 VND
-                            </span> <!---->
-                        </div>
-                    </div><div   class="PayPlan p-3 relative cursor-pointer">
-                        <div   class="PaySelectBox" ></div> <div   class="PayPlan__Name font-weight-semibold text-sm">
-                            Gói Combo SMAX K+ 12 tháng
-
-                            <!---->
-                        </div> <div   class="PayPlan__Price">
-                            <!----> <span   class="PayPlan__Amount">
-                                2.628.000 VND
-                            </span> <!---->
-                        </div>
-                    </div>
-                </div>
-            </div> <div    class="PaySection rounded-xl is-darken" >
-                <h4  class="font-weight-bold mb-2 text-lg">
-                    Chọn hình thức thanh toán
-                </h4> <div   class="PayMethod__Wrapper">
-                    <a   id="foxpay_credit" href="#tab-foxpay_credit" class="PayMethod block relative active">
-                        <div   class="PayMethod__Select"><div   class="PaySelectBox active" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/video/21_10_2020/visa21-10-2020_17g17-23.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full">
-                            <div   class="PayMethod__Meta">
-                                <h5   class="mb-0">Thẻ Tín Dụng</h5> <p   class="mb-0">
-                                    Lần đầu thanh toán qua thẻ VPBank hoàn 50% (tối đã 100.000đ) áp dụng cho đơn hàng từ 100.000 trở lên. Thông tin chi tiết xem tại bit.ly/khuyenmaifptplay
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </div><div   class="PayMethod__Wrapper"><a   id="momo_walle" href="#tab-momo_walle" class="PayMethod block relative"><div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/video/21_10_2020/momo21-10-2020_17g15-59.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full"><div   class="PayMethod__Meta"><h5   class="mb-0">Ví MoMo</h5> <!----></div></div></a></div><div   class="PayMethod__Wrapper"><a   id="airpay" href="#tab-airpay" class="PayMethod block relative"><div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://images.fptplay.net/media/photo/OTT/2024/03/29/shopeepay-square-icon-orange29-03-2024_11g46-20.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full"><div   class="PayMethod__Meta"><h5   class="mb-0">Ví ShopeePay</h5> <!----></div></div></a></div><div   class="PayMethod__Wrapper"><a   id="vn_pay" href="#tab-vn_pay" class="PayMethod block relative"><div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/promotion/05_08_2021/vnpayjpg05-08-2021_14g08-22.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full"><div   class="PayMethod__Meta"><h5   class="mb-0">VNPAY-QR</h5> <!----></div></div></a></div><div   class="PayMethod__Wrapper">
-                    <a   id="zalo_pay" href="#tab-zalo_pay" class="PayMethod block relative">
-                        <div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/video/21_10_2020/zalopay21-10-2020_17g16-23.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full">
-                            <div   class="PayMethod__Meta">
-                                <h5   class="mb-0">Ví ZaloPay</h5> <p   class="mb-0">
-                                    Nhập mã LAMQUEN giảm ngay 50% (tối đã 25.000đ) khi lần đầu thanh toán bằng ví ZaloPay. Thông tin chi tiết xem tại bit.ly/khuyenmaifptplay
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </div><div   class="PayMethod__Wrapper">
-                    <a   id="dcb" href="#tab-dcb" class="PayMethod block relative" style="display: none;">
-                        <div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/promotion/16_03_2021/dcb16-03-2021_16g16-47.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full">
-                            <div   class="PayMethod__Meta">
-                                <h5   class="mb-0">Tài Khoản Điện thoại</h5> <p   class="mb-0">
-                                    Giá gói dịch vụ áp dụng theo chính sách của nhà mạng
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </div><div   class="PayMethod__Wrapper"><a   id="foxpay" href="#tab-foxpay" class="PayMethod block relative" style="display: none;"><div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://images.fptplay.net/media/photo/OTT/2024/03/29/icon-orange4x29-03-2024_11g13-38.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full"><div   class="PayMethod__Meta"><h5   class="mb-0">Ví FPT Pay</h5> <!----></div></div></a></div><div   class="PayMethod__Wrapper">
-                    <a   id="viettel_pay" href="#tab-viettel_pay" class="PayMethod block relative" style="display: none;">
-                        <div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/promotion/14_09_2021/ic_viettelpay_red-2x-78x7814-09-2021_15g22-33.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full">
-                            <div   class="PayMethod__Meta">
-                                <h5   class="mb-0">Viettel Pay</h5> <p   class="mb-0">
-                                    Lưu ý: Không hỗ trợ áp dụng mã giảm giá khi thanh toán qua cổng Viettel Pay
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-                </div><div   class="PayMethod__Wrapper"><a   id="foxpay_atm" href="#tab-foxpay_atm" class="PayMethod block relative" style="display: none;"><div   class="PayMethod__Select"><div   class="PaySelectBox" ></div></div> <div   class="PayMethod__Icon"><img   src="https://static.fptplay.net/static/img/share/video/23_10_2020/mask-group23-10-2020_16g06-47.png" alt=""></div> <div   class="PayMethod__Item flex align-items-center w-full"><div   class="PayMethod__Meta"><h5   class="mb-0">Thẻ ATM</h5> <!----></div></div></a></div> <div   class="PayMethod__Wrapper"><div   class="PayMethod is-blank d-flex align-items-center justify-content-center"><img   src="/images/mua-goi/plus-icon.png" alt="plus-icon" class="mr-2"> <span  >Hiển thị thêm hình thức thanh toán</span></div></div>
+                </h4>
+                <div id="price"></div>
             </div>
-        </div> <div  class="col-lg-5 col-12">
-            <div   id="payment-total" >
-                <div   class="PaySection rounded-xl is-darken">
-                    <h4  class="font-weight-bold mb-2 text-lg">
-                        Thông tin thanh toán
-                    </h4> <!----> <div   class="PayTable"><table  ><tbody  ><tr  ><td  >Tài khoản</td> <td  >0968161576</td></tr></tbody></table></div> <div   class="PaySeperateLine"></div> <div   class="PayTable">
-                        <table  >
-                            <tbody  >
-                                <tr  >
-                                    <td  >Tên gói</td>
-                                    <td  >
-                                        Gói SMAX
-                                    </td>
-                                </tr>
-                                <tr  >
-                                    <td  >Thời hạn gói</td>
-                                    <td  >
-                                        1 Tháng
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> <div   class="PayTable"><table  ><tbody  ><tr  ><td  >Dịch vụ</td> <td  >Gói dịch vụ FPT Play</td></tr></tbody></table></div> <div   class="PaySeperateLine"></div> <div   class="PayTable">
-                        <table  >
-                            <tbody  >
-                                <tr  ><td  >Giá gói</td> <td  >66.000 VND</td></tr>
-                                <tr  >
-                                    <td  >Giảm giá</td>
-                                    <td  >
-                                        0 VND
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> <div  >
-                        <div   class="PayInput__Wrapper">
-                            <input   id="input-promotion-code" type="text" value="" placeholder="Mã khuyến mãi" class="PayInput browser-default"> <button   type="submit" class="btn PayButton PayInput__Button btn-secondary">
-                                Áp dụng
-                            </button>
+            <div class="PaySection rounded-xl is-darken">
+                <h4 class="font-weight-bold mb-2 text-lg">
+                    Chọn hình thức thanh toán
+                </h4>
+                <div class="PayMethod__Wrapper">
+                    <a id="momo_walle" class="PayMethod block relative cursor-pointer">
+                        <div class="PayMethod__Select">
+                                <input type="radio" id="checkbox" name="checkboxp" checked />
                         </div>
-                    </div> <!----> <div   class="PaySeperateLine"></div> <div   class="PayTable">
-                        <table  >
-                            <tbody  >
-                                <tr  >
-                                    <td  >Tổng thanh toán:</td>
-                                    <td  >
-                                        <span   id="amount_price" class="total">
-                                            66.000
-                                            VND
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div> <div   class="PayTable">
-                        <div   class="text-center mt-4">
-                            <button   id="btn_payment_submit" type="button" class="btn font-weight-semibold rounded-btn px-5 py-2 btn-orange btn-primary">
-                                Thanh toán
-                            </button>
-                        </div> <div   class="payment-policy"><p>Bằng việc chấp nhận thanh toán, Khách Hàng đã đồng ý với Điều kiện và điều khoản sử dụng dịch vụ truyền hình FPT Play, và ủy quyền cho FPT Play tự động gia hạn khi hết hạn sử dụng. <br>Xem chi tiết <a style="color: #ff6500" href="/dieu-khoan-su-dung">Tại đây</a></p></div>
-                    </div>
+                        <div class="PayMethod__Icon">
+                            <img src="https://static.fptplay.net/static/img/share/video/21_10_2020/momo21-10-2020_17g15-59.png" alt="">
+                        </div>
+                        <div class="PayMethod__Item flex align-items-center w-full">
+                            <div class="PayMethod__Meta">
+                                <h5 class="mb-0">Ví MoMo</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="PayMethod__Wrapper">
+                    <a id="airpay" class="PayMethod block relative cursor-pointer">
+                        <div class="PayMethod__Select">
+                            <input type="radio" id="checkbox" name="checkboxp" />
+                        </div>
+                        <div class="PayMethod__Icon">
+                            <img src="https://images.fptplay.net/media/photo/OTT/2024/03/29/shopeepay-square-icon-orange29-03-2024_11g46-20.png" alt="">
+                        </div>
+                        <div class="PayMethod__Item flex align-items-center w-full">
+                            <div class="PayMethod__Meta">
+                                <h5 class="mb-0">Ví ShopeePay</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="PayMethod__Wrapper">
+                    <a id="vn_pay" class="PayMethod block relative cursor-pointer">
+                        <div class="PayMethod__Select ">
+                            <input type="radio" id="checkbox" name="checkboxp" />
+                        </div>
+                        <div class="PayMethod__Icon">
+                            <img src="https://static.fptplay.net/static/img/share/promotion/05_08_2021/vnpayjpg05-08-2021_14g08-22.png" alt="">
+                        </div>
+                        <div class="PayMethod__Item flex align-items-center w-full">
+                            <div class="PayMethod__Meta">
+                                <h5 class="mb-0">VNPAY-QR</h5>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="PayMethod__Wrapper">
+                    <a id="zalo_pay" class="PayMethod block relative cursor-pointer">
+                        <div class="PayMethod__Select">
+                            <input type="radio" id="checkbox" name="checkboxp" />
+                        </div>
+                        <div class="PayMethod__Icon">
+                            <img src="https://static.fptplay.net/static/img/share/video/21_10_2020/zalopay21-10-2020_17g16-23.png" alt="">
+                        </div>
+                        <div class="PayMethod__Item flex align-items-center w-full">
+                            <div class="PayMethod__Meta">
+                                <h5 class="mb-0">Ví ZaloPay</h5> <p class="mb-0">
+                                    
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>               
+            </div>
+        </div>
+        <div class="col-lg-5 col-12">
+            <div id="payment-total">
+                <div class="PaySection rounded-xl is-darken" id="inf">
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<script src="@Url.Content("~/pagesjs/pay.js")"></script>
+<script>
+    getprice('@Model.PackageId')
+</script>
