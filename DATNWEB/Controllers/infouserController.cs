@@ -135,6 +135,13 @@ namespace DATNWEB.Controllers
                             db.SaveChanges();
                             db.Bills.Remove(a);
                             db.SaveChanges();
+                            var pac = db.ServicePackages.Find(p.PackageId);
+                            var user = db.Users.Find(a.Userid);
+                            if(pac.ValidityPeriod > user.UserType || user.UserType == null)
+                            {
+                                user.UserType= pac.ValidityPeriod;
+                                db.SaveChanges();
+                            }
                         } ;
                     }
                     // Ví dụ:

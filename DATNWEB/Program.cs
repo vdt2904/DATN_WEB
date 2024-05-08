@@ -137,10 +137,10 @@ app.UseEndpoints(endpoints =>
         endpoints.MapHub<ReviewHub>("/commenthub/" + i);
     }
     // Định nghĩa route cho trang được gọi từ payOS
-    endpoints.MapControllerRoute(
+   /* endpoints.MapControllerRoute(
         name: "payment",
         pattern: "home/infouser",
-        defaults: new { controller = "infouser", action = "ProcessPayment" });
+        defaults: new { controller = "infouser", action = "ProcessPayment" });*/
 
 });
 

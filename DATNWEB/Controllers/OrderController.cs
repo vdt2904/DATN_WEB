@@ -48,7 +48,6 @@ namespace DATNWEB.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }
@@ -64,7 +63,6 @@ namespace DATNWEB.Controllers
             }
             catch (System.Exception exception)
             {
-
                 Console.WriteLine(exception);
                 return Ok(new Response(-1, "fail", null));
             }

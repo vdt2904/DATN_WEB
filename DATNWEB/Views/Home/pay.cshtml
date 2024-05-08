@@ -21,7 +21,7 @@
                 <div class="PayMethod__Wrapper">
                     <a id="momo_walle" class="PayMethod block relative cursor-pointer">
                         <div class="PayMethod__Select">
-                                <input type="radio" id="checkbox" name="checkboxp" checked />
+                            <input type="radio" id="checkbox" name="checkboxp" onclick="check()" value="1" checked />
                         </div>
                         <div class="PayMethod__Icon">
                             <img src="https://static.fptplay.net/static/img/share/video/21_10_2020/momo21-10-2020_17g15-59.png" alt="">
@@ -36,14 +36,14 @@
                 <div class="PayMethod__Wrapper">
                     <a id="airpay" class="PayMethod block relative cursor-pointer">
                         <div class="PayMethod__Select">
-                            <input type="radio" id="checkbox" name="checkboxp" />
+                            <input type="radio" id="checkbox" name="checkboxp" onclick="check()" value="2" />
                         </div>
                         <div class="PayMethod__Icon">
-                            <img src="https://images.fptplay.net/media/photo/OTT/2024/03/29/shopeepay-square-icon-orange29-03-2024_11g46-20.png" alt="">
+                            <img src="https://cdn-gop-garenanow-com.obs.ap-southeast-3.myhuaweicloud.com/cdn.garenanow.com/webmain/static/payment_center/vn/menu/QR-PAY.png" alt="">
                         </div>
                         <div class="PayMethod__Item flex align-items-center w-full">
                             <div class="PayMethod__Meta">
-                                <h5 class="mb-0">Ví ShopeePay</h5>
+                                <h5 class="mb-0">QR Code</h5>
                             </div>
                         </div>
                     </a>
@@ -51,7 +51,7 @@
                 <div class="PayMethod__Wrapper">
                     <a id="vn_pay" class="PayMethod block relative cursor-pointer">
                         <div class="PayMethod__Select ">
-                            <input type="radio" id="checkbox" name="checkboxp" />
+                            <input type="radio" id="checkbox" name="checkboxp" onclick="check()" value="3" />
                         </div>
                         <div class="PayMethod__Icon">
                             <img src="https://static.fptplay.net/static/img/share/promotion/05_08_2021/vnpayjpg05-08-2021_14g08-22.png" alt="">
@@ -66,7 +66,7 @@
                 <div class="PayMethod__Wrapper">
                     <a id="zalo_pay" class="PayMethod block relative cursor-pointer">
                         <div class="PayMethod__Select">
-                            <input type="radio" id="checkbox" name="checkboxp" />
+                            <input type="radio" id="checkbox" name="checkboxp" onclick="check()" value="4" />
                         </div>
                         <div class="PayMethod__Icon">
                             <img src="https://static.fptplay.net/static/img/share/video/21_10_2020/zalopay21-10-2020_17g16-23.png" alt="">
@@ -94,5 +94,5 @@
 
 <script src="@Url.Content("~/pagesjs/pay.js")"></script>
 <script>
-    getprice('@Model.PackageId')
+    getprice('@Model.PackageId',1)
 </script>

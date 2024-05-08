@@ -1,4 +1,4 @@
-﻿function getprice(id) {
+﻿function getprice(id,a) {
     $.ajax({
         url: 'https://localhost:7274/api/pay?id='+id,
         method: 'GET',
@@ -14,10 +14,10 @@
                 var price = response[i].price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
                 table += '<div class="PayPlan p-3 relative cursor-pointer ">';
                 if (i == 0) {
-                    table += '<input type="radio" id="checkbox" name="checkbox" onclick="getpayinfo(' + response[i].id + ')" checked />';
-                    getpayinfo(response[i].id);
+                    table += '<input type="radio" id="checkbox" name="checkbox" onclick="getpayinfo(' + response[i].id + ','+a+')" value="'+response[i].id+'" checked />';
+                    getpayinfo(response[i].id,a);
                 } else {
-                    table += '<input type="radio" id="checkbox" name="checkbox" onclick="getpayinfo(' + response[i].id + ')" />';
+                    table += '<input type="radio" id="checkbox" name="checkbox" onclick="getpayinfo(' + response[i].id + ',' + a + ')" value="' + response[i].id +'" />';
                 }               
                 table += '<div class="PayPlan__Name font-weight-semibold text-sm">' + response[i].usedTime + ' Tháng</div>';
                 table += '<div class="PayPlan__Price">';
@@ -32,7 +32,7 @@
         }
     })
 }
-function getpayinfo(id) {
+function getpayinfo(id,a) {
     $.ajax({
         url: 'https://localhost:7274/api/pay/infopay?id=' + id,
         method: 'GET',
@@ -103,7 +103,7 @@ function getpayinfo(id) {
             //button
             table += '<div class="PayTable">';
             table += '<div class="text-center mt-4">';
-            table += '<a id="btn_payment_submit" href="/home/checkout?id=' + pay.id + '" type="button" class="btn font-weight-semibold rounded-btn px-5 py-2 btn-orange btn-primary">Thanh toán</a>';
+            table += '<a id="btn_payment_submit" href="/home/payment?a='+a+'&b=' + pay.id + '" type="button" class="btn font-weight-semibold rounded-btn px-5 py-2 btn-orange btn-primary">Thanh toán</a>';
             table += '</div>';
             document.getElementById('inf').innerHTML = table;
         },
@@ -112,29 +112,44 @@ function getpayinfo(id) {
         }
     })
 }
-
-/*function thanhtoan(id) {
-    $.ajax({
-        url: 'https://localhost:7274/api/pay/create-payment-link?id=' + id,
-        method: 'POST',
-        contentType: 'application/json',
-        dataType: 'json',
-        error: function (response) {
-            console.log("error");
-        },
-        success: function (response) {
-            if (response.checkoutUrl) {
-                // Chuyển hướng đến checkoutUrl
-                window.location.href = response.checkoutUrl;
-            } else {
-                console.log("Không tìm thấy URL thanh toán");
-            }
-        },
-        fail: function (response) {
-            console.log("fail");
+// Lắng nghe sự kiện onclick cho tất cả các checkbox có name là "checkboxp"
+function check() {
+    var checkboxes = document.querySelectorAll('input[type="radio"][name="checkboxp"]');
+    // Lắng nghe sự kiện onclick cho tất cả các checkbox có name là "checkbox"
+    var checkboxe = document.querySelectorAll('input[type="radio"][name="checkbox"]');
+    var selectedCheckbox = getCheckboxValue(checkboxes);
+    var selectedCheckbox1 = getCheckboxValue1(checkboxe);
+    getpayinfo(selectedCheckbox1, selectedCheckbox);
+}
+function getCheckboxValue(checkboxes) {
+    var selectedCheckboxValue = ""; // Biến để lưu trữ giá trị của checkbox được chọn
+    // Duyệt qua tất cả các checkbox
+    checkboxes.forEach(function (checkbox) {
+        // Kiểm tra xem checkbox đó có được chọn không
+        if (checkbox.checked) {
+            // Nếu checkbox được chọn, gán giá trị của nó cho biến selectedCheckboxValue
+            selectedCheckboxValue = checkbox.value;
         }
-    })
-}*/
+    });
+    // Trả về giá trị của checkbox được chọn
+    return selectedCheckboxValue;
+}
+
+function getCheckboxValue1(checkboxe) {
+    var selectedCheckboxValue = ""; // Biến để lưu trữ giá trị của checkbox được chọn
+    // Duyệt qua tất cả các checkbox
+    checkboxe.forEach(function (checkbox) {
+        // Kiểm tra xem checkbox đó có được chọn không
+        if (checkbox.checked) {
+            // Nếu checkbox được chọn, gán giá trị của nó cho biến selectedCheckboxValue
+            selectedCheckboxValue = checkbox.value;
+        }
+    });
+    // Trả về giá trị của checkbox được chọn
+    return selectedCheckboxValue;
+}
+
+
 
         
 

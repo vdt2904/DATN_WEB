@@ -47,16 +47,16 @@ namespace DATNWEB.Controllers
         }
         public IActionResult AnimeDetail(string id)
         {
-            if(HttpContext.Session.GetString("UID") == null)
+            if (HttpContext.Session.GetString("UID") == null)
             {
-                return RedirectToAction("Login","home");
+                return RedirectToAction("Login", "home");
             }
             var a = db.Animes.Find(id);
             return View(a);
         }
         public IActionResult Watch(string id)
         {
-            var a = db.Episodes.Where(x=>x.AnimeId == id && x.Ep == 0).FirstOrDefault();
+            var a = db.Episodes.Where(x => x.AnimeId == id && x.Ep == 0).FirstOrDefault();
             return Redirect($"/home/episode?id={a.AnimeId}&ep={a.Ep}");
         }
         public IActionResult Episode(string id, int ep)
@@ -64,7 +64,7 @@ namespace DATNWEB.Controllers
             var ani = db.Animes.Find(id);
             var us = db.Users.Find(HttpContext.Session.GetString("UID"));
             var a = db.Episodes.Where(x => x.AnimeId == id && x.Ep == ep).FirstOrDefault();
-            if (ani.Permission == 0 && us.UserType ==0 && ep != 0)
+            if (ani.Permission == 0 && us.UserType == 0 && ep != 0)
             {
                 return RedirectToAction("package", "Home");
             }
@@ -72,7 +72,7 @@ namespace DATNWEB.Controllers
         }
         public IActionResult Login()
         {
-            if(HttpContext.Session.GetString("UID") == null)
+            if (HttpContext.Session.GetString("UID") == null)
             {
                 return View();
             }
@@ -93,14 +93,13 @@ namespace DATNWEB.Controllers
         }
         public IActionResult package()
         {
-            if(HttpContext.Session.GetString("UID") == null)
+            if (HttpContext.Session.GetString("UID") == null)
             {
                 return RedirectToAction("Login", "Home");
             }
             return View();
         }
-        
-        public async Task<IActionResult> Checkout(int id)
+        public async Task<IActionResult> vietqr(int id)
         {
             try
             {
@@ -122,7 +121,7 @@ namespace DATNWEB.Controllers
                 {
                     Id = createPayment.paymentLinkId,
                     Userid = HttpContext.Session.GetString("UID"),
-                    Description = paymentData.description,
+                    Description = createPayment.orderCode.ToString(),
                     Createat = DateTime.Now,
                     Ids = id
                 };
@@ -138,5 +137,28 @@ namespace DATNWEB.Controllers
                 return Redirect("https://localhost:7274/");
             }
         }
+        public IActionResult payment(int a, int b)
+        {
+            switch (a)
+            {
+                case 1:
+                    // Xử lý thanh toán bằng phương thức 1
+                    return Redirect("/home/vietqr?id=" + b);
+
+                case 2:
+                    // Xử lý thanh toán bằng phương thức 2
+
+                    return Redirect("/home/vietqr?id=" + b);
+
+                case 3:
+                    // Xử lý thanh toán bằng phương thức 3
+                    return Redirect("/home/vietqr?id=" + b);
+
+                default:
+                    // Xử lý trường hợp không hợp lệ
+                    return Redirect("/home/vietqr?id=" + b);
+            }
+        }
+
     }
 }
