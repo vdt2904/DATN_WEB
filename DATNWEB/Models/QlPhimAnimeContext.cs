@@ -125,6 +125,10 @@ namespace DATNWEB.Models
 
                 entity.Property(e => e.Ids).HasColumnName("ids");
 
+                entity.Property(e => e.Status)
+                    .HasMaxLength(50)
+                    .HasColumnName("status");
+
                 entity.Property(e => e.Userid)
                     .HasMaxLength(10)
                     .HasColumnName("userid");

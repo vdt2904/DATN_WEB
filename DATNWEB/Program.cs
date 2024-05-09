@@ -56,6 +56,7 @@ builder.Services.AddSession(options =>
 });
 // thêm dịch vụ signalR
 builder.Services.AddSignalR();
+// login gg fb
 builder.Services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;

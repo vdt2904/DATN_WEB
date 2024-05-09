@@ -1,11 +1,14 @@
 ﻿using DATNWEB.helpter;
 using DATNWEB.Models;
+using DATNWEB.Payments.PayOs;
 using DATNWEB.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Net.payOS;
 using Net.payOS.Types;
+using System.Text;
+using X.PagedList;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace DATNWEB.Controllers
@@ -15,6 +18,7 @@ namespace DATNWEB.Controllers
     public class infouserController : ControllerBase
     {
         private readonly PayOS _payOS;
+
         public infouserController(PayOS payos)
         {
             _payOS = payos;
@@ -105,6 +109,53 @@ namespace DATNWEB.Controllers
                 return StatusCode(500, $"Lỗi: {ex.Message}");
             }
         }
+        [HttpGet("transactionhistory")]
+        public async Task<IActionResult> Transactionhistory(int ?page)
+        {
+            const int pageSize = 3;
+            if (HttpContext.Session != null && HttpContext.Session.TryGetValue("UID", out byte[] uidBytes))
+            {
+
+                string userId = Encoding.UTF8.GetString(uidBytes);
+
+                var bills = db.Bills.Where(x => x.Userid == userId && x.Status == "PAID").OrderByDescending(x=>x.Createat).ToList();
+                var total = bills.Count;
+                var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+                var pageNumber = page ?? 1;
+                var pagedAnimes = bills.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+                var paginationInfo = new
+                {
+                    TotalPages = totalPages,
+                    CurrentPage = pageNumber
+                };
+                var tasks = new List<Task<PaymentLinkInformation>>();
+
+                foreach (var bill in pagedAnimes)
+                {
+                    if (long.TryParse(bill.Description, out long descriptionAsLong))
+                    {
+                        tasks.Add(_payOS.getPaymentLinkInfomation(descriptionAsLong));
+                    }
+                }
+
+                await Task.WhenAll(tasks); // Chờ đợi tất cả các nhiệm vụ hoàn thành
+
+                var results = tasks.Select(t => t.Result).ToList();
+
+                
+                return Ok(new { results = results, PaginationInfo = paginationInfo });
+            }
+
+            else
+            {
+                // Xử lý khi không tìm thấy UserID trong Session
+                return BadRequest("UserID not found in session.");
+            }
+        }
+
+
+
+
         [HttpGet("/home/infousers")]
         public IActionResult ProcessPayment(
         [FromQuery(Name = "code")] string code,
@@ -120,32 +171,35 @@ namespace DATNWEB.Controllers
                 {
                     // Xử lý thanh toán đã thành công
                     var bill = db.Bills.Where(x => x.Createat > DateTime.Now.AddMinutes(-10)).ToList();
-                    foreach(var a in bill)
+                    foreach (var a in bill)
                     {
+                        
                         var p = db.ServiceUsages.Find(a.Ids);
-                        if (HttpContext.Session.GetString("UID") == a.Userid && a.Id == id) {
+                        if (HttpContext.Session.GetString("UID") == a.Userid && a.Id == id)
+                        {
                             UserSubscription us = new UserSubscription
                             {
                                 UserId = a.Userid,
                                 PackageId = p.PackageId,
-                                SubscriptionDate= DateTime.Now,
-                                ExpirationDate= DateTime.Now.AddMonths(p.UsedTime),
+                                SubscriptionDate = DateTime.Now,
+                                ExpirationDate = DateTime.Now.AddMonths(p.UsedTime),
                             };
                             db.UserSubscriptions.Add(us);
                             db.SaveChanges();
-                            db.Bills.Remove(a);
+                            a.Status = status;
+                            db.Bills.Update(a);
                             db.SaveChanges();
                             var pac = db.ServicePackages.Find(p.PackageId);
                             var user = db.Users.Find(a.Userid);
-                            if(pac.ValidityPeriod > user.UserType || user.UserType == null)
+                            if (pac.ValidityPeriod > user.UserType || user.UserType == null)
                             {
-                                user.UserType= pac.ValidityPeriod;
+                                user.UserType = pac.ValidityPeriod;
                                 db.SaveChanges();
                             }
-                        } ;
+                        };
                     }
-                    // Ví dụ:
-                    return Redirect("/home/infouser");
+                    string script = @"<script> localStorage.setItem('redirected', 'true'); window.location = '/home/infouser'; </script>";
+                    return Content(script, "text/html");
 
                 }
                 else

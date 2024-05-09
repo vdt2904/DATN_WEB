@@ -1,4 +1,11 @@
-﻿function info() {
+﻿if (localStorage.getItem('redirected') === 'true') {
+    // Gọi hàm của bạn
+    gettrans();
+
+    // Xóa trạng thái đã được redirect
+    localStorage.removeItem('redirected');
+}
+function info() {
     $.ajax({
         url: 'https://localhost:7274/api/infouser',
         method: 'GET',
@@ -245,3 +252,95 @@ function updatepass() {
         }
     });
 }
+// lịch sử giao dịch
+function gettrans(page) {
+    if (typeof page === 'undefined') {
+        page = 1;
+    }
+    $.ajax({
+        url: 'https://localhost:7274/api/infouser/transactionhistory?page=' + page,
+        method: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            var results = response.results;
+            var paginationInfo = response.paginationInfo
+            const len = results.length;
+            let table = '';
+            table += '<h5>Lịch sử giao dịch</h5> <br />';
+            table += '<table class="table table-dark">';
+            table += '<thead>';
+            table += '<tr>';
+            table += '<th scope="col">Mã</th>';
+            table += '<th scope="col">Số tiền</th>';
+            table += '<th scope="col">Ngày thanh toán</th>';
+            table += '<th scope="col">Nội dung</th>';
+            table += '<th scope="col">Trạng thái</th>';
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody>';
+            for (var i = 0; i < len; i++) {
+                if (results[i].status == "PAID") {
+                    var transactions = results[i].transactions;
+                    table += '<tr>';
+                    table += '<th scope="row">' + results[i].orderCode +'</th>';
+                    table += '<td>' + results[i].amount +'</td>';
+                    table += '<td>' + transactions[0].transactionDateTime +'</td>';
+                    table += '<td>' + transactions[0].description +'</td>';
+                    table += '<td>Thanh toán thành công</td>';
+                    table += '</tr>';
+                }
+            }
+            table += '</tbody>';
+            table += '</table>';
+            renderPagination(paginationInfo)
+            document.getElementById('infou').innerHTML = table;
+            updateModal();
+        },
+        fail: function (response) {
+            console.log("fail");
+        }
+    })
+}
+
+
+function renderPagination(paginationInfo) {
+    let paginationHtml = '';
+
+    // Add page links to pagination
+    if (paginationInfo.totalPages > 1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<a href="#" onclick="gettrans(' + i + ')">' + i + '</a>';
+        }
+    }
+    // Display previous page link
+    if (paginationInfo.currentPage > 1) {
+        paginationHtml += '<a href="#" onclick="category( ' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
+    }
+
+    // Display next page link
+    if (paginationInfo.currentPage < paginationInfo.totalPages) {
+        paginationHtml += '<a href="#" onclick="category(' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
+    }
+
+    // Display pagination
+    document.getElementById('pagination').innerHTML = paginationHtml;
+}
+    
+        
+            
+            
+            
+            
+        
+    
+    
+        
+            
+            
+
+        
+    

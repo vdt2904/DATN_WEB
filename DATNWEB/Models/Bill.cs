@@ -10,5 +10,6 @@ namespace DATNWEB.Models
         public string? Description { get; set; }
         public DateTime? Createat { get; set; }
         public int? Ids { get; set; }
+        public string? Status { get; set; }
     }
 }

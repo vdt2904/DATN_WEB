@@ -115,7 +115,7 @@ namespace DATNWEB.Controllers
                 List<ItemData> items = new List<ItemData>();
                 items.Add(item);
 
-                PaymentData paymentData = new PaymentData(orderCode, service.Price, "Thanh toan #" + orderCode, items, "https://localhost:7274/home/package", "https://localhost:7274/home/infousers");
+                PaymentData paymentData = new PaymentData(orderCode, service.Price, "#" + orderCode, items, "https://localhost:7274/home/package", "https://localhost:7274/home/infousers");
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
                 Bill b = new Bill
                 {
@@ -159,6 +159,7 @@ namespace DATNWEB.Controllers
                     return Redirect("/home/vietqr?id=" + b);
             }
         }
+
 
     }
 }
