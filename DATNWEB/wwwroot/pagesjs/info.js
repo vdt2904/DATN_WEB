@@ -99,11 +99,11 @@ function logout() {
         url: 'https://localhost:7274/api/infouser/logout',
         method: 'POST',
         contentType: 'application/json',
-        dataType: 'json',        
+        dataType: 'json',
         success: function (response) {
             console.log("Logout successful");
-            
-        },error: function (response) {
+
+        }, error: function (response) {
             console.log("Error:", response);
             localStorage.removeItem("token");
             localStorage.removeItem("uid");
@@ -118,7 +118,7 @@ function updatesdt() {
         url: 'https://localhost:7274/api/infouser/updatesdt',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify( sdt ),
+        data: JSON.stringify(sdt),
         success: function (response) {
             info();
             $('#phoneModalCenter').modal('hide');
@@ -242,7 +242,7 @@ function updatepass() {
         url: 'https://localhost:7274/api/infouser/updatepass',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({mail:mail, pass:pass}),
+        data: JSON.stringify({ mail: mail, pass: pass }),
         success: function (response) {
             console.log(response);
             info();
@@ -286,10 +286,10 @@ function gettrans(page) {
                 if (results[i].status == "PAID") {
                     var transactions = results[i].transactions;
                     table += '<tr>';
-                    table += '<th scope="row">' + results[i].orderCode +'</th>';
-                    table += '<td>' + results[i].amount +'</td>';
-                    table += '<td>' + transactions[0].transactionDateTime +'</td>';
-                    table += '<td>' + transactions[0].description +'</td>';
+                    table += '<th scope="row">' + results[i].orderCode + '</th>';
+                    table += '<td>' + results[i].amount + '</td>';
+                    table += '<td>' + transactions[0].transactionDateTime + '</td>';
+                    table += '<td>' + transactions[0].description + '</td>';
                     table += '<td>Thanh toán thành công</td>';
                     table += '</tr>';
                 }
@@ -329,18 +329,147 @@ function renderPagination(paginationInfo) {
     // Display pagination
     document.getElementById('pagination').innerHTML = paginationHtml;
 }
-    
-        
-            
-            
-            
-            
-        
-    
-    
-        
-            
-            
 
-        
-    
+
+// goi da mua           
+
+function getbought(page) {
+    if (typeof page === 'undefined') {
+        page = 1;
+    }
+    $.ajax({
+        url: 'https://localhost:7274/api/infouser/bought?page=' + page,
+        method: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        error: function (response) {
+            console.log("error");
+        },
+        success: function (response) {
+            var results = response.results;
+            var paginationInfo = response.paginationInfo
+            const len = results.length;
+            let table = '';
+            table += '<h5>Dịch vụ đã mua</h5> <br />';
+            table += '<table class="table table-dark">';
+            table += '<thead>';
+            table += '<tr>';
+            table += '<th scope="col">Tên dịch vụ</th>';
+            table += '<th scope="col">Ngày mua</th>';
+            table += '<th scope="col">Thời gian sử dụng</th>';
+            table += '<th scope="col">Trạng thái</th>';
+            table += '</tr>';
+            table += '</thead>';
+            table += '<tbody>';
+            var currentTime = new Date().getTime();
+            for (var i = 0; i < len; i++) {
+                var subscriptionDate = new Date(results[i].subscriptionDate);
+                var expirationDate = new Date(results[i].expirationDate);
+                var timeRemaining = expirationDate.getTime() - subscriptionDate.getTime();
+
+
+                // Chuyển thời gian từ milliseconds sang ngày, giờ, phút, giây
+                var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                // Tạo chuỗi để hiển thị
+                var remainingTimeStr = days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây ";
+
+                table += '<tr>';
+                table += '<th scope="row">' + results[i].packageName + '</th>';
+                table += '<td>' + results[i].subscriptionDate + '</td>';
+                table += '<td>' + days + ' Ngày</td>';
+                var dynamicId = 'hsd_' + i;
+                if (expirationDate > currentTime) {
+                    table += '<td id="' + dynamicId + '"></td>';
+                    // Gọi hàm cập nhật thời gian còn lại với id tương ứng
+                    updateRemainingTime(dynamicId,results[i].expirationDate);
+                } else {
+                    table += '<td>Đã hết hạn</td>';
+                }
+                table += '<td>Thanh toán thành công</td>';
+                table += '</tr>';
+            }
+            table += '</tbody>';
+            table += '</table>';
+            renderPagination1(paginationInfo)
+            document.getElementById('infou').innerHTML = table;
+            updateModal();
+        },
+        fail: function (response) {
+            console.log("fail");
+        }
+    })
+}
+function updateRemainingTime(elementId, expirationDateString) {
+    var currentTime = new Date().getTime();
+    var expirationDate = new Date(expirationDateString);
+
+    // Kiểm tra tính hợp lệ của expirationDate
+    if (isNaN(expirationDate.getTime())) {
+        console.error("Ngày hết hạn không hợp lệ: ", expirationDateString);
+        return;
+    }
+
+    // Tính thời gian còn lại
+    var timeRemaining = expirationDate.getTime() - currentTime;
+
+    // Tạo chuỗi để hiển thị và cập nhật nội dung của phần tử HTML
+    var timer = setInterval(function () {
+        timeRemaining--;
+        var days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        if (days != 0) {
+            document.getElementById(elementId).innerText ="Còn " +days +"ngày";
+        }
+        if (days == 0 && hours != 0) {
+            document.getElementById(elementId).innerText = "Còn " + hours + "giờ";
+        } if (days == 0 && hours == 0) {
+            document.getElementById(elementId).innerText = "Còn " + minutes + "Phút";
+        }
+
+        // Kiểm tra xem thời gian còn lại có bằng 0 không
+        if (timeRemaining <= 0) {
+            clearInterval(timer); // Dừng đếm ngược
+            document.getElementById(elementId).innerText = "Đã hết hạn";
+        }
+    }, 1000);
+}
+
+
+function renderPagination1(paginationInfo) {
+    let paginationHtml = '';
+
+    // Add page links to pagination
+    if (paginationInfo.totalPages > 1) {
+        for (let i = 1; i <= paginationInfo.totalPages; i++) {
+            paginationHtml += '<a href="#" onclick="getbought(' + i + ')">' + i + '</a>';
+        }
+    }
+    // Display previous page link
+    if (paginationInfo.currentPage > 1) {
+        paginationHtml += '<a href="#" onclick="getbought( ' + (paginationInfo.currentPage - 1) + ')"><i class="fa fa-angle-double-left"></i></a>';
+    }
+
+    // Display next page link
+    if (paginationInfo.currentPage < paginationInfo.totalPages) {
+        paginationHtml += '<a href="#" onclick="getbought(' + (paginationInfo.currentPage + 1) + ')"><i class="fa fa-angle-double-right"></i></a>';
+    }
+
+    // Display pagination
+    document.getElementById('pagination').innerHTML = paginationHtml;
+}
+
+
+
+
+
+
+
+
+
+

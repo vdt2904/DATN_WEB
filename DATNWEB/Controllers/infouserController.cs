@@ -9,6 +9,7 @@ using Net.payOS;
 using Net.payOS.Types;
 using System.Text;
 using X.PagedList;
+using ZXing;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace DATNWEB.Controllers
@@ -110,7 +111,7 @@ namespace DATNWEB.Controllers
             }
         }
         [HttpGet("transactionhistory")]
-        public async Task<IActionResult> Transactionhistory(int ?page)
+        public async Task<IActionResult> Transactionhistory(int? page)
         {
             const int pageSize = 3;
             if (HttpContext.Session != null && HttpContext.Session.TryGetValue("UID", out byte[] uidBytes))
@@ -152,10 +153,33 @@ namespace DATNWEB.Controllers
                 return BadRequest("UserID not found in session.");
             }
         }
-
-
-
-
+        [HttpGet("bought")]
+        public IActionResult bought(int? page)
+        {
+            const int pageSize = 5;
+            var data = (from us in db.UserSubscriptions
+                        join sp in db.ServicePackages on us.PackageId equals sp.PackageId
+                        where us.UserId == HttpContext.Session.GetString("UID")
+                        orderby us.SubscriptionDate descending
+                        select new
+                        {
+                            us.Id,
+                            sp.PackageName,
+                            us.SubscriptionDate,
+                            us.ExpirationDate
+                        }
+                        ).ToList();
+            var total = data.Count;
+            var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+            var pageNumber = page ?? 1;
+            var pagedAnimes = data.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+            var paginationInfo = new
+            {
+                TotalPages = totalPages,
+                CurrentPage = pageNumber
+            };
+            return Ok(new { results = pagedAnimes, PaginationInfo = paginationInfo });
+        }
         [HttpGet("/home/infousers")]
         public IActionResult ProcessPayment(
         [FromQuery(Name = "code")] string code,
