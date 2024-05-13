@@ -5,15 +5,25 @@ function watch(a, b) {
     if (b == null) {
         urls = 'https://localhost:7274/api/AnimeWatching?aid=' + a;
     } else {
-        urls = 'https://localhost:7274/api/AnimeWatching?aid='+a+'&ep='+b;
+        urls = 'https://localhost:7274/api/AnimeWatching?aid=' + a + '&ep=' + b;
     }
     $.ajax({
         url: urls,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
-        error: function (response) {
-            console.log("error");
+        error: function (xhr) {
+            if (xhr.status === 400) {
+                var errorMessage = xhr.responseText;
+                if (errorMessage === "Bạn không phải là VIP" || errorMessage === "Bạn không phải là SVIP") {
+                    window.location.href = "../home/package";
+                } else {
+                    // Xử lý các trường hợp lỗi khác nếu cần
+                    console.log(errorMessage);
+                }
+            } else {
+                console.log("Lỗi không xác định");
+            }
         },
         success: function (response) {
             let table = '';
@@ -30,12 +40,63 @@ function watch(a, b) {
             table += '<h5>List Name</h5>';
             table += '</div>';
             var eps = response.e;
-            for (var i = 0; i < eps.length; i++) {
-                if (eps[i] == response.epside) {
-                   
-                    table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i] + '" style = "color: white; background-color:blue;">Ep ' + eps[i] + '</a>';
-                } else {
-                    table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i] + '">Ep ' + eps[i] + '</a>';
+            if (response.permission != 0) {
+                for (var i = 0; i < eps.length; i++) {
+                    if (eps[i].ep == response.epside) {
+                        if (new Date(eps[i].postingDate).getTime() < (new Date().getTime() + 7 * 24 * 60 * 60 * 1000) && new Date(eps[i].postingDate).getTime() > (new Date().getTime())) {
+                            // Your logic here
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '" style = "color: white; background-color:blue;">Ep ' + eps[i].ep + '<img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                        else if (new Date(eps[i].postingDate).getTime() > (new Date().getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                            // Your logic here
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '" style = "color: white; background-color:blue;">Ep ' + eps[i].ep + '<img src = "../home/img/svip_icon.jpg" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                        else {
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '" style = "color: white; background-color:blue;">Ep ' + eps[i].ep + '</a>';
+                        }
+                    }
+                    else {
+                        if (new Date(eps[i].postingDate).getTime() < (new Date().getTime() + 7 * 24 * 60 * 60 * 1000) && new Date(eps[i].postingDate).getTime() > (new Date().getTime())) {
+                            // Your logic here
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '">Ep ' + eps[i].ep + '<img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                        else if (new Date(eps[i].postingDate).getTime() > (new Date().getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                            // Your logic here
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '">Ep ' + eps[i].ep + '<img src = "../home/img/svip_icon.jpg" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                        else {
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '">Ep ' + eps[i].ep + '</a>';
+                        }
+
+                    }
+                }
+            } else {
+                for (var i = 0; i < eps.length; i++) {
+                    if (eps[i].ep == response.epside) {
+                        if (new Date(eps[i].postingDate).getTime() > (new Date().getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                            // Your logic here
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '" style = "color: white; background-color:blue;">Ep ' + eps[i].ep + '<img src = "../home/img/svip_icon.jpg" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                        else if (eps[i].ep == 0) {
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '" style = "color: white; background-color:blue;">Ep ' + eps[i].ep + '</a>';
+                        }
+                        else {
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '" style = "color: white; background-color:blue;">Ep ' + eps[i].ep + '<img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                    }
+                    else {
+                        if (new Date(eps[i].postingDate).getTime() > (new Date().getTime() + 7 * 24 * 60 * 60 * 1000)) {
+                            // Your logic here
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '">Ep ' + eps[i].ep + '<img src = "../home/img/svip_icon.jpg" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+                        else if (eps[i].ep == 0) {
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '">Ep ' + eps[i].ep + '</a>';
+                        }
+                        else {
+                            table += '<a href="../Home/Episode?id=' + response.animeId + '&ep=' + eps[i].ep + '">Ep ' + eps[i].ep + '<img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 20px; height: 20px;" ></a>';
+                        }
+
+                    }
                 }
             }
             console.log(response.epside)
@@ -174,7 +235,7 @@ function addreview(id) {
             console.log("fail");
         }
     })
-}   
+}
 
 window.addEventListener('beforeunload', function (event) {
     requestSent = true;
@@ -188,11 +249,11 @@ window.addEventListener('beforeunload', function (event) {
     sendApiRequest(currentTime, ids, duration);
 
     // Thông báo cho trình duyệt biết rằng bạn không muốn rời khỏi trang
-    event.preventDefault();
+    //event.preventDefault();
     // Chrome cần một giá trị cho event.returnValue
     event.returnValue = '';
-}); 
-        
+});
+
 function sendApiRequest(time, id, times) {
     var bool = 0;
     if (time > times / 2) {
@@ -214,7 +275,7 @@ function sendApiRequest(time, id, times) {
         url: 'https://localhost:7274/api/animewatching/addview',
         method: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({ episodeId: id, userId: localStorage.getItem("uid"), viewDate: formattedDateTime, duration: formatTime(time), isView:bool }),
+        data: JSON.stringify({ episodeId: id, userId: localStorage.getItem("uid"), viewDate: formattedDateTime, duration: formatTime(time), isView: bool }),
         success: function (response) {
             console.log(response);
         },
@@ -237,12 +298,12 @@ function formatTime(seconds) {
 
     return formattedTime;
 }
-        
-        
-    
-    
-        
-            
-        
-        
-    
+
+
+
+
+
+
+
+
+

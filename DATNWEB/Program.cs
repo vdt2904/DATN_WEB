@@ -21,6 +21,9 @@ using DATNWEB.helpter;
 using DATNWEB.Service;
 using DATNWEB.Payments.Momo.Config;
 using Net.payOS;
+using Hangfire;
+using Hangfire.SqlServer;
+using DATNWEB.HangFire;
 
 QlPhimAnimeContext db = new QlPhimAnimeContext();
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +57,13 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+//hangfire config
+builder.Services.AddHangfire(configurations => configurations
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection")));
+builder.Services.AddHangfireServer();
 // thêm dịch vụ signalR
 builder.Services.AddSignalR();
 // login gg fb
@@ -112,6 +122,11 @@ builder.Services.AddAuthentication(x =>
 });
 
 var app = builder.Build();
+//hangfire
+app.UseHangfireDashboard();
+RecurringJob.AddOrUpdate<UpdateScheduledTasks>("RunDailyTask", x => x.RunDailyTask(), Cron.Daily(12, 00)); // Lập lịch chạy vào 12h hàng ngày
+//RecurringJob.AddOrUpdate<UpdateScheduledTasks>("RunDailyTask", x => x.RunDailyTask(), Cron.MinuteInterval(1));
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
