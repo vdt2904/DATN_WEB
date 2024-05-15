@@ -35,6 +35,15 @@ namespace DATNWEB.Controllers
 
             ep = ep ?? 0;
             var epi = db.Episodes.Where(x => x.AnimeId == aid && x.Ep == ep).FirstOrDefault();
+            var viewDuration = db.Views
+                    .Where(x => x.EpisodeId == epi.EpisodeId && x.UserId == HttpContext.Session.GetString("UID"))
+                    .OrderByDescending(x => x.ViewDate) // Sắp xếp giảm dần theo ngày xem
+                    .Select(x => x.Duration) // Chỉ lấy thời lượng
+                    .FirstOrDefault();
+
+            // Convert the TimeSpan to seconds
+            int view = viewDuration.HasValue ? (int)viewDuration.Value.TotalSeconds : 0;
+
             var detail = new
             {
                 epi.AnimeId,
@@ -44,7 +53,8 @@ namespace DATNWEB.Controllers
                 epi.Title,
                 e = eps,
                 epside = ep,
-                ani.Permission
+                ani.Permission,
+                view
             };            
             return Ok(detail);
         }

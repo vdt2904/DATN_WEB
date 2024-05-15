@@ -159,7 +159,9 @@ namespace DATNWEB.Controllers
                     return Redirect("/home/vietqr?id=" + b);
             }
         }
-
-
+        public IActionResult history()
+        {
+            return View();
+        }
     }
 }

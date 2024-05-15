@@ -1,6 +1,6 @@
 ﻿let connection;
 var ids = "";
-function watch(a, b) {
+function watch(a, b,c) {
     var urls = '';
     if (b == null) {
         urls = 'https://localhost:7274/api/AnimeWatching?aid=' + a;
@@ -112,6 +112,11 @@ function watch(a, b) {
             });
 
             connection.start().catch(err => console.error(err));
+            var videoElement = document.getElementById('player');
+            videoElement.addEventListener('loadedmetadata', function () {
+                videoElement.currentTime = response.view;
+              //  videoElement.play(); // Bắt đầu phát video sau khi đã đặt thời gian
+            }, false);
         },
         fail: function (response) {
             console.log("fail");
@@ -237,22 +242,30 @@ function addreview(id) {
     })
 }
 
+var requestSent = false;
+
 window.addEventListener('beforeunload', function (event) {
-    requestSent = true;
-    // Lấy thời gian hiện tại của video
-    var player = document.getElementById("player");
-    var currentTime = player.currentTime;
+    // Đảm bảo rằng yêu cầu chỉ được gửi một lần khi người dùng rời khỏi trang
+    if (!requestSent) {
+        // Lấy phần tử video bằng ID
+        var player = document.getElementById("player");
 
-    var duration = player.duration;
+        // Kiểm tra nếu player tồn tại
+        if (player) {
+            var currentTime = player.currentTime;
+            var duration = player.duration;
 
-    // Gửi yêu cầu HTTP POST đến API để ghi nhận thời gian đang xem
-    sendApiRequest(currentTime, ids, duration);
+            // Gửi yêu cầu HTTP POST đến API để ghi nhận thời gian đang xem
+            sendApiRequest(currentTime, ids, duration);
+        }
 
-    // Thông báo cho trình duyệt biết rằng bạn không muốn rời khỏi trang
-    //event.preventDefault();
+        // Đặt requestSent thành true để đánh dấu đã gửi yêu cầu
+        requestSent = true;
+    }
+
     // Chrome cần một giá trị cho event.returnValue
-    event.returnValue = '';
 });
+
 
 function sendApiRequest(time, id, times) {
     var bool = 0;
@@ -271,7 +284,7 @@ function sendApiRequest(time, id, times) {
     // Tạo chuỗi định dạng "yyyy-mm-ddThh:mm:ss"
     var formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
     // Gửi yêu cầu AJAX POST đến API
-    $.ajax({
+/*    $.ajax({
         url: 'https://localhost:7274/api/animewatching/addview',
         method: 'POST',
         contentType: 'application/json',
@@ -282,7 +295,19 @@ function sendApiRequest(time, id, times) {
         error: function (response) {
             console.log(response);
         }
+    });*/
+    var data = JSON.stringify({
+        episodeId: id,
+        userId: localStorage.getItem("uid"),
+        viewDate: formattedDateTime,
+        duration: formatTime(time),
+        isView: bool
     });
+
+    // Sử dụng Navigator.sendBeacon để gửi yêu cầu không đồng bộ
+    var url = 'https://localhost:7274/api/animewatching/addview';
+    var blob = new Blob([data], { type: 'application/json' });
+    navigator.sendBeacon(url, blob);
 }
 
 

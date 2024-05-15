@@ -12,7 +12,13 @@ namespace DATNWEB.Controllers
         public IActionResult package()
         {
             var p = db.ServicePackages.ToList();
-            return Ok(p);
+            var user = db.Users.Find(HttpContext.Session.GetString("UID"));
+            var data = new
+            {
+                p,
+                user
+            };
+            return Ok(data);
         }
     }
 }

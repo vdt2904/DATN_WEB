@@ -240,26 +240,6 @@ namespace DATNWEB.Controllers
             }
         }
 
-        [HttpGet("test")]
-        public IActionResult Test()
-        {
-            var lst = (from u in db.Users
-                       join us in db.UserSubscriptions on u.UserId equals us.UserId
-                       where us.ExpirationDate > DateTime.Now.AddDays(-1)
-                       group us by new { u.UserId, us.PackageId } into grouped
-                       select new
-                       {
-                           UserId = grouped.Key.UserId,
-                           PackageID = grouped.Key.PackageId,
-                           ExpirationDate = grouped.Max(x => x.ExpirationDate)
-                       }).Distinct().ToList();
-
-            lst = lst.OrderByDescending(x => x.UserId).ThenByDescending(x => x.PackageID).ToList();
-
-            var lst1 = (from u in db.Users.ToList() // Chuyển danh sách User thành danh sách trong bộ nhớ
-                        where u.UserType != 0 && !lst.Any(x => x.UserId == u.UserId)
-                        select u).ToList();
-            return Ok(lst);
-        }
+       
     }
 }

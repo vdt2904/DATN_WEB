@@ -115,7 +115,7 @@ namespace DATNWEB.Controllers
         {
             const int pageSize = 15;
             DateTime today = DateTime.Now;
-            DateTime oneWeekAgo = today.AddDays(-365);
+            DateTime oneWeekAgo = today.AddDays(-60);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId
@@ -225,7 +225,6 @@ namespace DATNWEB.Controllers
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId into viewGroup
                             from v in viewGroup.DefaultIfEmpty()
-                            where v == null || v.IsView == 1
                             group new { a, e, v } by new
                             {
                                 a.AnimeId,
@@ -234,14 +233,14 @@ namespace DATNWEB.Controllers
                                 a.AnimeName,
                                 a.Permission
                             } into grouped
-                            orderby grouped.Sum(x => x.v != null ? 1 : 0) descending
+                            orderby grouped.Sum(x => x.v != null && x.v.IsView == 1 ? 1 : 0) descending
                             select new
                             {
                                 AnimeId = grouped.Key.AnimeId,
                                 TotalEpisode = grouped.Key.TotalEpisode,
                                 AnimeName = grouped.Key.AnimeName,
                                 ImageVUrl = grouped.Key.ImageVUrl,
-                                Total = grouped.Sum(x => x.v != null ? 1 : 0),
+                                Total = grouped.Sum(x => x.v != null && x.v.IsView == 1 ? 1 : 0),
                                 Permission = grouped.Key.Permission
                             }
              ).Take(6).ToList();
@@ -321,7 +320,6 @@ namespace DATNWEB.Controllers
                           from e in episodeGroup.DefaultIfEmpty()
                           join v in db.Views on e != null ? e.EpisodeId : null equals v.EpisodeId into viewGroup
                           from v in viewGroup.DefaultIfEmpty()
-                          where v == null || v.IsView == 1
                           group new { a, e, v } by new
                           {
                               a.AnimeId,
@@ -329,7 +327,7 @@ namespace DATNWEB.Controllers
                           select new
                           {
                               AnimeId = grouped.Key.AnimeId,
-                              Total = grouped.Sum(x => x.v != null ? 1 : 0),
+                              Total = grouped.Sum(x => x.v != null && x.v.IsView == 1 ? 1 : 0),
                           }).ToList();
             var maxEpisodes = (from a in idanimes
                                join e in db.Episodes on a.AnimeId equals e.AnimeId into episodeGroup
