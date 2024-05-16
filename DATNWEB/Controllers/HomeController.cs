@@ -54,11 +54,6 @@ namespace DATNWEB.Controllers
             var a = db.Animes.Find(id);
             return View(a);
         }
-        public IActionResult Watch(string id)
-        {
-            var a = db.Episodes.Where(x => x.AnimeId == id && x.Ep == 0).FirstOrDefault();
-            return Redirect($"/home/episode?id={a.AnimeId}&ep={a.Ep}");
-        }
         public IActionResult Episode(string id, int ep)
         {
             var ani = db.Animes.Find(id);

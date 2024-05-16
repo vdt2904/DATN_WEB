@@ -60,7 +60,7 @@ function detail(a) {
             table += '</div>';
             table += '<div class="anime__details__btn">';
             table += '<a href="#" class="follow-btn"><i class="fa fa-heart-o"></i> Follow</a>';
-            table += '<a href="/home/Watch?id=' + response.animeId + '" class="watch-btn">';
+            table += '<a href="/home/Episode?id=' + response.animeId + '&ep='+ response.ep+'" class="watch-btn">';
             table += '<span>Watch Now</span> <i class="fa fa-angle-right"></i>';
             table += '</a>';
             table += '</div>';

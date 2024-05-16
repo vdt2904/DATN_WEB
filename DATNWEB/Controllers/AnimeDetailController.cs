@@ -2,6 +2,7 @@
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using X.PagedList;
 namespace DATNWEB.Controllers
 {
@@ -13,10 +14,111 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult AnimeDetail(string id)
         {
-            var idanime = db.Animes.Where(x=>x.AnimeId==id).ToList();
-            if (idanime == null)
+            var latestViews = (
+                                from v in db.Views
+                                join e in db.Episodes on v.EpisodeId equals e.EpisodeId
+                                join a in db.Animes on e.AnimeId equals a.AnimeId
+                                where v.UserId == HttpContext.Session.GetString("UID") && a.AnimeId == id
+                                group new { v, e, a } by e.AnimeId into g
+                                select new
+                                {
+                                    AnimeId = g.Key,
+                                    EpisodeId = g.OrderByDescending(vea => vea.v.ViewDate).FirstOrDefault().e.EpisodeId,
+                                    Ep = g.OrderByDescending(vea => vea.v.ViewDate).FirstOrDefault().e.Ep,
+                                    max_ngayxem = g.Max(vea => vea.v.ViewDate),
+                                    TotalEpisode = g.FirstOrDefault().a.TotalEpisode,
+                                    ImageVUrl = g.FirstOrDefault().a.ImageVUrl,
+                                    AnimeName = g.FirstOrDefault().a.AnimeName,
+                                    Permission = g.FirstOrDefault().a.Permission,
+                                    BroadcastSchedule = g.FirstOrDefault().a.BroadcastSchedule,
+                                    Information = g.FirstOrDefault().a.Information,
+                                    DirectorId = g.FirstOrDefault().a.DirectorId,
+                                    Genres = (
+                                           from fg in db.FilmGenres
+                                           join ge in db.Genres on fg.GenreId equals ge.GenreId
+                                           where fg.AnimeId == g.Key
+                                           select new
+                                           {
+                                               GenreId = ge.GenreId,
+                                               GenreName = ge.GenreName
+                                           }
+                                       ).Distinct().ToList(),
+                                }
+                            ).ToList();
+            var idanime = latestViews.OrderByDescending(x => x.max_ngayxem).ToList();
+
+            
+            var idanime1 = db.Animes.Where(x=>x.AnimeId==id).ToList();
+
+            
+
+
+            if (idanime == null || idanime.Count == 0)
             {
-                return BadRequest();
+                if(idanime1 == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    var totalv = (from a in db.Animes
+                                  join e in db.Episodes on a.AnimeId equals e.AnimeId into episodeGroup
+                                  from e in episodeGroup.DefaultIfEmpty()
+                                  join v in db.Views on e != null ? e.EpisodeId : null equals v.EpisodeId into viewGroup
+                                  from v in viewGroup.DefaultIfEmpty()
+                                  where a.AnimeId == id
+                                  group new { a, e, v } by new
+                                  {
+                                      a.AnimeId,
+                                  } into grouped
+                                  select new
+                                  {
+                                      AnimeId = grouped.Key.AnimeId,
+                                      Total = grouped.Sum(x => x.v != null && x.v.IsView == 1 ? 1 : 0),
+                                  }).ToList();
+                    var totalc = (from a in db.Animes
+                                  join e in db.Episodes on a.AnimeId equals e.AnimeId into episodeGroup
+                                  from e in episodeGroup.DefaultIfEmpty()
+                                  join c in db.Comments on e != null ? e.EpisodeId : null equals c.EpisodeId into commentGroup
+                                  from c in commentGroup.DefaultIfEmpty()
+                                  where a.AnimeId == id
+                                  group new { a, e, c } by new
+                                  {
+                                      a.AnimeId,
+                                  } into grouped
+                                  select new
+                                  {
+                                      AnimeId = grouped.Key.AnimeId,
+                                      Totalc = grouped.Sum(x => x.c != null ? 1 : 0),
+                                  }).ToList();
+                    var detail = (from a in idanime1
+                                  join v in totalv on a.AnimeId equals v.AnimeId
+                                  join c in totalc on a.AnimeId equals c.AnimeId
+                                  where a.AnimeId == id
+                                  select new
+                                  {
+                                      a.AnimeId,
+                                      a.ImageVUrl,
+                                      a.AnimeName,
+                                      genre = (from fg in db.FilmGenres
+                                               join g in db.Genres on fg.GenreId equals g.GenreId
+                                               where fg.AnimeId == a.AnimeId
+                                               select new
+                                               {
+                                                   GenreId = g.GenreId,
+                                                   GenreName = g.GenreName
+                                               }
+                                              ).ToList(),
+                                      a.BroadcastSchedule,
+                                      a.Information,
+                                      a.Permission,
+                                      v.Total,
+                                      c.Totalc,
+                                      direc = db.Directors.Where(x => x.DirectorId == a.DirectorId).Select(x => x.DirectorName).FirstOrDefault(),
+                                      Ep = 0
+                                  }).FirstOrDefault();
+                    return Ok(detail);
+                }
             }
             else
             {
@@ -25,7 +127,7 @@ namespace DATNWEB.Controllers
                               from e in episodeGroup.DefaultIfEmpty()
                               join v in db.Views on e != null ? e.EpisodeId : null equals v.EpisodeId into viewGroup
                               from v in viewGroup.DefaultIfEmpty()
-                              where v == null || v.IsView == 1 && a.AnimeId == id
+                              where a.AnimeId == id
                               group new { a, e, v } by new
                               {
                                   a.AnimeId,
@@ -33,7 +135,7 @@ namespace DATNWEB.Controllers
                               select new
                               {
                                   AnimeId = grouped.Key.AnimeId,
-                                  Total = grouped.Sum(x => x.v != null ? 1 : 0),
+                                  Total = grouped.Sum(x => x.v != null && x.v.IsView == 1 ? 1 : 0),
                               }).ToList();
                 var totalc = (from a in db.Animes
                               join e in db.Episodes on a.AnimeId equals e.AnimeId into episodeGroup
@@ -73,6 +175,7 @@ namespace DATNWEB.Controllers
                                 a.Permission,
                                 v.Total,
                                 c.Totalc,
+                                a.Ep,
                                 direc = db.Directors.Where(x => x.DirectorId == a.DirectorId).Select(x=>x.DirectorName).FirstOrDefault()
                              }).FirstOrDefault();
                 return Ok(detail);
