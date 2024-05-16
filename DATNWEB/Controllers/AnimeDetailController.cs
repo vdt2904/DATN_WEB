@@ -45,14 +45,8 @@ namespace DATNWEB.Controllers
                                        ).Distinct().ToList(),
                                 }
                             ).ToList();
-            var idanime = latestViews.OrderByDescending(x => x.max_ngayxem).ToList();
-
-            
+            var idanime = latestViews.OrderByDescending(x => x.max_ngayxem).ToList();           
             var idanime1 = db.Animes.Where(x=>x.AnimeId==id).ToList();
-
-            
-
-
             if (idanime == null || idanime.Count == 0)
             {
                 if(idanime1 == null)
