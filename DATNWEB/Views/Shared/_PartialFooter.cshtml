@@ -39,9 +39,66 @@
             <input type="text" id="search-input" placeholder="Search here.....">
         </form>
     </div>
+    <div class="suggestsearch" style="">
+        <ul>
+            <li>
+                <a href="https://www.nettruyendie.com/truyen-tranh/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay-6677">
+                    <img class="lazy" src="https://res.cloudinary.com/dbpbkj4pg/image/upload/v1706190193/DATN/Anime/AN0001/vAN0001.jpg" data-original="https://res.cloudinary.com/dbpbkj4pg/image/upload/v1706190193/DATN/Anime/AN0001/vAN0001.jpg" alt="Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy">
+                    <div>
+                        <h4>Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy</h4>
+                        <h6>
+                            <ul>
+                                <li><i>Chapter 4</i></li>
+                                <li><i>Slice of life,Shoujo,Gender Bender,Comedy</i></li>
+                            </ul>                                                      
+                        </h6>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 <!-- Search model end -->
 <!-- Js Plugins -->
+@*<div class="suggestsearch" style="">
+    <ul>
+        <li>
+            <a href="https://www.nettruyendie.com/truyen-tranh/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay-6677">
+                <img class="lazy" src="https://www.nettruyendie.com/images/comics/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay.jpg" data-original="https://www.nettruyendie.com/images/comics/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay.jpg" alt="Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy">
+                <h3>Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy</h3>
+                <h4>
+                    <i>Chapter 4</i>
+                    <i> <b>Đang cập nhật</b> </i>
+                    <i>Slice of life,Shoujo,Gender Bender,Comedy</i>
+                </h4>
+            </a>
+        </li>
+    </ul>
+</div>*@
 
 
+<script>
+    // Khi một phần tử có lớp 'search-switch' được nhấp vào
+    $('.search-switch').on('click', function (e) {
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
+        // Hiển thị mô hình tìm kiếm trong 400 mili giây
+        $('.search-model').fadeIn(400);
+    });
 
+    // Khi một phần tử có lớp 'search-close-switch' được nhấp vào
+    $('.search-close-switch').on('click', function () {
+        // Ẩn mô hình tìm kiếm trong 400 mili giây, sau đó xóa nội dung trong ô tìm kiếm
+        $('.search-model').fadeOut(400, function () {
+            $('#search-input').val('');
+        });
+    });
+    $(document).ready(function () {
+        $('#search-input').on('input', function () {
+            if ($(this).val().length > 0) {
+                $('.h-100').removeClass('h-100').addClass('h-25');
+            } else {
+                $('.h-25').removeClass('h-25').addClass('h-100');
+            }
+        });
+    });
+</script>

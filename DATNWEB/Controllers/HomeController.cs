@@ -158,5 +158,10 @@ namespace DATNWEB.Controllers
         {
             return View();
         }
+        public IActionResult Search(string keyword)
+        {
+            ViewBag.keyword = keyword;
+            return View();
+        }
     }
 }
