@@ -2470,55 +2470,64 @@ ol {
     color: #fff;
 }
 
-/*.suggestsearch {
-    width: 422px;
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Đảm bảo hiển thị trên các phần tử khác */
+    background-color: rgba(0, 0, 0, 0.8); /* Màu nền với độ mờ */
+    color: white;
+    border-radius: 5px;
+    padding: 15px;
+    width:300px;
 }
 
-.suggestsearch {
+    .notification a {
+        display: flex;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .notification img {
+        width: 75px;
+        height: 100px;
+        margin-right: 20px;
+    }
+
+    .notification > div {
+        display: flex;
+    }
+
+        .notification > div > div {
+            flex: 1; /* Đảm bảo phần tử nằm bên phải chiếm phần còn lại của div cha */
+        }
+
+    .notification h4 {
+        color:azure!important;
+        margin: 0;
+    }
+
+    .notification h6 {
+        margin-top: 5px;
+    }
+
+    .notification ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .notification li {
+        margin-bottom: 5px;
+    }
+
+.close-btn {
     position: absolute;
-    top: 32px;
-    left: 0;
-    z-index: 1;
-    max-height: 375px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: 1px solid #ebebeb;
-    background-color: #fff;
-    -moz-transition: all .3s ease-out;
-    -ms-transition: all .3s ease-out;
-    -o-transition: all .3s ease-out;
-    transition: all .3s ease-out;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
 }
-
-.suggestsearch ul li {
-    padding: 5px 0;
-    list-style: none;
-    display: block;
-    border-bottom: 1px solid #ebebeb;
-}
-.suggestsearch ul li a {
-    padding: 0;
-    display: block;
-}
-.suggestsearch ul li a img {
-    float: left;
-    margin: 0 5px 0 0;
-    width: 50px;
-    height: 50px;
-}
-.suggestsearch ul li a h3, .suggestsearch ul li a h4 {
-    color: #333;
-    font-size: 14px;
-    font-weight: 700;
-    margin: 0;
-    margin-right: 5px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-    .suggestsearch ul li a i {
-        display: block;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }*/

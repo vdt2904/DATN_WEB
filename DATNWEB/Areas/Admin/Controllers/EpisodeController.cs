@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DATNWEB.Models.Authentication;
+using DATNWEB.Hubs;
+using Microsoft.AspNetCore.SignalR;
+using DATNWEB.Models.ViewModel;
 
 namespace DATNWEB.Areas.Admin.Controllers
 {
@@ -13,6 +16,12 @@ namespace DATNWEB.Areas.Admin.Controllers
     [Area("admin")]
     public class EpisodeController : Controller
     {
+        private readonly IHubContext<NotificationHub> _hubContext;
+
+        public EpisodeController(IHubContext<NotificationHub> hubContext)
+        {
+            _hubContext = hubContext;
+        }
         private HttpClient httpClient = new HttpClient();
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         [Route("admin/Episode")]
@@ -50,7 +59,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("Episodeadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EpisodeAdds(Episode Episode, IFormFile video)
+        public async Task<IActionResult> EpisodeAdds(Episode Episode, IFormFile video)
         {
             if (ModelState.IsValid)
             {
@@ -73,12 +82,31 @@ namespace DATNWEB.Areas.Admin.Controllers
                     var hUploadResult = cloudinary.Upload(hUploadParams);
                     Episode.VideoUrl = hUploadResult.SecureUrl.ToString();
                 }
-
+                var b = db.Animes.Find(Episode.AnimeId);
+                NotificationView a = new NotificationView
+                {
+                    AnimeId = Episode.AnimeId,
+                    AnimeName = b.AnimeName,
+                    ImageVUrl = b.ImageVUrl,
+                    Episode = Episode.Ep,
+                    PostingDate = Episode.PostingDate,
+                    Title = Episode.Title,
+                    Permission = b.Permission,
+                };
                 db.Episodes.Add(Episode);
                 db.SaveChanges();
+                await AddNewEpisode(a);
                 return RedirectToAction("EpisodeList" , new {id = Episode.AnimeId});
             }
             return RedirectToAction("EpisodesAdd");
+        }
+        public async Task AddNewEpisode(NotificationView newEpisode)
+        {
+            // Thêm tập phim mới vào cơ sở dữ liệu
+            // ...
+
+            // Gửi thông báo đến các client
+            await _hubContext.Clients.All.SendAsync("ReceiveNewEpisodeNotification", newEpisode);
         }
         [Route("admin/Episodeedit")]
         [HttpGet]
@@ -155,5 +183,6 @@ namespace DATNWEB.Areas.Admin.Controllers
 
             return RedirectToAction("EpisodeList", new { id = ep.AnimeId });
         }
+        
     }
 }

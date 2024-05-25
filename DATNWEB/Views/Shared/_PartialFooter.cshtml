@@ -34,13 +34,13 @@
 <!-- Search model Begin -->
 <div class="search-model">
     <div class="h-100 d-flex align-items-center justify-content-center">
-        <div class="search-close-switch"><i class="icon_close"></i></div>
+        <div onclick="clearSearchInput()" class="search-close-switch"><i class="icon_close"></i></div>
         <form class="search-model-form">
-            <input type="text" id="search-input" placeholder="Search here.....">
+            <input type="text" id="search-input" onkeypress="handleKeyPress(event)" placeholder="Search here.....">
         </form>
     </div>
-    <div class="suggestsearch" style="">
-        <ul>
+    <div class="suggestsearch" style="" id="suggestsearch">
+        @*<ul>
             <li>
                 <a href="https://www.nettruyendie.com/truyen-tranh/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay-6677">
                     <img class="lazy" src="https://res.cloudinary.com/dbpbkj4pg/image/upload/v1706190193/DATN/Anime/AN0001/vAN0001.jpg" data-original="https://res.cloudinary.com/dbpbkj4pg/image/upload/v1706190193/DATN/Anime/AN0001/vAN0001.jpg" alt="Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy">
@@ -55,28 +55,11 @@
                     </div>
                 </a>
             </li>
-        </ul>
+        </ul>*@
     </div>
 </div>
 <!-- Search model end -->
 <!-- Js Plugins -->
-@*<div class="suggestsearch" style="">
-    <ul>
-        <li>
-            <a href="https://www.nettruyendie.com/truyen-tranh/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay-6677">
-                <img class="lazy" src="https://www.nettruyendie.com/images/comics/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay.jpg" data-original="https://www.nettruyendie.com/images/comics/khoang-khac-ban-toi-noi-rang-cau-ay-muon-thu-mac-vay.jpg" alt="Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy">
-                <h3>Khoảng Khắc Bạn Tôi (♂) Nói Rằng Cậu Ấy Muốn Thử Mặc Váy</h3>
-                <h4>
-                    <i>Chapter 4</i>
-                    <i> <b>Đang cập nhật</b> </i>
-                    <i>Slice of life,Shoujo,Gender Bender,Comedy</i>
-                </h4>
-            </a>
-        </li>
-    </ul>
-</div>*@
-
-
 <script>
     // Khi một phần tử có lớp 'search-switch' được nhấp vào
     $('.search-switch').on('click', function (e) {
@@ -102,3 +85,4 @@
         });
     });
 </script>
+<script src="@Url.Content("~/pagesjs/SuggestSearch.js")"></script>

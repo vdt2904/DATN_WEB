@@ -1,4 +1,4 @@
-﻿let connection;
+﻿let connection1;
 var ids = "";
 function watch(a, b,c) {
     var urls = '';
@@ -103,15 +103,15 @@ function watch(a, b,c) {
             table += '</div>';
             table += '</div>';
             document.getElementById('video').innerHTML = table;
-            connection = new signalR.HubConnectionBuilder()
+            connection1 = new signalR.HubConnectionBuilder()
                 .withUrl("/commenthub/" + response.episodeId)
                 .build();
-            connection.on("ReviewRequested", () => {
+            connection1.on("ReviewRequested", () => {
                 // Gọi hàm để thực hiện lấy dữ liệu review
                 getcmt(response.episodeId);
             });
 
-            connection.start().catch(err => console.error(err));
+            connection1.start().catch(err => console.error(err));
             var videoElement = document.getElementById('player');
             videoElement.addEventListener('loadedmetadata', function () {
                 videoElement.currentTime = response.view;
@@ -231,7 +231,7 @@ function addreview(id) {
             console.log("error");
         },
         success: function (response) {
-            connection.invoke("RequestReview").catch(err => console.error(err));
+            connection1.invoke("RequestReview").catch(err => console.error(err));
             document.getElementById("idrv").value = ""; // Xóa nội dung của textarea
         },
 

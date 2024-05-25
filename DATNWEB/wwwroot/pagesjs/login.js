@@ -22,10 +22,11 @@
     });
 }
 window.addEventListener('message', function (event) {
+    console.log("Received message:", event.data);
     // Kiểm tra xem thông điệp có phải là yêu cầu reload trang không
     if (event.data === 'reloadLogin') {
         // Reload lại trang
-        window.location.href = 'https://localhost:7274/Home/Login';
+        window.location.href = 'https://localhost:7274/Home/login';
     }
 });
 function loginWithGoogle() {
@@ -41,10 +42,22 @@ function loginWithGoogle() {
 
     // Mở cửa sổ pop-up ở giữa trang
     var googleLoginWindow = window.open("/loginGGFB/logingg", "_blank", "width=600,height=600,left=" + leftPosition + ",top=" + topPosition);
-    googleLoginWindow.addEventListener('beforeunload', function () {
+    if (googleLoginWindow) {
+        var timer = setInterval(function () {
+            if (googleLoginWindow.closed) {
+                clearInterval(timer);
+                console.log("Pop-up closed. Sending message to reload login...");
+                // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
+                window.postMessage('reloadLogin', '*');
+            }
+        }, 500);
+    } else {
+        console.error("Failed to open the pop-up window.");
+    }
+/*    googleLoginWindow.addEventListener('beforeunload', function () {
         // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
-        window.opener.postMessage('reloadLogin', 'https://localhost:7274/Home/Login');
-    });
+        window.postMessage('reloadLogin', '*');
+    });*/
 }
 
 function loginWithFace() {
@@ -59,10 +72,22 @@ function loginWithFace() {
 
     // Mở cửa sổ pop-up ở giữa trang
     var googleLoginWindow = window.open("/loginGGFB/loginfb", "_blank", "width=600,height=600,left=" + leftPosition + ",top=" + topPosition);
-    googleLoginWindow.addEventListener('beforeunload', function () {
+    if (googleLoginWindow) {
+        var timer = setInterval(function () {
+            if (googleLoginWindow.closed) {
+                clearInterval(timer);
+                console.log("Pop-up closed. Sending message to reload login...");
+                // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
+                window.postMessage('reloadLogin', '*');
+            }
+        }, 500);
+    } else {
+        console.error("Failed to open the pop-up window.");
+    }
+/*    googleLoginWindow.addEventListener('beforeunload', function () {
         // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
         window.opener.postMessage('reloadLogin', 'https://localhost:7274/Home/Login');
-    });
+    });*/
 }
 
 function register() {

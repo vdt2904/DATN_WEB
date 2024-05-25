@@ -56,6 +56,10 @@ namespace DATNWEB.Controllers
         }
         public IActionResult Episode(string id, int ep)
         {
+            if(HttpContext.Session.GetString("UID") == null)
+            {
+                return RedirectToAction("login", "Home");
+            }
             var ani = db.Animes.Find(id);
             var us = db.Users.Find(HttpContext.Session.GetString("UID"));
             var a = db.Episodes.Where(x => x.AnimeId == id && x.Ep == ep).FirstOrDefault();

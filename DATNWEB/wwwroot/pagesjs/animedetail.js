@@ -1,4 +1,4 @@
-﻿let connection;
+﻿let connection1;
 function detail(a) {
     $.ajax({
         url: 'https://localhost:7274/api/animedetail?id=' + a,
@@ -70,16 +70,16 @@ function detail(a) {
             rate(response.animeId);
             mikelike(response.animeId);
             getreview(response.animeId);
-            connection = new signalR.HubConnectionBuilder()
+            connection1 = new signalR.HubConnectionBuilder()
                 .withUrl("/reviewhub/"+a)
                 .build();
-            connection.on("ReviewRequested", () => {
+            connection1.on("ReviewRequested", () => {
                 // Gọi hàm để thực hiện lấy dữ liệu review
                 rate(response.animeId);
                 getreview(response.animeId);
             });
 
-            connection.start().catch(err => console.error(err));
+            connection1.start().catch(err => console.error(err));
         },
         fail: function (response) {
             console.log("fail");
@@ -312,7 +312,7 @@ function addreview(id) {
             console.log("error");
         },
         success: function (response) {
-            connection.invoke("RequestReview").catch(err => console.error(err));
+            connection1.invoke("RequestReview").catch(err => console.error(err));
             getreview(id);
             document.getElementById("vrate").selectedIndex = 0; // Chọn lại option đầu tiên
             document.getElementById("idrv").value = ""; // Xóa nội dung của textarea
