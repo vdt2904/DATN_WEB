@@ -1,7 +1,7 @@
 ﻿let connection1;
 function detail(a) {
     $.ajax({
-        url: 'https://localhost:7274/api/animedetail?id=' + a,
+        url: baseUrl+'api/animedetail?id=' + a,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -96,7 +96,7 @@ function convertdate(inputDateString) {
 
 function mikelike(a) {
     $.ajax({
-        url: 'https://localhost:7274/api/animedetail/Mikelike?id=' + a,
+        url: baseUrl+'api/animedetail/Mikelike?id=' + a,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -130,7 +130,7 @@ function mikelike(a) {
 function getreview(id,page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/animedetail/review?id='+id+'&page=' + page,
+        url: baseUrl+'api/animedetail/review?id='+id+'&page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -203,7 +203,7 @@ function getreview(id,page) {
 
 function rate(id) {
     $.ajax({
-        url: 'https://localhost:7274/api/animedetail/rate?id=' + id,
+        url: baseUrl+'api/animedetail/rate?id=' + id,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -284,7 +284,10 @@ function renderPagination(paginationInfo, id) {
 
 function addreview(id) {
     // Tạo một đối tượng Date hiện tại
-    var currentDate = new Date();
+    var currentDate1 = new Date();
+    var utcTime = currentDate1.getTime() + (currentDate1.getTimezoneOffset() * 60000);
+    // Tạo đối tượng Date mới với UTC+7
+    var currentDate = new Date(utcTime + (7 * 60 * 60000));
     var year = currentDate.getFullYear();
     var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng, thêm 0 nếu cần thiết
     var day = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày, thêm 0 nếu cần thiết
@@ -304,7 +307,7 @@ function addreview(id) {
     }
     console.log(item);
     $.ajax({
-        url: 'https://localhost:7274/api/animedetail/addreview',
+        url: baseUrl+'api/animedetail/addreview',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ animeId: id, userId: localStorage.getItem("uid"), rating: document.getElementById('vrate').value, content: document.getElementById('idrv').value, timestamp: formattedDateTime }),

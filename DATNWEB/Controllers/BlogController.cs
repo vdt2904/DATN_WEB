@@ -51,5 +51,18 @@ namespace DATNWEB.Controllers
             };
             return Ok(data);
         }
+        [HttpGet]
+        [Route("Test")]
+        public IActionResult test()
+        {
+            var utc0 = DateTime.UtcNow.AddHours(7);
+            var utc7 = DateTime.Now;
+            var data = new
+            {
+                utc0,
+                utc7
+            };
+            return Ok(data);
+        }
     }
 }

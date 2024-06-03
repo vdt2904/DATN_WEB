@@ -43,7 +43,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult topday()
         {
-            DateTime today = DateTime.Now;
+            DateTime today = DateTime.UtcNow.AddHours(7);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId
@@ -102,7 +102,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult topweek()
         {
-            DateTime today = DateTime.Now;
+            DateTime today = DateTime.UtcNow.AddHours(7);
             DateTime oneWeekAgo = today.AddDays(-7);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
@@ -162,7 +162,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult topmonth()
         {
-            DateTime today = DateTime.Now;
+            DateTime today = DateTime.UtcNow.AddHours(7);
             DateTime oneWeekAgo = today.AddDays(-30);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
@@ -222,7 +222,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult topyear()
         {
-            DateTime today = DateTime.Now;
+            DateTime today = DateTime.UtcNow.AddHours(7);
             DateTime oneWeekAgo = today.AddDays(-365);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
@@ -282,7 +282,7 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult trending()
         {
-            DateTime today = DateTime.Now;
+            DateTime today = DateTime.UtcNow.AddHours(7);
             DateTime oneWeekAgo = today.AddDays(-60);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId

@@ -70,7 +70,7 @@ namespace DATNWEB.Areas.Admin.Controllers
                 Cloudinary cloudinary = new Cloudinary(account);
                 cloudinary.Api.Secure = true;
 
-                httpClient.Timeout = TimeSpan.FromMinutes(5);
+                httpClient.Timeout = TimeSpan.FromMinutes(10);
                 using (var hStream = video.OpenReadStream())
                 {
                     var hUploadParams = new VideoUploadParams()

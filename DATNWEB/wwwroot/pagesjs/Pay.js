@@ -1,6 +1,6 @@
 ﻿function getprice(id,a) {
     $.ajax({
-        url: 'https://localhost:7274/api/pay?id='+id,
+        url: baseUrl+'api/pay?id='+id,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -34,7 +34,7 @@
 }
 function getpayinfo(id,a) {
     $.ajax({
-        url: 'https://localhost:7274/api/pay/infopay?id=' + id,
+        url: baseUrl+'api/pay/infopay?id=' + id,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

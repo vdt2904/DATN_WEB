@@ -3,7 +3,7 @@
     var password = document.getElementById("password").value;
 
     $.ajax({
-        url: 'https://localhost:7274/api/account',
+        url: baseUrl+'api/account',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ mail: username, pass: password }),
@@ -17,6 +17,10 @@
         },
         error: function (xhr, status, error) {
             console.error("Lỗi khi đăng nhập:", error);
+            var errorMessage = "";
+            errorMessage = xhr.responseText;
+            var errorHTML = '<div class="alert alert-danger" role="alert">' + errorMessage + '</div>';
+            document.getElementById('error_login').innerHTML = errorHTML;
             // Xử lý lỗi ở đây nếu cần thiết
         }
     });
@@ -26,7 +30,7 @@ window.addEventListener('message', function (event) {
     // Kiểm tra xem thông điệp có phải là yêu cầu reload trang không
     if (event.data === 'reloadLogin') {
         // Reload lại trang
-        window.location.href = 'https://localhost:7274/Home/login';
+        window.location.href = baseUrl+'Home/login';
     }
 });
 function loginWithGoogle() {
@@ -86,7 +90,7 @@ function loginWithFace() {
     }
 /*    googleLoginWindow.addEventListener('beforeunload', function () {
         // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
-        window.opener.postMessage('reloadLogin', 'https://localhost:7274/Home/Login');
+        window.opener.postMessage('reloadLogin', baseUrl+'Home/Login');
     });*/
 }
 
@@ -96,13 +100,13 @@ function register() {
     var mail = document.getElementById("mailid").value;
     var code = document.getElementById("codeid").value;
     $.ajax({
-        url: 'https://localhost:7274/api/account/Register',
+        url: baseUrl+'api/account/Register',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ username: username, pass: password, mail: mail, code: code }),
         success: function (response) {
             $.ajax({
-                url: 'https://localhost:7274/api/account',
+                url: baseUrl+'api/account',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ mail: username, pass: password }),
@@ -151,7 +155,7 @@ function sendmail() {
 
     // Gửi email qua AJAX
     $.ajax({
-        url: 'https://localhost:7274/api/account/sendmail',
+        url: baseUrl+'api/account/sendmail',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ toEmail: mail, subject: subject, body: body, code: code, num:num}),
@@ -258,7 +262,7 @@ function sendmailf() {
     body += '<div style="text-align: center;"><img src="https://i.mailtimer.io/lTF47IQjCs.gif?start={' + formattedDate + '}" border="0" alt="mailtimer.io" style="max-width:100%;" /></div>';
     // Gửi email qua AJAX
     $.ajax({
-        url: 'https://localhost:7274/api/account/sendmail',
+        url: baseUrl+'api/account/sendmail',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ toEmail: mail, subject: subject, body: body, code: code, num: num }),
@@ -281,7 +285,7 @@ function checkotp() {
     var mail = document.getElementById("email").value;
 
     $.ajax({
-        url: `https://localhost:7274/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
+        url: `http://animethai-001-site1.atempurl.com/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
         method: 'GET',
         success: function (response) {
             console.log(response);
@@ -301,7 +305,7 @@ function updatepass() {
     var pass = document.getElementById("newPassword").value;
     var mail = document.getElementById("email").value;
     $.ajax({
-        url: 'https://localhost:7274/api/infouser/updatepass',
+        url: baseUrl+'api/infouser/updatepass',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ mail: mail, pass: pass }),

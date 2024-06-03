@@ -1,7 +1,7 @@
 ﻿function populars(page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/category/popular?page=' + page,
+        url: baseUrl+'api/category/popular?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

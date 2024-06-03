@@ -10,9 +10,11 @@ namespace DATNWEB.Controllers
     public class HomeController : Controller
     {
         private readonly PayOS _payOS;
-        public HomeController(PayOS payos)
+        private readonly IConfiguration _configuration;
+        public HomeController(PayOS payos, IConfiguration configuration)
         {
             _payOS = payos;
+            _configuration = configuration;
         }
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         public IActionResult Index()
@@ -114,7 +116,7 @@ namespace DATNWEB.Controllers
                 List<ItemData> items = new List<ItemData>();
                 items.Add(item);
 
-                PaymentData paymentData = new PaymentData(orderCode, service.Price, "#" + orderCode, items, "https://localhost:7274/home/package", "https://localhost:7274/home/infousers");
+                PaymentData paymentData = new PaymentData(orderCode, service.Price, "#" + orderCode, items, _configuration["Url:baseUrl"] + "home/package", _configuration["Url:baseUrl"] + "home/infousers");
                 CreatePaymentResult createPayment = await _payOS.createPaymentLink(paymentData);
                 Bill b = new Bill
                 {
@@ -133,7 +135,7 @@ namespace DATNWEB.Controllers
             catch (System.Exception exception)
             {
                 Console.WriteLine(exception);
-                return Redirect("https://localhost:7274/");
+                return Redirect(_configuration["Url:baseUrl"]);
             }
         }
         public IActionResult payment(int a, int b)
@@ -160,6 +162,10 @@ namespace DATNWEB.Controllers
         }
         public IActionResult history()
         {
+            if (HttpContext.Session.GetString("UID") == null)
+            {
+                return RedirectToAction("login","Home");
+            }
             return View();
         }
         public IActionResult Search(string keyword)

@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
                 <label>Posting Date</label>
-                <input asp-for="BroadcastSchedule" type="datetime-local" class="form-control" />
+                <input id="datetime-local-input" asp-for="BroadcastSchedule" type="datetime-local" class="form-control" />
             </div>
             <div class="form-group">
                 <label>Permission</label>
@@ -69,3 +69,29 @@
 
 <script src="../Admin/js/ShowImage.js"></script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var currentDate = new Date();
+        // Lấy thời gian hiện tại UTC
+        var utcTime = currentDate.getTime() + (currentDate.getTimezoneOffset() * 60000);
+        // Tạo đối tượng Date mới với UTC+7
+        var utcPlus7 = new Date(utcTime + (7 * 60 * 60000));
+        // Trích xuất các thành phần thời gian
+        var year = utcPlus7.getFullYear();
+        var month = utcPlus7.getMonth() + 1; // Tháng bắt đầu từ 0
+        var day = utcPlus7.getDate();
+        var hours = utcPlus7.getHours();
+        var minutes = utcPlus7.getMinutes();
+        // Định dạng lại thời gian
+        var formattedDateTime = year + '-' + pad(month) + '-' + pad(day) + 'T' + pad(hours) + ':' + pad(minutes);
+        // Đặt giá trị cho input
+        document.getElementById('datetime-local-input').value = formattedDateTime;
+    });
+    // Hàm để thêm số 0 vào trước các số có một chữ số
+    function pad(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    }
+</script>

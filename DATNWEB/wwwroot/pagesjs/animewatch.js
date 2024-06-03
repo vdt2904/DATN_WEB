@@ -3,9 +3,9 @@ var ids = "";
 function watch(a, b,c) {
     var urls = '';
     if (b == null) {
-        urls = 'https://localhost:7274/api/AnimeWatching?aid=' + a;
+        urls = baseUrl+'api/AnimeWatching?aid=' + a;
     } else {
-        urls = 'https://localhost:7274/api/AnimeWatching?aid=' + a + '&ep=' + b;
+        urls = baseUrl+'api/AnimeWatching?aid=' + a + '&ep=' + b;
     }
     $.ajax({
         url: urls,
@@ -127,7 +127,7 @@ function watch(a, b,c) {
 function getcmt(id, page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/animewatching/getcmt?eid=' + id + '&page=' + page,
+        url: baseUrl+'api/animewatching/getcmt?eid=' + id + '&page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -211,7 +211,10 @@ function renderPagination(paginationInfo, id) {
 
 function addreview(id) {
     // Tạo một đối tượng Date hiện tại
-    var currentDate = new Date();
+    var currentDate1 = new Date();
+    var utcTime = currentDate1.getTime() + (currentDate1.getTimezoneOffset() * 60000);
+    // Tạo đối tượng Date mới với UTC+7
+    var currentDate = new Date(utcTime + (7 * 60 * 60000));
     var year = currentDate.getFullYear();
     var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Lấy tháng, thêm 0 nếu cần thiết
     var day = ('0' + currentDate.getDate()).slice(-2); // Lấy ngày, thêm 0 nếu cần thiết
@@ -223,7 +226,7 @@ function addreview(id) {
     var formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
 
     $.ajax({
-        url: 'https://localhost:7274/api/animewatching/addcmt',
+        url: baseUrl+'api/animewatching/addcmt',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ episodeId: id, userId: localStorage.getItem("uid"), commentDate: formattedDateTime, Comment1: document.getElementById('idrv').value }),
@@ -285,7 +288,7 @@ function sendApiRequest(time, id, times) {
     var formattedDateTime = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes + ':' + seconds;
     // Gửi yêu cầu AJAX POST đến API
 /*    $.ajax({
-        url: 'https://localhost:7274/api/animewatching/addview',
+        url: baseUrl+'api/animewatching/addview',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ episodeId: id, userId: localStorage.getItem("uid"), viewDate: formattedDateTime, duration: formatTime(time), isView: bool }),
@@ -305,7 +308,7 @@ function sendApiRequest(time, id, times) {
     });
 
     // Sử dụng Navigator.sendBeacon để gửi yêu cầu không đồng bộ
-    var url = 'https://localhost:7274/api/animewatching/addview';
+    var url = baseUrl+'api/animewatching/addview';
     var blob = new Blob([data], { type: 'application/json' });
     navigator.sendBeacon(url, blob);
 }

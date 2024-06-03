@@ -25,6 +25,10 @@ namespace DATNWEB.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] Login  login)
         {
+            if (login.Mail == ""||login.Pass == "")
+            {
+                return BadRequest("Vui lòng nhập đầy đủ");
+            }
             AutoCode a = new AutoCode();
             var user = db.Users.FirstOrDefault(x => (x.Username == login.Mail || x.Email == login.Mail || x.Phone == login.Mail) && x.Password == a.HashPassword(login.Pass));
             if (user != null)
@@ -33,7 +37,7 @@ namespace DATNWEB.Controllers
                 var token = GenerateToken(user);
                 return Ok(new { token , user.UserId});
             }
-            return BadRequest("Invalid user");
+            return BadRequest("Tài khoản,Mật khẩu không đúng");
         }
         public string GenerateToken(User user)
         {
@@ -100,6 +104,11 @@ namespace DATNWEB.Controllers
             try{
                 if(mailrequest.Num == 1)
                 {
+                    var u = db.Users.Where(x => x.Email == mailrequest.ToEmail).FirstOrDefault();
+                    if(u != null)
+                    {
+                        return BadRequest("Email đã tồn tại!");
+                    }
                     CodeRegister c = new CodeRegister
                     {
                         Email = mailrequest.ToEmail,

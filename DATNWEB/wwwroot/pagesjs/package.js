@@ -1,6 +1,6 @@
 ﻿function package() {
     $.ajax({
-        url: 'https://localhost:7274/api/package',
+        url: baseUrl+'api/package',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

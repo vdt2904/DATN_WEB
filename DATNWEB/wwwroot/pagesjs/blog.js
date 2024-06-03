@@ -2,9 +2,9 @@
     a = (typeof a !== 'undefined') ? a : null;
     var urls = '';
     if (a == null) {
-        urls = 'https://localhost:7274/api/blog';
+        urls = baseUrl+'api/blog';
     } else {
-        urls = 'https://localhost:7274/api/blog?id=' + a;
+        urls = baseUrl+'api/blog?id=' + a;
     }
     $.ajax({
         url: urls,

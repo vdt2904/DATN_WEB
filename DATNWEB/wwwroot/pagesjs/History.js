@@ -1,7 +1,7 @@
 ﻿function History(page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/history?page=' + page,
+        url: baseUrl+'api/history?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -28,9 +28,9 @@
                 }
                 table += '</ul>';
                 if (products[i].permission == 0) {
-                    table += '<h5><a href="https://localhost:7274/home/episode?id=' + products[i].animeId + '&ep=' + products[i].ep +'">' + products[i].animeName + '</a> <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h5>';
+                    table += '<h5><a href="http://animethai-001-site1.atempurl.com/home/episode?id=' + products[i].animeId + '&ep=' + products[i].ep +'">' + products[i].animeName + '</a> <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h5>';
                 } else {
-                    table += '<h5><a href="https://localhost:7274/home/episode?id=' + products[i].animeId + '&ep=' + products[i].ep +'">' + products[i].animeName + '</a></h5>';
+                    table += '<h5><a href="http://animethai-001-site1.atempurl.com/home/episode?id=' + products[i].animeId + '&ep=' + products[i].ep +'">' + products[i].animeName + '</a></h5>';
                 }
                 table += '</div>';
                 table += '</div>';

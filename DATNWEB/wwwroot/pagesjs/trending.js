@@ -1,7 +1,7 @@
 ﻿function trendings(page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/category/trending?page=' + page,
+        url: baseUrl+'api/category/trending?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

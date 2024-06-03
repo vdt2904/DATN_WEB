@@ -1,6 +1,6 @@
 ﻿function blogdetail(a) {
     $.ajax({
-        url: 'https://localhost:7274/api/blogdetail?id=' + a,
+        url: baseUrl+'api/blogdetail?id=' + a,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

@@ -2,7 +2,7 @@
 function category(a,page) {
     page = page || 1; 
     $.ajax({
-        url: 'https://localhost:7274/api/category?id=' + a + '&page=' + page,
+        url: baseUrl+'api/category?id=' + a + '&page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

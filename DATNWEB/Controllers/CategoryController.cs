@@ -114,7 +114,7 @@ namespace DATNWEB.Controllers
         public IActionResult trending(int? page)
         {
             const int pageSize = 15;
-            DateTime today = DateTime.Now;
+            DateTime today = DateTime.UtcNow.AddHours(7);
             DateTime oneWeekAgo = today.AddDays(-60);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId

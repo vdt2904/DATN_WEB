@@ -24,6 +24,10 @@ using Net.payOS;
 using Hangfire;
 using Hangfire.SqlServer;
 using DATNWEB.HangFire;
+using DATNWEB.Payments.PayOs;
+using Microsoft.AspNetCore.Builder;
+using Org.BouncyCastle.Asn1.Ocsp;
+using static System.Net.Mime.MediaTypeNames;
 
 QlPhimAnimeContext db = new QlPhimAnimeContext();
 var builder = WebApplication.CreateBuilder(args);
@@ -87,17 +91,9 @@ builder.Services.AddAuthentication(options =>
 //PayMent config
 builder.Services.Configure<MomoConfig>(
     builder.Configuration.GetSection(MomoConfig.ConfigName));
-//cors
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddMvc();
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(
-        policy =>
-        {
-            policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
-        });
-});
+
 // cau hing jwt
 var key = Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]);
 builder.Services.AddAuthentication(x =>
@@ -120,8 +116,20 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime = true
     };
 });
-
+//cors
+const string policyName = "CorsPolicy";
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); // Thêm dòng này
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: policyName, builder =>
+    {
+        builder.WithOrigins("*")
+        .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
+app.UseCors(policyName);
 //hangfire
 app.UseHangfireDashboard();
 RecurringJob.AddOrUpdate<UpdateScheduledTasks>("RunDailyTask", x => x.RunDailyTask(), Cron.Daily(12, 00)); // Lập lịch chạy vào 12h hàng ngày

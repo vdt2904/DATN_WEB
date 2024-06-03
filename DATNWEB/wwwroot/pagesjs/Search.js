@@ -1,7 +1,7 @@
 ﻿function searchs(a,page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/search/searchdata?keyword=' + a+'&page='+page,
+        url: baseUrl+'api/search/searchdata?keyword=' + a+'&page='+page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

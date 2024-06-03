@@ -1,7 +1,7 @@
 ﻿function recentlys(page) {
     page = page || 1;
     $.ajax({
-        url: 'https://localhost:7274/api/category/recently?page=' + page,
+        url: baseUrl+'api/category/recently?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

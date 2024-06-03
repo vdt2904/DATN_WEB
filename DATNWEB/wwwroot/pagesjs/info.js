@@ -7,7 +7,7 @@
 }
 function info() {
     $.ajax({
-        url: 'https://localhost:7274/api/infouser',
+        url: baseUrl+'api/infouser',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -96,7 +96,7 @@ function info() {
 
 function logout() {
     $.ajax({
-        url: 'https://localhost:7274/api/infouser/logout',
+        url: baseUrl+'api/infouser/logout',
         method: 'POST',
         contentType: 'application/json',
         dataType: 'json',
@@ -115,7 +115,7 @@ function logout() {
 function updatesdt() {
     var sdt = document.getElementById("phone").value;
     $.ajax({
-        url: 'https://localhost:7274/api/infouser/updatesdt',
+        url: baseUrl+'api/infouser/updatesdt',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(sdt),
@@ -178,6 +178,10 @@ function updateModal() {
 
 function sendmail() {
     var currentDate = new Date();
+    if (currentStep < 3) {
+        currentStep++;
+        updateModal();
+    }
     // Lấy các thành phần của ngày
     var year = currentDate.getFullYear(); // Năm
     var month = ('0' + (currentDate.getMonth() + 1)).slice(-2); // Tháng (từ 01 đến 12)
@@ -196,16 +200,13 @@ function sendmail() {
     body += '<div style="text-align: center;"><img src="https://i.mailtimer.io/lTF47IQjCs.gif?start={' + formattedDate + '}" border="0" alt="mailtimer.io" style="max-width:100%;" /></div>';
     // Gửi email qua AJAX
     $.ajax({
-        url: 'https://localhost:7274/api/account/sendmail',
+        url: baseUrl+'api/account/sendmail',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ toEmail: mail, subject: subject, body: body, code: code, num: num }),
         success: function (response) {
             console.log(response);
-            if (currentStep < 3) {
-                currentStep++;
-                updateModal();
-            }
+            
         },
         error: function (xhr, status, error) {
             console.error("Lỗi khi đăng nhập:", error);
@@ -219,7 +220,7 @@ function checkotp() {
     var mail = document.getElementById("email").value;
 
     $.ajax({
-        url: `https://localhost:7274/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
+        url: `http://animethai-001-site1.atempurl.com/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
         method: 'GET',
         success: function (response) {
             console.log(response);
@@ -239,7 +240,7 @@ function updatepass() {
     var pass = document.getElementById("newPassword").value;
     var mail = document.getElementById("email").value;
     $.ajax({
-        url: 'https://localhost:7274/api/infouser/updatepass',
+        url: baseUrl+'api/infouser/updatepass',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ mail: mail, pass: pass }),
@@ -258,7 +259,7 @@ function gettrans(page) {
         page = 1;
     }
     $.ajax({
-        url: 'https://localhost:7274/api/infouser/transactionhistory?page=' + page,
+        url: baseUrl+'api/infouser/transactionhistory?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -338,7 +339,7 @@ function getbought(page) {
         page = 1;
     }
     $.ajax({
-        url: 'https://localhost:7274/api/infouser/bought?page=' + page,
+        url: baseUrl+'api/infouser/bought?page=' + page,
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',

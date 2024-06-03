@@ -1,6 +1,7 @@
 ﻿function advertisement() {
+    console.log(baseUrl);
     $.ajax({
-        url: 'https://localhost:7274/api/homepage',
+        url: baseUrl+'api/homepage',
         method: 'GET',
         contentType: 'json',
         dataType: 'json',
@@ -51,7 +52,7 @@
 }
 function topday() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/topday',
+        url: baseUrl+'api/homepage/topday',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -81,7 +82,7 @@ function topday() {
 }
 function topweek() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/topweek',
+        url: baseUrl+'api/homepage/topweek',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -111,7 +112,7 @@ function topweek() {
 }
 function topyear() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/topyear',
+        url: baseUrl+'api/homepage/topyear',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -141,7 +142,7 @@ function topyear() {
 }
 function topmonth() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/topmonth',
+        url: baseUrl+'api/homepage/topmonth',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -171,7 +172,7 @@ function topmonth() {
 }
 function newcomment() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/newcomment',
+        url: baseUrl+'api/homepage/newcomment',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -212,7 +213,7 @@ function newcomment() {
 }
 function trending() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/trending',
+        url: baseUrl+'api/homepage/trending',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -255,7 +256,7 @@ function trending() {
 }
 function popular() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/popular',
+        url: baseUrl+'api/homepage/popular',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
@@ -298,7 +299,7 @@ function popular() {
 }
 function recently() {
     $.ajax({
-        url: 'https://localhost:7274/api/homepage/recently',
+        url: baseUrl+'api/homepage/recently',
         method: 'GET',
         contentType: 'application/json',
         dataType: 'json',
