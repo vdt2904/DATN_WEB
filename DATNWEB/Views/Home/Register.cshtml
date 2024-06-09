@@ -37,6 +37,8 @@
             <div class="col-lg-6">
                 <div class="login__form">
                     <h3>Sign Up</h3>
+                    <div id="error_login">
+                    </div>
                     <form>
                         <div class="input__item">
                             <input type="text" placeholder="Email address" id="mailid">
@@ -45,7 +47,7 @@
                         <div class="input__item" style="display: flex;">
                             <input type="number" placeholder="Mã code" id="codeid" style="flex-grow: 1;" oninput="this.value = this.value.slice(0, 6)">
                             <span class="icon_mail"></span>
-                            <button type="button" onclick="sendlat60()" id="sendmail" class="icon_code" style="flex-grow: 1;height:50px;font-size:15px;color:#b7b7b7;background:#1000ff;border:none;margin-top:0px!important;">Gửi mã</button>
+                            <button type="button" onclick="sendmailr();" id="sendmail" class="icon_code" style="flex-grow: 1;height:50px;font-size:15px;color:#b7b7b7;background:#1000ff;border:none;margin-top:0px!important;">Gửi mã</button>
                         </div>
                         <div class="input__item">
                             <input type="text" placeholder="Your Name" id="nameid">

@@ -63,6 +63,10 @@ namespace DATNWEB.Controllers
         [HttpPost]
         public IActionResult Register([FromBody] Register register)
         {
+            if(register.Code == "" || register.Username == "" || register.Mail == "")
+            {
+                return BadRequest("Vui lòng nhập đầy đủ thông tin");
+            }
             var codes = db.CodeRegisters.Where(x => x.Email == register.Mail && x.Token == register.Code).OrderByDescending(x => x.SentDate).FirstOrDefault();
             if(codes!= null)
             {
@@ -94,7 +98,7 @@ namespace DATNWEB.Controllers
             }
             else
             {
-                return BadRequest("Mã không tồn tại");
+                return BadRequest("Mã OTP sai");
             }
         }
         [HttpPost]
@@ -102,6 +106,10 @@ namespace DATNWEB.Controllers
         public async Task<IActionResult> sendmail([FromBody] MailRequest mailrequest)
         {
             try{
+                if(mailrequest.ToEmail == "")
+                {
+                    return BadRequest("Vui lòng nhập email");
+                }
                 if(mailrequest.Num == 1)
                 {
                     var u = db.Users.Where(x => x.Email == mailrequest.ToEmail).FirstOrDefault();

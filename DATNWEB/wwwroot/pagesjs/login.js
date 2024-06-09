@@ -120,18 +120,52 @@ function register() {
                 },
                 error: function (xhr, status, error) {
                     console.error("Lỗi khi đăng nhập:", error);
-                    // Xử lý lỗi ở đây nếu cần thiết
+                    
                 }
             });
         },
         error: function (xhr, status, error) {
             console.error("Lỗi khi đăng nhập:", error);
-            // Xử lý lỗi ở đây nếu cần thiết
+            var errorMessage = "";
+            errorMessage = xhr.responseText;
+            var errorHTML = '<div class="alert alert-danger" role="alert">' + errorMessage + '</div>';
+            document.getElementById('error_login').innerHTML = errorHTML;
         }
     });
 }
+function sendlat60() {
+    var button = document.getElementById("sendmail");
 
-function sendmail() {
+    if (button.disabled) return; // Nếu nút đã được vô hiệu hóa, không làm gì cả
+
+    // Thực hiện công việc gửi mail ở đây
+    // sendmail();
+
+    // Vô hiệu hóa nút gửi
+    button.disabled = true;
+
+    // Bắt đầu đếm ngược
+    startTimer();
+}
+function startTimer() {
+    var timeLeft = 60; // Thời gian còn lại đếm ngược, ở đây là 60s
+
+    // Bắt đầu đếm ngược
+    timer = setInterval(function () {
+        timeLeft--;
+
+        // Cập nhật nút gửi
+        document.getElementById("sendmail").innerText = "Gửi mã (" + timeLeft + "s)";
+
+        // Kiểm tra xem thời gian còn lại có bằng 0 không
+        if (timeLeft <= 0) {
+            clearInterval(timer); // Dừng đếm ngược
+            document.getElementById("sendmail").innerText = "Gửi mã";
+            document.getElementById("sendmail").disabled = false; // Kích hoạt nút gửi lại
+        }
+    }, 1000); // Cứ sau mỗi giây, đếm ngược giảm đi 1 giây
+}
+function sendmailr() {
     var currentDate = new Date();
 
     // Lấy các thành phần của ngày
@@ -161,49 +195,16 @@ function sendmail() {
         data: JSON.stringify({ toEmail: mail, subject: subject, body: body, code: code, num:num}),
         success: function (response) {
             console.log(response);
-;
+            sendlat60();
         },
         error: function (xhr, status, error) {
-            console.error("Lỗi khi đăng nhập:", error);
-            // Xử lý lỗi ở đây nếu cần thiết
+            var errorMessage = "";
+            errorMessage = xhr.responseText;
+            var errorHTML = '<div class="alert alert-danger" role="alert">' + errorMessage + '</div>';
+            document.getElementById('error_login').innerHTML = errorHTML;
         }
     });
 }
-
-
-function sendlat60() {
-    var button = document.getElementById("sendmail");
-
-    if (button.disabled) return; // Nếu nút đã được vô hiệu hóa, không làm gì cả
-
-    // Thực hiện công việc gửi mail ở đây
-    sendmail();
-
-    // Vô hiệu hóa nút gửi
-    button.disabled = true;
-
-    // Bắt đầu đếm ngược
-    startTimer();
-}
-function startTimer() {
-    var timeLeft = 60; // Thời gian còn lại đếm ngược, ở đây là 60s
-
-    // Bắt đầu đếm ngược
-    timer = setInterval(function () {
-        timeLeft--;
-
-        // Cập nhật nút gửi
-        document.getElementById("sendmail").innerText = "Gửi mã (" + timeLeft + "s)";
-
-        // Kiểm tra xem thời gian còn lại có bằng 0 không
-        if (timeLeft <= 0) {
-            clearInterval(timer); // Dừng đếm ngược
-            document.getElementById("sendmail").innerText = "Gửi mã";
-            document.getElementById("sendmail").disabled = false; // Kích hoạt nút gửi lại
-        }
-    }, 1000); // Cứ sau mỗi giây, đếm ngược giảm đi 1 giây
-}
-
 
 var currentStep = 1;
 
