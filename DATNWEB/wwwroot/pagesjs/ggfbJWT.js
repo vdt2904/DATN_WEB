@@ -1,7 +1,7 @@
 ﻿
 function loginJWT(a, b) {
     $.ajax({
-        url: 'https://localhost:7274/api/account',
+        url: 'https://animethai-001-site1.atempurl.com/api/account',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ mail: a, pass: b }),

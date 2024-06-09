@@ -1,4 +1,4 @@
-﻿var baseUrl = 'https://localhost:7274/';
+﻿var baseUrl = 'https://animethai-001-site1.atempurl.com/';
 // baseUrl.js
 
 
