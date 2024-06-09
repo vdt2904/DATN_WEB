@@ -82,6 +82,8 @@ builder.Services.AddAuthentication(options =>
                 {
                     options.ClientId = configuration.GetSection("Login:GoogleClientId").Value;
                     options.ClientSecret = configuration.GetSection("Login:GoogleClientSecret").Value;
+                    options.CallbackPath = new PathString("/signin-google"); // Đảm bảo rằng đường dẫn này khớp với URI chuyển hướng đã cấu hình
+                   // options.SaveTokens = true;
                 })
                 .AddFacebook(FacebookDefaults.AuthenticationScheme,options =>
                 {

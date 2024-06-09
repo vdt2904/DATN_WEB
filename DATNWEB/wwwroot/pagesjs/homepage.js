@@ -13,7 +13,7 @@
             const len = response.length;
             let table = '<div class="hero__slider owl-carousel">';
             for (var i = len - 1; i >= 0; --i) {
-                table = table + '<div class="hero__items set-bg" style="background-image: url(' + response[i].img + '); background-size: cover; width: 1140px; height: 579px;">';
+                table = table + '<div class="hero__items set-bg" style="background-image: url(' + response[i].img + '); background-size: cover; width: 1140px; height: 579px; object-fit: cover;">';
                 table = table + '<div class="row">';
                 table = table + '<div class="col-lg-6">';
                 table = table + '<div class="hero__text">';
@@ -93,15 +93,17 @@ function topweek() {
             const len = response.length;
             let table = '';
             for (var i = 0; i < len; i++) {
-                table += '<div class="product__sidebar__view__item set-bg" style="background-image: url(' + response[i].imageHUrl + '); background-size: cover; width: 360px; height: 190px;">';
+                table += '<a href="/Home/AnimeDetail?id=' + response[i].animeId + '">';
+                table += '<div class="product__sidebar__view__item set-bg" style="background-image: url(' + response[i].imageHUrl + '); background-size: cover;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i>' + response[i].total + '</div>';
                 if (response[i].permission == 0) {
-                    table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a> <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h5>';
+                    table += '<h5><span style="color: white; font-weight: 700; line-height: 26px;">' + response[i].animeName + '</span> <img src = "../home/img/vip-pass.png" alt = "VIP Icon" style = "width: 40px; height: 40px;" ></h5>';
                 } else {
-                    table += '<h5><a href="/Home/AnimeDetail?id=' + response[i].animeId + '">' + response[i].animeName + '</a></h5>';
+                    table += '<h5><span style="color: white; font-weight: 700; line-height: 26px;">' + response[i].animeName + '</span></h5>';
                 }  
                 table += '</div>';
+                table += '</a>';
             }
             document.getElementById('topview').innerHTML = table;
         },
@@ -227,7 +229,7 @@ function trending() {
                 const genre = response[i].genres;
                 table += '<div class="col-lg-4 col-md-6 col-sm-6">';
                 table += '<div class="product__item">';
-                table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;">';
+                table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px; object-fit: contain;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="comment"><i class="fa fa-comments"></i> ' + response[i].totalc + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i> ' + response[i].total + '</div>';
@@ -270,7 +272,7 @@ function popular() {
                 const genre = response[i].genres;
                 table += '<div class="col-lg-4 col-md-6 col-sm-6">';
                 table += '<div class="product__item">';
-                table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;">';
+                table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;object-fit: contain;">';
                 table += '<div class="ep">' + response[i].maxep + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="comment"><i class="fa fa-comments"></i> ' + response[i].totalc + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i> ' + response[i].total + '</div>';
@@ -313,7 +315,7 @@ function recently() {
                 const genre = response[i].genres;
                 table += '<div class="col-lg-4 col-md-6 col-sm-6">';
                 table += '<div class="product__item">';
-                table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;">';
+                table += '<div class="product__item__pic set-bg" style="background-image: url(' + response[i].imageVUrl + '); background-size: cover; width: 230px; height: 325px;object-fit: contain;">';
                 table += '<div class="ep">' + (response[i].maxep == -1 ? '??' : response[i].maxep) + ' /' + (response[i].totalEpisode == null ? '??' : response[i].totalEpisode) + '</div>';
                 table += '<div class="comment"><i class="fa fa-comments"></i> ' + response[i].totalc + '</div>';
                 table += '<div class="view"><i class="fa fa-eye"></i> ' + response[i].total + '</div>';

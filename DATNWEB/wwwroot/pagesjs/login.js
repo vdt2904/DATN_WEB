@@ -25,6 +25,7 @@
         }
     });
 }
+
 window.addEventListener('message', function (event) {
     console.log("Received message:", event.data);
     // Kiểm tra xem thông điệp có phải là yêu cầu reload trang không
@@ -50,7 +51,6 @@ function loginWithGoogle() {
         var timer = setInterval(function () {
             if (googleLoginWindow.closed) {
                 clearInterval(timer);
-                console.log("Pop-up closed. Sending message to reload login...");
                 // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
                 window.postMessage('reloadLogin', '*');
             }

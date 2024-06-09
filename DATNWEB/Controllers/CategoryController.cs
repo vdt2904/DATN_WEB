@@ -115,7 +115,7 @@ namespace DATNWEB.Controllers
         {
             const int pageSize = 15;
             DateTime today = DateTime.UtcNow.AddHours(7);
-            DateTime oneWeekAgo = today.AddDays(-60);
+            DateTime oneWeekAgo = today.AddDays(-180);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId

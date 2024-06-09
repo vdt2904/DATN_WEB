@@ -283,7 +283,7 @@ namespace DATNWEB.Controllers
         public IActionResult trending()
         {
             DateTime today = DateTime.UtcNow.AddHours(7);
-            DateTime oneWeekAgo = today.AddDays(-60);
+            DateTime oneWeekAgo = today.AddDays(-180);
             var idanimes = (from a in db.Animes
                             join e in db.Episodes on a.AnimeId equals e.AnimeId
                             join v in db.Views on e.EpisodeId equals v.EpisodeId
@@ -356,23 +356,23 @@ namespace DATNWEB.Controllers
              ).ToList();
             var episodesList = db.Episodes.ToList();
 
-            var animes = (from a in newid
-                          join e in episodesList on a.AnimeId equals e.AnimeId
-                          join t in totalv on a.AnimeId equals t.AnimeId
-                          join c in totalc on a.AnimeId equals c.AnimeId
-                          select new
-                          {
-                              a.AnimeId,
-                              a.AnimeName,
-                              a.ImageVUrl,
-                              a.TotalEpisode,
-                              Maxep = db.Episodes.Where(ep => ep.AnimeId == a.AnimeId).Max(ep => ep.Ep),
-                              t.Total,
-                              c.Totalc,
-                              a.Genres,
-                              a.Permission
-                          }
-                         ).Distinct().ToList();
+                var animes = (from a in newid
+                              join e in episodesList on a.AnimeId equals e.AnimeId
+                              join t in totalv on a.AnimeId equals t.AnimeId
+                              join c in totalc on a.AnimeId equals c.AnimeId
+                              select new
+                              {
+                                  a.AnimeId,
+                                  a.AnimeName,
+                                  a.ImageVUrl,
+                                  a.TotalEpisode,
+                                  Maxep = db.Episodes.Where(ep => ep.AnimeId == a.AnimeId).Max(ep => ep.Ep),
+                                  t.Total,
+                                  c.Totalc,
+                                  a.Genres,
+                                  a.Permission
+                              }
+                             ).Distinct().ToList();
             return Ok(animes);
         }
         [Route("popular")]

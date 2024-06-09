@@ -1,6 +1,7 @@
-﻿function loginJWT(a,b) {
+﻿
+function loginJWT(a, b) {
     $.ajax({
-        url: baseUrl+'api/account',
+        url: 'https://animethai-001-site1.atempurl.com/api/account',
         method: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ mail: a, pass: b }),
@@ -9,7 +10,7 @@
             // Lưu token vào localStorage hoặc session để sử dụng trong các yêu cầu sau này
             localStorage.setItem("token", token);
             localStorage.setItem("uid", response.userId);
-         //   window.opener.postMessage('reloadLogin', baseUrl+'Home/Login');
+          //  window.opener.postMessage('closePopup', 'https://localhost:7274/Home/Login');
             window.close();
         },
         error: function (xhr, status, error) {
