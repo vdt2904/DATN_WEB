@@ -37,7 +37,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("directoradds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DirectorAdds(Director director)
+        public IActionResult DirectorsAdd(Director director)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +57,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("directoredit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DirectorEdits(Director director)
+        public IActionResult DirectorEdit(Director director)
         {
             if (ModelState.IsValid)
             {

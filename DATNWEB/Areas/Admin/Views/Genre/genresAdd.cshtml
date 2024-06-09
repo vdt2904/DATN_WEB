@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Add Genre</h4>
-        <form method="post" action="@Url.Action("genreAdds", "Genre")" class="forms-sample">
+        <form method="post" action="/genreadds" class="forms-sample">
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label>Genre ID</label>
@@ -17,6 +17,7 @@
             <div class="form-group">
                 <label>Genre Name</label>
                 <input type="text" class="form-control" asp-for="GenreName" placeholder="Name">
+                <span asp-validation-for="GenreName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>Information</label>

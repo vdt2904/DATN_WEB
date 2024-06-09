@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Add Episode</h4>
-        <form method="post" action="@Url.Action("EpisodeAdds", "Episode")" class="forms-sample" enctype="multipart/form-data">
+        <form method="post" action="/Episodeadds" class="forms-sample" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label>Episode ID</label>
@@ -32,7 +32,9 @@
             </div>
             <div class="form-group">
                 <label>Video</label>
-                <input type="file" class="form-control" name="video">
+                <input type="file" class="form-control" name="video" accept=".mp4, .avi, .wmv, .mov, .flv, .mp3" onchange="validateVideo(this)">
+                <span id="errorImage" class="text-danger"></span>
+                @Html.ValidationMessage("video",new { @class = "text-danger" })
             </div>
 
             <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
@@ -66,4 +68,14 @@
         }
         return number;
     }
+    function validateVideo(input) {
+        var errorSpan = document.getElementById("errorImage");
+        var allowedExtensions = ['mp4', 'avi', 'wmv', 'mov', 'flv' , 'mp3'];
+        var fileExtension = input.files[0].name.split('.').pop().toLowerCase();
+        if (allowedExtensions.indexOf(fileExtension) === -1) {
+            errorSpan.textContent = "Vui lòng chọn một tệp video có định dạng hợp lệ (mp4, avi, wmv, mov, flv, mp3)!";
+            input.value = ''; // Xóa file đã chọn để người dùng chọn lại
+        }
+    }
+
 </script>

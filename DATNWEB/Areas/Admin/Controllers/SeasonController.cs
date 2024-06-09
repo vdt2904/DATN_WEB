@@ -40,8 +40,12 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("Seasonadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SeasonAdds(Season Season, IFormFile img)
+        public IActionResult SeasonsAdd(Season Season, IFormFile img)
         {
+            if (img == null)
+            {
+                ModelState.AddModelError("img", "Hãy thêm ảnh");
+            }
             if (ModelState.IsValid && img != null)
             {
                 using (var stream = img.OpenReadStream())
@@ -66,7 +70,8 @@ namespace DATNWEB.Areas.Admin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("SeasonList");
             }
-            return RedirectToAction("SeasonsAdd");
+            
+            return View(Season);
         }
         [Route("admin/Seasonedit")]
         [HttpGet]
@@ -78,7 +83,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("Seasonedit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SeasonEdits(Season Season, IFormFile img)
+        public IActionResult SeasonEdit(Season Season, IFormFile img)
         {
             ModelState.Remove("img");
             if (ModelState.IsValid)
@@ -105,7 +110,7 @@ namespace DATNWEB.Areas.Admin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("SeasonList");
             }
-            return RedirectToAction("SeasonEdit", new { id = Season.SeasonId });
+            return View(Season);
         }
         [Route("Seasondelete")]
         [HttpGet]

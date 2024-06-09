@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Add Director</h4>
-        <form method="post" action="@Url.Action("DirectorAdds", "Director")" class="forms-sample">
+        <form method="post" action="/directoradds" class="forms-sample">
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label>Director ID</label>
@@ -17,6 +17,7 @@
             <div class="form-group">
                 <label>Director Name</label>
                 <input type="text" class="form-control" asp-for="DirectorName" placeholder="Name">
+                <span asp-validation-for="DirectorName" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
             <a class="btn btn-light" href="/admin/director">Cancel</a>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DATNWEB.Models
 {
@@ -11,6 +12,7 @@ namespace DATNWEB.Models
         }
 
         public string DirectorId { get; set; } = null!;
+        [Required(ErrorMessage = "Tên Tác giả không được để trống!")]
         public string? DirectorName { get; set; }
 
         public virtual ICollection<Anime> Animes { get; set; }

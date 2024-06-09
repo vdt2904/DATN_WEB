@@ -59,7 +59,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("Episodeadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EpisodeAdds(Episode Episode, IFormFile video)
+        public async Task<IActionResult> EpisodesAdd(Episode Episode, IFormFile video)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace DATNWEB.Areas.Admin.Controllers
                 await AddNewEpisode(a);
                 return RedirectToAction("EpisodeList" , new {id = Episode.AnimeId});
             }
-            return RedirectToAction("EpisodesAdd");
+            return View(Episode);
         }
         public async Task AddNewEpisode(NotificationView newEpisode)
         {

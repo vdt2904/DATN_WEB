@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DATNWEB.Models
 {
@@ -11,6 +12,7 @@ namespace DATNWEB.Models
         }
 
         public string GenreId { get; set; } = null!;
+        [Required(ErrorMessage = "Tên Thể loại không được để trống!")]
         public string? GenreName { get; set; }
         public string? Infomation { get; set; }
 

@@ -32,15 +32,17 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("FilmGenreadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult FilmGenresAdds(FilmGenre FilmGenre)
+        public IActionResult FilmGenresAdd(FilmGenre FilmGenre)
         {
             if (ModelState.IsValid)
             {
                 var a = db.FilmGenres.AsNoTracking().Where(x => x.AnimeId == FilmGenre.AnimeId).Where(x=>x.GenreId == FilmGenre.GenreId).ToList();
                 if (a.Count >0)
                 {
-                    TempData["AddError"] = "Can not add the Film genre!";
-                    return RedirectToAction("FilmGenresAdd");
+                    TempData["AddError"] = "Đã tồn tại!";
+                    ViewBag.Anime = new SelectList(db.Animes.ToList(), "AnimeId", "AnimeName");
+                    ViewBag.Genre = new SelectList(db.Genres.ToList(), "GenreId", "GenreName");
+                    return View(FilmGenre);
                 }
                 db.FilmGenres.Add(FilmGenre);
                 db.SaveChanges();
@@ -60,20 +62,24 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("FilmGenreedit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult FilmGenreEdits(FilmGenre FilmGenre)
+        public IActionResult FilmGenreEdit(FilmGenre FilmGenre)
         {
             if (ModelState.IsValid)
             {
                 var a = db.FilmGenres.AsNoTracking().Where(x => x.AnimeId == FilmGenre.AnimeId).Where(x => x.GenreId == FilmGenre.GenreId).Where(x=>x.Id != FilmGenre.Id).ToList();
                 if (a.Count > 0)
                 {
-                    TempData["AddError"] = "Can not edit the Film genre!";
+                    TempData["AddError"] = "Đã tồn tại!";
+                    ViewBag.Anime = new SelectList(db.Animes.ToList(), "AnimeId", "AnimeName");
+                    ViewBag.Genre = new SelectList(db.Genres.ToList(), "GenreId", "GenreName");
                     return RedirectToAction("FilmGenreEdit" , new {id = FilmGenre.Id});
                 }
                 db.Entry(FilmGenre).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("FilmGenreList");
             }
+            ViewBag.Anime = new SelectList(db.Animes.ToList(), "AnimeId", "AnimeName");
+            ViewBag.Genre = new SelectList(db.Genres.ToList(), "GenreId", "GenreName");
             return View(FilmGenre);
         }
         [Route("FilmGenredelete")]

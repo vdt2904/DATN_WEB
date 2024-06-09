@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DATNWEB.Models
 {
@@ -11,6 +12,7 @@ namespace DATNWEB.Models
         }
 
         public string SeasonId { get; set; } = null!;
+        [Required(ErrorMessage = "Tên mùa không được để trống!")]
         public string? SeasonName { get; set; }
         public string? ImageUrl { get; set; }
         public string? Information { get; set; }

@@ -38,7 +38,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("genreadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult genreAdds(Genre genre)
+        public IActionResult genresAdd(Genre genre)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("genreedit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult GenreEdits(Genre genre)
+        public IActionResult GenreEdit(Genre genre)
         {
             if (ModelState.IsValid)
             {
