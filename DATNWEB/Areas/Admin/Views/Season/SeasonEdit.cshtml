@@ -22,7 +22,7 @@
             <div class="form-group">
                 <label>Image</label>
                 <input type="text" value="@Model.ImageUrl" asp-for="ImageUrl" hidden/>
-                <input type="file" class="form-control" name="img" accept=".jpg, .jpeg, .png, .jfif" id="imageInput" onchange="validateImage(this,'previewImage')">
+                <input type="file" class="form-control" name="img" accept=".jpg, .jpeg, .png, .jfif" id="imageInput" onchange="validateImage(this,'previewImage','errorImage')">
                 <img id="previewImage" style="max-width: 200px; max-height: 200px; margin-top: 10px;" src="@Model.ImageUrl" />
                 <span id="errorImage" class="text-danger"></span>
             </div>

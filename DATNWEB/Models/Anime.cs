@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace DATNWEB.Models
 {
@@ -13,6 +14,7 @@ namespace DATNWEB.Models
         }
 
         public string AnimeId { get; set; } = null!;
+        [Required(ErrorMessage = "Tên phim không được để trống!")]
         public string? AnimeName { get; set; }
         public string? ImageHUrl { get; set; }
         public string? ImageVUrl { get; set; }
@@ -20,6 +22,7 @@ namespace DATNWEB.Models
         public DateTime? BroadcastSchedule { get; set; }
         public string? Information { get; set; }
         public int? TotalEpisode { get; set; }
+        [Required(ErrorMessage = "Hãy chọn loại phim!")]
         public int? Permission { get; set; }
         public string? SeasonId { get; set; }
         public string? DirectorId { get; set; }

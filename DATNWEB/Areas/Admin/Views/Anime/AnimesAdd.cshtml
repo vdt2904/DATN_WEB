@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">Add Anime</h4>
-        <form method="post" action="@Url.Action("AnimeAdds", "Anime")" class="forms-sample" enctype="multipart/form-data">
+        <form method="post" action="/Animeadds" class="forms-sample" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <div class="form-group">
                 <label>Anime ID</label>
@@ -17,21 +17,28 @@
             <div class="form-group">
                 <label>Anime Name</label>
                 <input type="text" class="form-control" asp-for="AnimeName" placeholder="Name">
+                <span asp-validation-for="AnimeName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>Horizontal image </label>
-                <input type="file" class="form-control" name="h" id="imageInput" onchange="displayImage(this,'previewImage')">
+                <input type="file" accept=".jpg, .jpeg, .png, .jfif" class="form-control" name="h" id="imageInput" onchange="validateImage(this,'previewImage','errorImage')">
                 <img id="previewImage" style="max-width: 200px; max-height: 200px; margin-top: 10px;" />
+                <span id="errorImage" class="text-danger"></span>
+                @Html.ValidationMessage("h",new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label>Vertical image</label>
-                <input type="file" class="form-control" name="v" id="imageInputv" onchange="displayImage(this,'previewImage1')">
+                <input type="file" accept=".jpg, .jpeg, .png, .jfif" class="form-control" name="v" id="imageInputv" onchange="validateImage(this,'previewImage1','errorImage1')">
                 <img id="previewImage1" style="max-width: 200px; max-height: 200px; margin-top: 10px;" />
+                <span id="errorImage1" class="text-danger"></span>
+                @Html.ValidationMessage("v",new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label>Background image </label>
-                <input type="file" class="form-control" name="b" id="imageInputb" onchange="displayImage(this,'previewImage2')">
+                <input type="file" accept=".jpg, .jpeg, .png, .jfif" class="form-control" name="b" id="imageInputb" onchange="validateImage(this,'previewImage2','errorImage2')">
                 <img id="previewImage2" style="max-width: 200px; max-height: 200px; margin-top: 10px;" />
+                <span id="errorImage2" class="text-danger"></span>
+                @Html.ValidationMessage("b",new { @class = "text-danger" })
             </div>
             <div class="form-group">
                 <label>Total episode</label>
@@ -52,6 +59,7 @@
                     <option value="0">Vip</option>
                     <option value="1">Nomal</option>
                 </select>
+                <span asp-validation-for="Permission" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label>Season</label>

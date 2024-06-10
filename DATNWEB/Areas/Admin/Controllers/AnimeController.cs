@@ -43,7 +43,7 @@ namespace DATNWEB.Areas.Admin.Controllers
         [Route("Animeadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AnimeAdds(Anime Anime, IFormFile h, IFormFile v, IFormFile b)
+        public IActionResult AnimesAdd(Anime Anime, IFormFile h, IFormFile v, IFormFile b)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace DATNWEB.Areas.Admin.Controllers
                 db.SaveChanges();
                 return RedirectToAction("AnimeList");
             }
-            return RedirectToAction("AnimesAdd");
+            return View(Anime);
         }
         [Route("admin/Animeedit")]
         [HttpGet]

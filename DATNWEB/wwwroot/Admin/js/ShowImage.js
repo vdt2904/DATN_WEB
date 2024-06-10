@@ -1,8 +1,8 @@
-﻿function validateImage(input, previewId) {
+﻿function validateImage(input, previewId, errorSpans) {
     var file = input.files[0];
     var preview = document.getElementById(previewId);
     var validExtensions = ["jpg", "jpeg", "png", "jfif"];
-    var errorSpan = document.getElementById("errorImage");
+    var errorSpan = document.getElementById(errorSpans);
     if (file) {
         var extension = file.name.split('.').pop().toLowerCase();
         if (validExtensions.indexOf(extension) === -1) {
