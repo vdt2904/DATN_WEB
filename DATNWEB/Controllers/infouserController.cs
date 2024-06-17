@@ -81,7 +81,7 @@ namespace DATNWEB.Controllers
             var a = db.PasswordResetRequests.FirstOrDefault(x => x.UserId == user.UserId && x.Token == otp);
             if (a == null)
             {
-                return BadRequest("Sai mã xác nhận!");
+                return BadRequest("Sai mã xác nhận1!");
             }
             if (a.RequestDate < DateTime.Now.AddMinutes(-5))
             {

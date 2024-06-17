@@ -75,10 +75,10 @@ function loginWithFace() {
     var topPosition = (screenHeight - popupHeight) / 2;
 
     // Mở cửa sổ pop-up ở giữa trang
-    var googleLoginWindow = window.open("/loginGGFB/loginfb", "_blank", "width=600,height=600,left=" + leftPosition + ",top=" + topPosition);
-    if (googleLoginWindow) {
+    var faceLoginWindow = window.open("/loginGGFB/loginfb", "_blank", "width=600,height=600,left=" + leftPosition + ",top=" + topPosition);
+    if (faceLoginWindow) {
         var timer = setInterval(function () {
-            if (googleLoginWindow.closed) {
+            if (faceLoginWindow.closed) {
                 clearInterval(timer);
                 console.log("Pop-up closed. Sending message to reload login...");
                 // Gửi thông điệp reload khi cửa sổ pop-up đóng lại
@@ -286,7 +286,7 @@ function checkotp() {
     var mail = document.getElementById("email").value;
 
     $.ajax({
-        url: `http://animethai-001-site1.atempurl.com/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
+        url: `${baseUrl}api/infouser/checkotp?otp=${otp}&mail=${mail}`,
         method: 'GET',
         success: function (response) {
             console.log(response);
@@ -296,12 +296,20 @@ function checkotp() {
             }
         },
         error: function (xhr, status, error) {
-            console.error("Lỗi khi đăng nhập:", error);
+            console.error("Lỗi khi đăng nhập:", xhr.responseText);
             // Xử lý lỗi ở đây nếu cần thiết
         }
     });
 }
+function validateOTP(input) {
+    // Xóa bất kỳ ký tự không phải là số nào được nhập vào
+    input.value = input.value.replace(/\D/g, '');
 
+    // Giới hạn độ dài của đầu vào là 6 ký tự
+    if (input.value.length > 6) {
+        input.value = input.value.slice(0, 6);
+    }
+}
 function updatepass() {
     var pass = document.getElementById("newPassword").value;
     var mail = document.getElementById("email").value;

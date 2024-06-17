@@ -220,7 +220,7 @@ function checkotp() {
     var mail = document.getElementById("email").value;
 
     $.ajax({
-        url: `http://animethai-001-site1.atempurl.com/api/infouser/checkotp?otp=${otp}&mail=${mail}`,
+        url: `${baseUrl}api/infouser/checkotp?otp=${otp}&mail=${mail}`,
         method: 'GET',
         success: function (response) {
             console.log(response);

@@ -7,6 +7,7 @@
     <meta name="keywords" content="Anime, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="google-site-verification" content="eAv_51Y4_RvdhogxVLpb-QTL7V1VC6-xL0h9ITAStJw" />
     <title>Anime-Thai</title>
 
     <!-- Google Font -->
@@ -24,7 +25,19 @@
     <link rel="stylesheet" href="../Home/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="../Home/css/style.css" type="text/css">
     <link rel="stylesheet" href="../Home/css/styleinfo.css" type="text/css">
-   
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v19.0"></script>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '960014669163893',  // Thay thế bằng App ID của bạn
+                cookie: true,
+                xfbml: true,
+                version: 'v19.0'
+            });
+            FB.AppEvents.logPageView();
+        };
+    </script>
 </head>
 
 <body>
@@ -39,9 +52,8 @@
     <!-- Hero Section Begin -->
     <!-- Hero Section End -->
     <!-- Product Section Begin -->
-    
     @RenderBody()
-
+    @RenderSection("Scripts", required: false)
     </div>
     <!-- Product Section End -->
     <!-- Footer Section Begin -->

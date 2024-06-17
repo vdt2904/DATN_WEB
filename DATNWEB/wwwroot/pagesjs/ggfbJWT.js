@@ -10,7 +10,7 @@ function loginJWT(a, b) {
             // Lưu token vào localStorage hoặc session để sử dụng trong các yêu cầu sau này
             localStorage.setItem("token", token);
             localStorage.setItem("uid", response.userId);
-          //  window.opener.postMessage('closePopup', 'https://localhost:7274/Home/Login');
+         //   window.opener.postMessage('reloadLogin', 'https://animethai-001-site1.atempurl.com/Home/Login');
             window.close();
         },
         error: function (xhr, status, error) {

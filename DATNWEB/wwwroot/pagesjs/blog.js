@@ -27,7 +27,7 @@
             table += '<h6><span>- ' + outputDateString + '</span></h6>';
             table += '<h2>Anime for Beginners: ' + season.seasonName + '</h2>';
             table += '<div class="blog__details__social">';
-            table += '<a href="#" class="facebook"><i class="fa fa-facebook-square"></i> Facebook</a>';
+            table += '<a class="facebook" onclick="shareOnFacebook()"><i class="fa fa-facebook-square"></i> Facebook</a>';
             table += '<a href="#" class="pinterest"><i class="fa fa-pinterest"></i> Pinterest</a>';
             table += '<a href="#" class="linkedin"><i class="fa fa-linkedin-square"></i> Linkedin</a>';
             table += '<a href="#" class="twitter"><i class="fa fa-twitter-square"></i> Twitter</a>';
@@ -93,8 +93,20 @@ function renderpages(idt, ids) {
 
 
 
-
-
+function shareOnFacebook() {
+    var currentPageUrl = window.location.href;
+    console.log(currentPageUrl);
+    FB.ui({
+        method: 'share',
+        href: currentPageUrl,
+    }, function (response) {
+        if (response && !response.error_message) {
+            alert('Chia sẻ trang hiện tại thành công');
+        } else {
+            alert('Chia sẻ trang hiện tại thất bại');
+        }
+    });
+}
 
 
 

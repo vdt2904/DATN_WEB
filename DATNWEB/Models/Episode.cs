@@ -15,7 +15,7 @@ namespace DATNWEB.Models
         public string? AnimeId { get; set; }
         public string? Title { get; set; }
         public int? Ep { get; set; }
-        public DateTime? PostingDate { get; set; }
+        public DateTime PostingDate { get; set; }
         public string? VideoUrl { get; set; }
 
         public virtual Anime? Anime { get; set; }

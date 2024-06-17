@@ -9,21 +9,24 @@ using DATNWEB.Models.Authentication;
 using DATNWEB.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using DATNWEB.Models.ViewModel;
+using Hangfire;
 
 namespace DATNWEB.Areas.Admin.Controllers
 {
-    [AuthForAdmin]
+    
     [Area("admin")]
     public class EpisodeController : Controller
     {
         private readonly IHubContext<NotificationHub> _hubContext;
-
-        public EpisodeController(IHubContext<NotificationHub> hubContext)
+        private readonly IBackgroundJobClient _backgroundJobClient;
+        public EpisodeController(IHubContext<NotificationHub> hubContext, IBackgroundJobClient backgroundJobClient)
         {
             _hubContext = hubContext;
+            _backgroundJobClient = backgroundJobClient;
         }
         private HttpClient httpClient = new HttpClient();
         QlPhimAnimeContext db = new QlPhimAnimeContext();
+        [AuthForAdmin]
         [Route("admin/Episode")]
         [HttpGet]
         public IActionResult EpisodeList(string id ,int? page)
@@ -35,6 +38,7 @@ namespace DATNWEB.Areas.Admin.Controllers
             ViewBag.AnimeId = id;
             return View(lst);
         }
+        [AuthForAdmin]
         [Route("admin/Episodeadd")]
         [HttpGet]
         public IActionResult EpisodesAdd(string ani)
@@ -56,6 +60,7 @@ namespace DATNWEB.Areas.Admin.Controllers
             var direc = new Episode() { EpisodeId = id , AnimeId = ani, Ep = ep};
             return View(direc);
         }
+        [AuthForAdmin]
         [Route("Episodeadds")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -95,19 +100,26 @@ namespace DATNWEB.Areas.Admin.Controllers
                 };
                 db.Episodes.Add(Episode);
                 db.SaveChanges();
-                await AddNewEpisode(a);
+                _backgroundJobClient.Schedule<EpisodeController>(x => x.AddNewEpisodes(a), Episode.PostingDate);
+                //await AddNewEpisode(a);
                 return RedirectToAction("EpisodeList" , new {id = Episode.AnimeId});
             }
             return View(Episode);
         }
+        public void AddNewEpisodes(NotificationView a)
+        {
+             AddNewEpisode(a);           
+        }
+
         public async Task AddNewEpisode(NotificationView newEpisode)
         {
             // Thêm tập phim mới vào cơ sở dữ liệu
             // ...
-
+            var a = newEpisode;
             // Gửi thông báo đến các client
             await _hubContext.Clients.All.SendAsync("ReceiveNewEpisodeNotification", newEpisode);
         }
+        [AuthForAdmin]
         [Route("admin/Episodeedit")]
         [HttpGet]
         public IActionResult EpisodeEdit(string id)
@@ -115,6 +127,7 @@ namespace DATNWEB.Areas.Admin.Controllers
             var a = db.Episodes.Where(x => x.EpisodeId == id).FirstOrDefault();
             return View(a);
         }
+        [AuthForAdmin]
         [Route("Episodeedit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -150,6 +163,7 @@ namespace DATNWEB.Areas.Admin.Controllers
             }
             return RedirectToAction("EpisodeEdit", new { id = Episode.EpisodeId });
         }
+        [AuthForAdmin]
         [Route("Episodedelete")]
         [HttpGet]
         public IActionResult EpisodeDelete(string id)
