@@ -87,7 +87,7 @@ function handleKeyPress(event) {
         // Kiểm tra nếu từ khóa có đủ điều kiện (ví dụ: ít nhất 3 ký tự)
         if (keyword.length >= 3) {
             // Chuyển hướng đến trang tìm kiếm với từ khóa được nhập
-            window.location.href = "http://animethai-001-site1.atempurl.com/home/search?keyword=" + keyword;
+            window.location.href = baseUrl + "home/search?keyword=" + keyword;
         } else {
             // Nếu từ khóa không đạt yêu cầu, có thể hiển thị thông báo hoặc thực hiện hành động khác
             console.log('Please enter at least 3 characters for search');

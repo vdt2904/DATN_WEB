@@ -3,7 +3,10 @@ using DATNWEB.Models;
 using DATNWEB.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,11 +19,13 @@ namespace DATNWEB.Controllers
     {
         private IConfiguration _config;
         private readonly IMailService mailService;
+        private readonly IDistributedCache _distributedCache;
         QlPhimAnimeContext db = new QlPhimAnimeContext();
-        public AccountController(IConfiguration config,IMailService service)
+        public AccountController(IConfiguration config,IMailService service, IDistributedCache distributedCache)
         {
             _config = config;
             this.mailService = service;
+            _distributedCache = distributedCache;
         }
         [HttpPost]
         public IActionResult Login([FromBody] Login  login)
@@ -33,7 +38,22 @@ namespace DATNWEB.Controllers
             var user = db.Users.FirstOrDefault(x => (x.Username == login.Mail || x.Email == login.Mail || x.Phone == login.Mail) && x.Password == a.HashPassword(login.Pass));
             if (user != null)
             {
-                HttpContext.Session.SetString("UID", user.UserId);
+                string userId = user.UserId.ToString();
+                string existingClientId = _distributedCache.GetString(userId);
+                if (!string.IsNullOrEmpty(existingClientId))
+                {
+                    HttpContext.Session.Remove("SessionInfo");
+                    _distributedCache.Remove(userId);
+                }
+                string newClientId = Guid.NewGuid().ToString();
+                var sessionInfo = new
+                {
+                    UID = user.UserId,
+                    ClientId = newClientId
+                };
+                _distributedCache.SetString(userId, JsonConvert.SerializeObject(sessionInfo));
+                // Lưu thông tin vào session dưới dạng JSON
+                HttpContext.Session.SetString("SessionInfo", JsonConvert.SerializeObject(sessionInfo));
                 var token = GenerateToken(user);
                 return Ok(new { token , user.UserId});
             }
@@ -93,7 +113,22 @@ namespace DATNWEB.Controllers
                 };
                 db.Users.Add(user);
                 db.SaveChanges();
-                HttpContext.Session.SetString("UID", user.UserId);
+
+                string existingClientId = _distributedCache.GetString(user.UserId);
+                if (!string.IsNullOrEmpty(existingClientId))
+                {
+                    HttpContext.Session.Remove("SessionInfo");
+                    _distributedCache.Remove(user.UserId);
+                }
+                string newClientId = Guid.NewGuid().ToString();
+                var sessionInfo = new
+                {
+                    UID = user.UserId,
+                    ClientId = newClientId
+                };
+                _distributedCache.SetString(user.UserId, JsonConvert.SerializeObject(sessionInfo));
+                // Lưu thông tin vào session dưới dạng JSON
+                HttpContext.Session.SetString("SessionInfo", JsonConvert.SerializeObject(sessionInfo));
                 return Ok();
             }
             else

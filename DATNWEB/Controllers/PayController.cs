@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Net.payOS.Types;
 using Net.payOS;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace DATNWEB.Controllers
 {
@@ -22,7 +23,10 @@ namespace DATNWEB.Controllers
         [Route("infopay")]
         public IActionResult infopay(int id)
         {
-            var info = db.Users.FirstOrDefault(x => x.UserId == HttpContext.Session.GetString("UID"));
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            var info = db.Users.FirstOrDefault(x => x.UserId == userId);
             var pay = db.ServiceUsages.FirstOrDefault(x => x.Id == id);
             var package = db.ServicePackages.Where(x => x.PackageId == pay.PackageId).Select(x => x.PackageName).FirstOrDefault();
             var data = new

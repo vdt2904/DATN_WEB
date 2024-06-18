@@ -1,6 +1,7 @@
 ﻿using DATNWEB.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using X.PagedList;
 namespace DATNWEB.Controllers
 {
@@ -12,7 +13,10 @@ namespace DATNWEB.Controllers
         [HttpGet]
         public IActionResult animewatch(string aid, int? ep)
         {
-            var user = db.Users.Find(HttpContext.Session.GetString("UID"));
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            var user = db.Users.Find(userId);
             var ani = db.Animes.Find(aid);
             var check = db.Episodes.Where(x => x.Ep == ep && x.AnimeId == aid).Select(x => x.PostingDate).FirstOrDefault();
             if (user.UserType == 0 && check < DateTime.Now.AddDays(7) && check > DateTime.Now)
@@ -36,7 +40,7 @@ namespace DATNWEB.Controllers
             ep = ep ?? 0;
             var epi = db.Episodes.Where(x => x.AnimeId == aid && x.Ep == ep).FirstOrDefault();
             var viewDuration = db.Views
-                    .Where(x => x.EpisodeId == epi.EpisodeId && x.UserId == HttpContext.Session.GetString("UID"))
+                    .Where(x => x.EpisodeId == epi.EpisodeId && x.UserId == userId)
                     .OrderByDescending(x => x.ViewDate) // Sắp xếp giảm dần theo ngày xem
                     .Select(x => x.Duration) // Chỉ lấy thời lượng
                     .FirstOrDefault();

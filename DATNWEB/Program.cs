@@ -27,6 +27,7 @@ using DATNWEB.HangFire;
 using DATNWEB.Payments.PayOs;
 using Microsoft.AspNetCore.Builder;
 using Org.BouncyCastle.Asn1.Ocsp;
+using StackExchange.Redis;
 using static System.Net.Mime.MediaTypeNames;
 
 QlPhimAnimeContext db = new QlPhimAnimeContext();
@@ -53,6 +54,12 @@ builder.Services.Configure<KestrelServerOptions>(options =>
 builder.Services.Configure<IISServerOptions>(options =>
 {
     options.MaxRequestBodySize = 104857600;
+});
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "redis-14248.c295.ap-southeast-1-1.ec2.redns.redis-cloud.com:14248,password=vrzf1vvbvcqUiTE7I7sFoC5oGdLDzkT9";
+    // Thay đổi nếu bạn có cấu hình Redis khác
+    options.InstanceName = "SampleInstance";
 });
 builder.Services.AddDistributedMemoryCache(); // You can replace this with other distributed cache providers
 builder.Services.AddSession(options =>

@@ -5,10 +5,17 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using DATNWEB.Models;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 namespace DATNWEB.Controllers
 {
     public class LoginGGFBController : Controller
     {
+        private readonly IDistributedCache _distributedCache;
+        public LoginGGFBController(IDistributedCache distributedCache)
+        {
+            _distributedCache = distributedCache;
+        }
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         public async Task logingg()
         {
@@ -48,11 +55,39 @@ namespace DATNWEB.Controllers
                 };
                 db.Users.Add(a);
                 db.SaveChanges();
-                HttpContext.Session.SetString("UID", id);
+                string existingClientId = _distributedCache.GetString(id);
+                if (!string.IsNullOrEmpty(existingClientId))
+                {
+                    HttpContext.Session.Remove("SessionInfo");
+                    _distributedCache.Remove(id);
+                }
+                string newClientId = Guid.NewGuid().ToString();
+                var sessionInfo = new
+                {
+                    UID = id,
+                    ClientId = newClientId
+                };
+                _distributedCache.SetString(id, JsonConvert.SerializeObject(sessionInfo));
+                // Lưu thông tin vào session dưới dạng JSON
+                HttpContext.Session.SetString("SessionInfo", JsonConvert.SerializeObject(sessionInfo));
             }
             else
             {
-                HttpContext.Session.SetString("UID", check.UserId);
+                string existingClientId = _distributedCache.GetString(check.UserId);
+                if (!string.IsNullOrEmpty(existingClientId))
+                {
+                    HttpContext.Session.Remove("SessionInfo");
+                    _distributedCache.Remove(check.UserId);
+                }
+                string newClientId = Guid.NewGuid().ToString();
+                var sessionInfo = new
+                {
+                    UID = check.UserId,
+                    ClientId = newClientId
+                };
+                _distributedCache.SetString(check.UserId, JsonConvert.SerializeObject(sessionInfo));
+                // Lưu thông tin vào session dưới dạng JSON
+                HttpContext.Session.SetString("SessionInfo", JsonConvert.SerializeObject(sessionInfo));
             }
             var mail = db.Users.FirstOrDefault(x => x.Email == email);
             // Trả về dữ liệu dưới dạng JSON
@@ -103,11 +138,39 @@ namespace DATNWEB.Controllers
                 };
                 db.Users.Add(a);
                 db.SaveChanges();
-                HttpContext.Session.SetString("UID", id);
+                string existingClientId = _distributedCache.GetString(id);
+                if (!string.IsNullOrEmpty(existingClientId))
+                {
+                    HttpContext.Session.Remove("SessionInfo");
+                    _distributedCache.Remove(id);
+                }
+                string newClientId = Guid.NewGuid().ToString();
+                var sessionInfo = new
+                {
+                    UID = id,
+                    ClientId = newClientId
+                };
+                _distributedCache.SetString(id, JsonConvert.SerializeObject(sessionInfo));
+                // Lưu thông tin vào session dưới dạng JSON
+                HttpContext.Session.SetString("SessionInfo", JsonConvert.SerializeObject(sessionInfo));
             }
             else
             {
-                HttpContext.Session.SetString("UID", check.UserId);
+                string existingClientId = _distributedCache.GetString(check.UserId);
+                if (!string.IsNullOrEmpty(existingClientId))
+                {
+                    HttpContext.Session.Remove("SessionInfo");
+                    _distributedCache.Remove(check.UserId);
+                }
+                string newClientId = Guid.NewGuid().ToString();
+                var sessionInfo = new
+                {
+                    UID = check.UserId,
+                    ClientId = newClientId
+                };
+                _distributedCache.SetString(check.UserId, JsonConvert.SerializeObject(sessionInfo));
+                // Lưu thông tin vào session dưới dạng JSON
+                HttpContext.Session.SetString("SessionInfo", JsonConvert.SerializeObject(sessionInfo));
             }
             var mail = db.Users.FirstOrDefault(x => x.Email == email);
             // Trả về dữ liệu dưới dạng JSON

@@ -2,7 +2,9 @@
 using Humanizer.Localisation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.VisualBasic;
+using Newtonsoft.Json;
 using X.PagedList;
 namespace DATNWEB.Controllers
 {
@@ -10,15 +12,23 @@ namespace DATNWEB.Controllers
     [ApiController]
     public class AnimeDetailController : ControllerBase
     {
+        private readonly IDistributedCache _distributedCache;
+        public AnimeDetailController(IDistributedCache distributedCache)
+        {
+            _distributedCache = distributedCache;
+        }
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         [HttpGet]
         public IActionResult AnimeDetail(string id)
         {
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
             var latestViews = (
                                 from v in db.Views
                                 join e in db.Episodes on v.EpisodeId equals e.EpisodeId
                                 join a in db.Animes on e.AnimeId equals a.AnimeId
-                                where v.UserId == HttpContext.Session.GetString("UID") && a.AnimeId == id
+                                where v.UserId == userId && a.AnimeId == id
                                 group new { v, e, a } by e.AnimeId into g
                                 select new
                                 {

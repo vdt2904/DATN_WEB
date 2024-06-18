@@ -5,8 +5,10 @@ using DATNWEB.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Net.payOS;
 using Net.payOS.Types;
+using Newtonsoft.Json;
 using System.Text;
 using X.PagedList;
 using ZXing;
@@ -19,17 +21,20 @@ namespace DATNWEB.Controllers
     public class infouserController : ControllerBase
     {
         private readonly PayOS _payOS;
-
-        public infouserController(PayOS payos)
+        private readonly IDistributedCache _distributedCache;
+        public infouserController(PayOS payos,IDistributedCache distributedCache)
         {
             _payOS = payos;
+            _distributedCache = distributedCache;
         }
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         [HttpGet]
         public IActionResult infouser()
         {
-            var a = HttpContext.Session.GetString("UID");
-            var info = db.Users.Find(a);
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            var info = db.Users.Find(userId);
             return Ok(info);
         }
         [HttpPost("logout")]
@@ -37,7 +42,11 @@ namespace DATNWEB.Controllers
         {
             try
             {
-                HttpContext.Session.Remove("UID");
+                var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+                var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+                string userId = sessionInfo.UID;
+                _distributedCache.Remove(userId);
+                HttpContext.Session.Remove("SessionInfo");
                 return Ok("Logout successful");
             }
             catch (Exception ex)
@@ -50,7 +59,9 @@ namespace DATNWEB.Controllers
         {
             try
             {
-                var userId = HttpContext.Session.GetString("UID");
+                var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+                var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+                string userId = sessionInfo.UID;
                 if (userId == null)
                 {
                     return NotFound("Không tìm thấy người dùng");
@@ -114,10 +125,12 @@ namespace DATNWEB.Controllers
         public async Task<IActionResult> Transactionhistory(int? page)
         {
             const int pageSize = 3;
-            if (HttpContext.Session != null && HttpContext.Session.TryGetValue("UID", out byte[] uidBytes))
+            if (HttpContext.Session != null)
             {
 
-                string userId = Encoding.UTF8.GetString(uidBytes);
+                var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+                var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+                string userId = sessionInfo.UID;
 
                 var bills = db.Bills.Where(x => x.Userid == userId && x.Status == "PAID").OrderByDescending(x=>x.Createat).ToList();
                 var total = bills.Count;
@@ -156,10 +169,13 @@ namespace DATNWEB.Controllers
         [HttpGet("bought")]
         public IActionResult bought(int? page)
         {
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
             const int pageSize = 5;
             var data = (from us in db.UserSubscriptions
                         join sp in db.ServicePackages on us.PackageId equals sp.PackageId
-                        where us.UserId == HttpContext.Session.GetString("UID")
+                        where us.UserId == userId
                         orderby us.SubscriptionDate descending
                         select new
                         {
@@ -197,9 +213,11 @@ namespace DATNWEB.Controllers
                     var bill = db.Bills.Where(x => x.Createat > DateTime.Now.AddMinutes(-10)).ToList();
                     foreach (var a in bill)
                     {
-                        
+                        var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+                        var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+                        string userId = sessionInfo.UID;
                         var p = db.ServiceUsages.Find(a.Ids);
-                        if (HttpContext.Session.GetString("UID") == a.Userid && a.Id == id)
+                        if (userId == a.Userid && a.Id == id)
                         {
                             UserSubscription us = new UserSubscription
                             {

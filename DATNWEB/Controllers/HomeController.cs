@@ -4,6 +4,8 @@ using Net.payOS.Types;
 using Net.payOS;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace DATNWEB.Controllers
 {
@@ -11,10 +13,12 @@ namespace DATNWEB.Controllers
     {
         private readonly PayOS _payOS;
         private readonly IConfiguration _configuration;
-        public HomeController(PayOS payos, IConfiguration configuration)
+        private readonly IDistributedCache _distributedCache;
+        public HomeController(PayOS payos, IConfiguration configuration, IDistributedCache distributedCache)
         {
             _payOS = payos;
             _configuration = configuration;
+            _distributedCache = distributedCache;
         }
         QlPhimAnimeContext db = new QlPhimAnimeContext();
         public IActionResult Index()
@@ -49,7 +53,25 @@ namespace DATNWEB.Controllers
         }
         public IActionResult AnimeDetail(string id)
         {
-            if (HttpContext.Session.GetString("UID") == null)
+            //session
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            if (string.IsNullOrEmpty(sessionInfoJson))
+            {
+                return RedirectToAction("Login", "home");
+            }
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            string clientId = sessionInfo.ClientId;
+            //redis
+            string storedinfoJson = _distributedCache.GetString(userId);
+            if (string.IsNullOrEmpty(storedinfoJson))
+            {
+                return RedirectToAction("Login", "home");
+            }
+            var clientInfo = JsonConvert.DeserializeObject<dynamic>(storedinfoJson);
+            string storedUserId = clientInfo.UID;
+            string storedClientId = clientInfo.ClientId;
+            if (clientId != storedClientId || userId != storedUserId)
             {
                 return RedirectToAction("Login", "home");
             }
@@ -58,12 +80,30 @@ namespace DATNWEB.Controllers
         }
         public IActionResult Episode(string id, int ep)
         {
-            if(HttpContext.Session.GetString("UID") == null)
+            //session
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            if (string.IsNullOrEmpty(sessionInfoJson))
+            {
+                return RedirectToAction("login", "Home");
+            }
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            string clientId = sessionInfo.ClientId;
+            //redis
+            string storedinfoJson = _distributedCache.GetString(userId);
+            if (string.IsNullOrEmpty(storedinfoJson))
+            {
+                return RedirectToAction("login", "Home");
+            }
+            var clientInfo = JsonConvert.DeserializeObject<dynamic>(storedinfoJson);
+            string storedUserId = clientInfo.UID;
+            string storedClientId = clientInfo.ClientId;
+            if (clientId != storedClientId || userId != storedUserId)
             {
                 return RedirectToAction("login", "Home");
             }
             var ani = db.Animes.Find(id);
-            var us = db.Users.Find(HttpContext.Session.GetString("UID"));
+            var us = db.Users.Find(userId);
             var a = db.Episodes.Where(x => x.AnimeId == id && x.Ep == ep).FirstOrDefault();
             if (ani.Permission == 0 && us.UserType == 0 && ep != 0)
             {
@@ -73,7 +113,25 @@ namespace DATNWEB.Controllers
         }
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("UID") == null)
+            //session
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            if (string.IsNullOrEmpty(sessionInfoJson))
+            {
+                return View();
+            }
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            string clientId = sessionInfo.ClientId;
+            //redis
+            string storedinfoJson = _distributedCache.GetString(userId);
+            if (string.IsNullOrEmpty(storedinfoJson))
+            {
+                return View();
+            }
+            var clientInfo = JsonConvert.DeserializeObject<dynamic>(storedinfoJson);
+            string storedUserId = clientInfo.UID;
+            string storedClientId = clientInfo.ClientId;
+            if (clientId != storedClientId || userId != storedUserId)
             {
                 return View();
             }
@@ -94,7 +152,25 @@ namespace DATNWEB.Controllers
         }
         public IActionResult package()
         {
-            if (HttpContext.Session.GetString("UID") == null)
+            //session
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            if (string.IsNullOrEmpty(sessionInfoJson))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            string clientId = sessionInfo.ClientId;
+            //redis
+            string storedinfoJson = _distributedCache.GetString(userId);
+            if (string.IsNullOrEmpty(storedinfoJson))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            var clientInfo = JsonConvert.DeserializeObject<dynamic>(storedinfoJson);
+            string storedUserId = clientInfo.UID;
+            string storedClientId = clientInfo.ClientId;
+            if (clientId != storedClientId || userId != storedUserId)
             {
                 return RedirectToAction("Login", "Home");
             }
@@ -102,6 +178,9 @@ namespace DATNWEB.Controllers
         }
         public async Task<IActionResult> vietqr(int id)
         {
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
             try
             {
                 // Sử dụng await để gọi đến cơ sở dữ liệu bất đồng bộ
@@ -121,7 +200,7 @@ namespace DATNWEB.Controllers
                 Bill b = new Bill
                 {
                     Id = createPayment.paymentLinkId,
-                    Userid = HttpContext.Session.GetString("UID"),
+                    Userid = userId,
                     Description = createPayment.orderCode.ToString(),
                     Createat = DateTime.Now,
                     Ids = id
@@ -162,9 +241,27 @@ namespace DATNWEB.Controllers
         }
         public IActionResult history()
         {
-            if (HttpContext.Session.GetString("UID") == null)
+            //session
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            if (string.IsNullOrEmpty(sessionInfoJson))
             {
-                return RedirectToAction("login","Home");
+                return RedirectToAction("Login", "Home");
+            }
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
+            string clientId = sessionInfo.ClientId;
+            //redis
+            string storedinfoJson = _distributedCache.GetString(userId);
+            if (string.IsNullOrEmpty(storedinfoJson))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            var clientInfo = JsonConvert.DeserializeObject<dynamic>(storedinfoJson);
+            string storedUserId = clientInfo.UID;
+            string storedClientId = clientInfo.ClientId;
+            if (clientId != storedClientId || userId != storedUserId)
+            {
+                return RedirectToAction("Login", "Home");
             }
             return View();
         }

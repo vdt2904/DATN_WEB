@@ -1,6 +1,7 @@
 ﻿using DATNWEB.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using X.PagedList;
 namespace DATNWEB.Controllers
 {
@@ -14,7 +15,9 @@ namespace DATNWEB.Controllers
         public IActionResult history(int? page)
         {
             const int pageSize = 15;
-            var userId = HttpContext.Session.GetString("UID");
+            var sessionInfoJson = HttpContext.Session.GetString("SessionInfo");
+            var sessionInfo = JsonConvert.DeserializeObject<dynamic>(sessionInfoJson);
+            string userId = sessionInfo.UID;
 
             var latestViews = (
                                 from v in db.Views
